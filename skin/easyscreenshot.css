@@ -1,0 +1,13 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#ce_easyscreenshot {
+  list-style-image: url("chrome://easyscreenshot/skin/tb.png") !important;
+}
+#ce_easyscreenshot:-moz-lwtheme-brighttext {
+  list-style-image: url("chrome://easyscreenshot/skin/tb-inverted.png") !important;
+}
+#TabsToolbar:last-child :-moz-any(#ce_easyscreenshot) {
+  list-style-image: url("chrome://easyscreenshot/skin/tb-inverted.png") !important;
+}
