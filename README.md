@@ -1,4 +1,4 @@
 easyscreenshot
 ==============
 
-easyscreenshot
+Easy Screen Shot.
