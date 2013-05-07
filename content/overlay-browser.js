@@ -52,33 +52,6 @@ var ceEasyScreenshot = {
       }
     }
 
-    function printScreen() {
-      var mainwin = document.getElementById("main-window");
-      if (!mainwin.getAttribute("xmlns:html"))
-        mainwin.setAttribute("xmlns:html", "http://www.w3.org/1999/xhtml");
-
-      var content = window.content;
-      if (content.document instanceof XULDocument) {
-        var insideBrowser = content.document.querySelector('browser');
-        content = insideBrowser ? insideBrowser.contentWindow : content;
-      }
-      var desth = content.innerHeight + content.scrollMaxY;
-      var destw = content.innerWidth + content.scrollMaxX;
-
-      // Unfortunately there is a limit:
-      if (desth > 16384) desth = 16384;
-
-      var canvas = document.createElementNS("http://www.w3.org/1999/xhtml", "html:canvas");
-      var ctx = canvas.getContext("2d");
-
-      canvas.height = desth;
-      canvas.width = destw;
-      ctx.clearRect(0, 0, destw, desth);
-      ctx.save();
-      ctx.drawWindow(content, 0, 0, destw, desth, "rgb(255,255,255)");
-      return canvas.toDataURL("image/png", "");
-    }
-
     function iso8601FromDate(date, punctuation) {
       var string = date.getFullYear().toString();
       if (punctuation) {
@@ -109,7 +82,7 @@ var ceEasyScreenshot = {
       return string;
     }
     var _stringBundle = document.getElementById("easyscreenshot-strings");
-    var data = printScreen();
+
     var file = Components.classes["@mozilla.org/file/directory_service;1"]
                          .getService(Components.interfaces.nsIProperties)
                          .get("Desk", Components.interfaces.nsIFile);
@@ -119,8 +92,33 @@ var ceEasyScreenshot = {
 
     var io = Components.classes["@mozilla.org/network/io-service;1"]
                   .getService(Components.interfaces.nsIIOService);
-    var source = io.newURI(data, "UTF8", null);
     var target = io.newFileURI(file)
+
+    var mainwin = document.getElementById("main-window");
+    if (!mainwin.getAttribute("xmlns:html"))
+      mainwin.setAttribute("xmlns:html", "http://www.w3.org/1999/xhtml");
+
+    var content = window.content;
+    if (content.document instanceof XULDocument) {
+      var insideBrowser = content.document.querySelector('browser');
+      content = insideBrowser ? insideBrowser.contentWindow : content;
+    }
+    var desth = content.innerHeight + content.scrollMaxY;
+    var destw = content.innerWidth + content.scrollMaxX;
+
+    // Unfortunately there is a limit:
+    if (desth > 16384) desth = 16384;
+
+    var canvas = document.createElementNS("http://www.w3.org/1999/xhtml", "html:canvas");
+    var ctx = canvas.getContext("2d");
+
+    canvas.height = desth;
+    canvas.width = destw;
+    ctx.clearRect(0, 0, destw, desth);
+    ctx.save();
+    ctx.drawWindow(content, 0, 0, destw, desth, "rgb(255,255,255)");
+    var data = canvas.toDataURL("image/png", "");
+    var source = io.newURI(data, "UTF8", null);
     // prepare to save the canvas data
     var persist = Components.classes["@mozilla.org/embedding/browser/nsWebBrowserPersist;1"]
                             .createInstance(Components.interfaces.nsIWebBrowserPersist);
@@ -128,7 +126,10 @@ var ceEasyScreenshot = {
     persist.persistFlags = Components.interfaces.nsIWebBrowserPersist.PERSIST_FLAGS_REPLACE_EXISTING_FILES;
     persist.persistFlags |= Components.interfaces.nsIWebBrowserPersist.PERSIST_FLAGS_AUTODETECT_APPLY_CONVERSION;
     // save the canvas data to the file
-    persist.saveURI(source, null, null, null, null, file, null);
+
+    Cu.import("resource://gre/modules/PrivateBrowsingUtils.jsm")
+    var pc = PrivateBrowsingUtils.privacyContextFromWindow(content)
+    persist.saveURI(source, null, null, null, null, file, pc);
     if (Services.appinfo.OS == "WINNT") {
       var winDir = Components.classes["@mozilla.org/file/directory_service;1"].
         getService(Components.interfaces.nsIProperties).get("WinD", Components.interfaces.nsILocalFile);
