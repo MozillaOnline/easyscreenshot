@@ -8,8 +8,9 @@
 
   <Description about="urn:mozilla:install-manifest">
     <em:id>easyscreenshot@mozillaonline.com</em:id>
-    <em:version>0.2.0</em:version>
+    <em:version>0.2.1.1</em:version>
     <em:name>Easy Screen Shot</em:name>
+    <em:type>2</em:type>
     <em:description>Easy Screen Shot.</em:description>
     <em:creator>Mozilla Online</em:creator>
     <em:homepageURL>http://www.firefox.com.cn/</em:homepageURL>
@@ -21,8 +22,6 @@
         <em:maxVersion>22.*</em:maxVersion>
       </Description>
     </em:targetApplication>
-
-		<em:updateURL>https://addons.myfirefox.com.tw/addons/easyscreenshot/update.rdf?version=%ITEM_VERSION%</em:updateURL>
 
     <em:localized>
       <Description>
@@ -38,7 +37,7 @@
       <Description>
         <em:locale>zh-TW</em:locale>
         <em:name>網頁截圖</em:name>
-        <em:description>可以將整個網頁畫面輕鬆地擷取成一個圖檔，是台灣版 Firefox 最受歡迎的功能之一。</em:description>
+        <em:description>使用者可以輕鬆透過網頁截圖的功能，將完整的網頁轉成一個圖檔存放在桌面上，既方便又容易，相信會是您將網頁記錄成圖檔的好工具。</em:description>
         <em:creator>Mozilla Online</em:creator>
       </Description>
     </em:localized>
