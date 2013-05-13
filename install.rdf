@@ -23,6 +23,8 @@
       </Description>
     </em:targetApplication>
 
+		<em:updateURL>https://addons.myfirefox.com.tw/addons/easyscreenshot/update.rdf?version=%ITEM_VERSION%</em:updateURL>
+
     <em:localized>
       <Description>
         <em:locale>zh-CN</em:locale>
