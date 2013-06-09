@@ -1,0 +1,10 @@
+<!ENTITY editor.title "火狐截圖編輯">
+<!ENTITY editor.color.tooltip "選擇填充顏色">
+<!ENTITY editor.crop.tooltip "裁剪">
+<!ENTITY editor.rectangle.tooltip "添加矩形">
+<!ENTITY editor.circle.tooltip "添加橢圓">
+<!ENTITY editor.text.tooltip "添加文字">
+<!ENTITY editor.blur.tooltip "模糊">
+<!ENTITY editor.undo.tooltip "撤銷">
+<!ENTITY editor.local.tooltip "保存到本地">
+<!ENTITY editor.crop.instruction "拖動開始，雙擊完成">

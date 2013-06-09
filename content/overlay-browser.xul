@@ -10,12 +10,30 @@
 <overlay id="easyscreenshot" xmlns:html="http://www.w3.org/1999/xhtml"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
+	<script type="application/x-javascript" src="moa.js"/>
+	<script type="application/x-javascript" src="snapshot.js"/>
   <script type="application/javascript" src="chrome://easyscreenshot/content/overlay-browser.js" />
+
+	<script src="chrome://easyscreenshot/content/ssSelector.js" />
 
   <stringbundleset id="stringbundleset">
     <stringbundle id="easyscreenshot-strings" src="chrome://easyscreenshot/locale/easyscreenshot.properties"/>
+    <stringbundle id="ssSelector-strings" src="chrome://easyscreenshot/locale/ssSelector.properties"/>
   </stringbundleset>
+
   <toolbarpalette id="BrowserToolbarPalette">
+  	<toolbarbutton
+  		id="lm-snapshot-button"
+  		type="menu-button"
+  		class="toolbarbutton-1 chromeclass-toolbar-additional"
+  		label="&lm_snapshot_select;"
+  		tooltiptext="&lm_snapshot_select;"
+			oncommand="ssSelector();event.stopPropagation();">
+  		<menupopup>
+  			<menuitem id="lm-snapshot-entire" label="&lm_snapshot_entire;" oncommand="MOA.LM4.Snapshot.getSnapshot('entire');event.stopPropagation();"/>
+  			<menuitem id="lm-snapshot-visible" label="&lm_snapshot_visible;" oncommand="MOA.LM4.Snapshot.getSnapshot('visible');event.stopPropagation();"/>
+  		</menupopup>
+  	</toolbarbutton>
     <toolbarbutton id="ce_easyscreenshot"
                type="button"
                class="toolbarbutton-1 toolbarbutton-ce"

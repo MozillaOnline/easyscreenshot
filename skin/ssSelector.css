@@ -1,0 +1,152 @@
+ssSelector-overlay {
+	background: hsla(0, 0%, 20%, 0.4);
+	cursor: crosshair;
+	height: 100%;
+	left: 0;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 1000002;
+}
+ssSelector-overlay.x-ray {
+	cursor: default;
+}
+ssSelector-selection,
+ssSelector-selection * {
+	-moz-box-sizing: border-box;
+	display: block;
+}
+ssSelector-selection {
+	background: hsla(212, 100%, 70%, 0.4);
+	border: 1px solid hsla(0, 0%, 100%, 0.3);
+	-moz-box-shadow: 0 0 10px hsla(0, 0%, 0%, 0.2);
+	overflow: hidden;
+	position: absolute;
+	z-index: 1000003;
+}
+ssSelector-selection.x-ray {
+	background: hsla(70, 100%, 70%, 0.4);
+}
+ssSelector-selection-inner {
+  background: 0 !important;
+	cursor: move;
+	height: 100%;
+	overflow: hidden;
+	width: 100%;
+}
+ssSelector-selection.x-ray ssSelector-selection-inner {
+	display: none;
+}
+ssSelector-selection-top {
+	border-bottom: 1px dashed hsla(0, 0%, 100%, 0.3);
+	cursor: n-resize;
+	height: 8px;
+	left: 8px;
+	position: absolute;
+	right: 8px;
+	top: 0;
+}
+ssSelector-selection-top-left {
+	cursor: nw-resize;
+	height: 8px;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 8px;
+}
+ssSelector-selection-top-right {
+	cursor: ne-resize;
+	height: 8px;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 8px;
+}
+ssSelector-selection-bottom {
+	border-top: 1px dashed hsla(0, 0%, 100%, 0.3);
+	bottom: 0;
+	cursor: s-resize;
+	height: 8px;
+	left: 8px;
+	position: absolute;
+	right: 8px;
+}
+ssSelector-selection-bottom-left {
+	bottom: 0;
+	cursor: sw-resize;
+	height: 8px;
+	left: 0;
+	position: absolute;
+	width: 8px;
+}
+ssSelector-selection-bottom-right {
+	bottom: 0;
+	cursor: se-resize;
+	height: 8px;
+	position: absolute;
+	right: 0;
+	width: 8px;
+}
+ssSelector-selection-left {
+	border-right: 1px dashed hsla(0, 0%, 100%, 0.3);
+	bottom: 8px;
+	cursor: w-resize;
+	left: 0;
+	position: absolute;
+	top: 8px;
+	width: 8px;
+}
+ssSelector-selection-right {
+	border-left: 1px dashed hsla(0, 0%, 100%, 0.3);
+	bottom: 8px;
+	cursor: e-resize;
+	position: absolute;
+	right: 0;
+	top: 8px;
+	width: 8px;
+}
+ssSelector-overlay[state = "selecting"],
+ssSelector-selection[state = "selecting"],
+ssSelector-selection[state = "selecting"] * {
+	cursor: crosshair;
+}
+ssSelector-overlay[state = "resize-top"],
+ssSelector-selection[state = "resize-top"],
+ssSelector-selection[state = "resize-top"] * {
+	cursor: n-resize;
+}
+ssSelector-overlay[state = "resize-top-left"],
+ssSelector-selection[state = "resize-top-left"],
+ssSelector-selection[state = "resize-top-left"] * {
+	cursor: nw-resize;
+}
+ssSelector-overlay[state = "resize-top-right"],
+ssSelector-selection[state = "resize-top-right"],
+ssSelector-selection[state = "resize-top-right"] * {
+	cursor: ne-resize;
+}
+ssSelector-overlay[state = "resize-bottom"],
+ssSelector-selection[state = "resize-bottom"],
+ssSelector-selection[state = "resize-bottom"] * {
+	cursor: s-resize;
+}
+ssSelector-overlay[state = "resize-bottom-left"],
+ssSelector-selection[state = "resize-bottom-left"],
+ssSelector-selection[state = "resize-bottom-left"] * {
+	cursor: sw-resize;
+}
+ssSelector-overlay[state = "resize-bottom-right"],
+ssSelector-selection[state = "resize-bottom-right"],
+ssSelector-selection[state = "resize-bottom-right"] * {
+	cursor: se-resize;
+}
+ssSelector-overlay[state = "resize-left"],
+ssSelector-selection[state = "resize-left"],
+ssSelector-selection[state = "resize-left"] * {
+	cursor: w-resize;
+}
+ssSelector-overlay[state = "resize-right"],
+ssSelector-selection[state = "resize-right"],
+ssSelector-selection[state = "resize-right"] * {
+	cursor: e-resize;
+}

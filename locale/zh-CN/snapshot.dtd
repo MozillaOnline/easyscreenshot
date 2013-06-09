@@ -1,0 +1,10 @@
+<!ENTITY editor.title "火截图编辑">
+<!ENTITY editor.color.tooltip "选择填充颜色">
+<!ENTITY editor.crop.tooltip "裁剪">
+<!ENTITY editor.rectangle.tooltip "添加矩形">
+<!ENTITY editor.circle.tooltip "添加椭圆">
+<!ENTITY editor.text.tooltip "添加文字">
+<!ENTITY editor.blur.tooltip "模糊">
+<!ENTITY editor.undo.tooltip "撤销">
+<!ENTITY editor.local.tooltip "保存到本地">
+<!ENTITY editor.crop.instruction "拖动开始，双击完成">

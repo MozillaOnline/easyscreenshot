@@ -1,0 +1,11 @@
+<!ENTITY editor.title "Appcenter Snapshot Editor">
+<!ENTITY editor.color.tooltip "Choose a color">
+<!ENTITY editor.crop.tooltip "Crop the snapshot">
+<!ENTITY editor.rectangle.tooltip "Add a rectangle">
+<!ENTITY editor.circle.tooltip "Add an ellipse">
+<!ENTITY editor.text.tooltip "Add text">
+<!ENTITY editor.blur.tooltip "Drag to blur">
+<!ENTITY editor.undo.tooltip "Undo">
+<!ENTITY editor.local.tooltip "Save to local disk">
+<!ENTITY editor.crop.instruction "Drag to start, double click to finish">
+

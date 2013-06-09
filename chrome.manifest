@@ -1,11 +1,12 @@
-content  easyscreenshot    content/  contentaccessible=yes
-
-skin  easyscreenshot  classic/1.0  skin/
+content  easyscreenshot               content/  contentaccessible=yes
+locale   easyscreenshot  en-US        locale/en-US/
+locale   easyscreenshot  zh-CN        locale/zh-CN/
+locale   easyscreenshot  zh-TW        locale/zh-TW/
+skin     easyscreenshot  classic/1.0  skin/
+resource easyscreenshot                 modules/
 
 style   chrome://global/content/customizeToolbar.xul chrome://easyscreenshot/skin/easyscreenshot.css
 
-overlay  chrome://browser/content/browser.xul  chrome://easyscreenshot/content/overlay-browser.xul   
+overlay  chrome://browser/content/browser.xul  chrome://easyscreenshot/content/overlay-browser.xul
 
-locale easyscreenshot en-US locale/en-US/
-locale easyscreenshot zh-CN locale/zh-CN/
-locale easyscreenshot zh-TW locale/zh-TW/
+resource abduction chrome/content/

@@ -11,3 +11,6 @@
 #TabsToolbar:last-child :-moz-any(#ce_easyscreenshot) {
   list-style-image: url("chrome://easyscreenshot/skin/tb-inverted.png") !important;
 }
+#lm-snapshot-button {
+	list-style-image: url("chrome://easyscreenshot/skin/snapshot.png");
+}
