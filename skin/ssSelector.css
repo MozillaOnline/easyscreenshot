@@ -21,6 +21,9 @@ ssSelector-selection {
 	border: 1px solid hsla(0, 0%, 100%, 0.3);
 	-moz-box-shadow: 0 0 10px hsla(0, 0%, 0%, 0.2);
 	overflow: hidden;
+}
+ssSelector-btnBox ,
+ssSelector-selection {
 	position: absolute;
 	z-index: 1000003;
 }

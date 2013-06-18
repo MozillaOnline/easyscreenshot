@@ -1,6 +1,6 @@
-<!ENTITY easyscreenshot.button.label "Screen Shot">
-<!ENTITY easyscreenshot.button.tooltip "Firefox Screen Shot">
+<!ENTITY easyscreenshot.button.label "Easy Screen Shot">
+<!ENTITY easyscreenshot.button.tooltip "Easy Screen Shot">
 
-<!ENTITY lm_snapshot_select "Capture Page Region">
-<!ENTITY lm_snapshot_visible "Capture Visible Content">
-<!ENTITY lm_snapshot_entire "Capture Whole Page">
+<!ENTITY easyscreenshot_snapshot_select "Capture Page Region">
+<!ENTITY easyscreenshot_snapshot_visible "Capture Visible Content">
+<!ENTITY easyscreenshot_snapshot_entire "Capture Whole Page">

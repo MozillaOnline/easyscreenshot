@@ -14,8 +14,8 @@
         return obj.SnapshotStorage;
     });
 
-    var ns = MOA.ns('LM4.Snapshot');
-    var _logger = jsm.utils.logger('LM4.snapshot');
+    var ns = MOA.ns('ESS.Snapshot');
+    var _logger = jsm.utils.logger('ESS.snapshot');
     var _strings = null;
 
     ns.init = function (evt) {
@@ -86,7 +86,6 @@
             case "editor":
                 jsm.SnapshotStorage.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
                 openUILinkIn("chrome://easyscreenshot/content/editor.xhtml", "tab");
-//                window.open('chrome://easyscreenshot/content/editor.xhtml', 'AppcenterSnapshotEditor', 'menubar=no,toolbar=no,location=no,personalbar=no,status=no,scrollbars=yes,resizable');
                 break;
         }
     }
@@ -94,7 +93,7 @@
     var saveDataToDisk = function(data) {
         var fp = Cc['@mozilla.org/filepicker;1'].createInstance(Ci.nsIFilePicker);
         fp.init(window.parent, _strings.getString('saveImageTo'), Ci.nsIFilePicker.modeSave);
-        fp.defaultString = _strings.getString('AppcenterSnap') + '_' + (new Date()).toISOString().replace(/:/g, '-') + '.png';
+        fp.defaultString = _strings.getString('SnapFilePrefix') + '_' + (new Date()).toISOString().replace(/:/g, '-') + '.png';
         fp.appendFilter(_strings.getString('pngImage'), '*.png');
 
         if (fp.show() != Ci.nsIFilePicker.returnCancel) {

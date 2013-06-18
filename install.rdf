@@ -8,10 +8,10 @@
 
   <Description about="urn:mozilla:install-manifest">
     <em:id>easyscreenshot@mozillaonline.com</em:id>
-    <em:version>0.2.1.1</em:version>
+    <em:version>0.3.0</em:version>
     <em:name>Easy Screen Shot</em:name>
     <em:type>2</em:type>
-    <em:description>Easy Screen Shot.</em:description>
+    <em:description>You can capture a screen shot by selecting an area of a webpage, the whole webpage or the visible area of a webpage, and save it as an image file. Also provide some essential edit functions.</em:description>
     <em:creator>Mozilla Online</em:creator>
     <em:homepageURL>http://www.firefox.com.cn/</em:homepageURL>
     <em:iconURL>chrome://easyscreenshot/skin/image/easyscreenshot.png</em:iconURL>
@@ -28,8 +28,8 @@
     <em:localized>
       <Description>
         <em:locale>zh-CN</em:locale>
-        <em:name>火狐截图</em:name>
-        <em:description>火狐截图工具</em:description>
+        <em:name>网页截图</em:name>
+        <em:description>帮您方便的截取网页并保存为图片，支持选定区域、整个网页和可视区域三种截图方式，并提供必要的图片编辑功能。</em:description>
         <em:creator>Mozilla Online</em:creator>
         <em:homepageURL>http://www.firefox.com.cn/</em:homepageURL>
       </Description>

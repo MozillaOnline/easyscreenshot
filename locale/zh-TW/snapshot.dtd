@@ -4,6 +4,8 @@
 <!ENTITY editor.rectangle.tooltip "添加矩形">
 <!ENTITY editor.circle.tooltip "添加橢圓">
 <!ENTITY editor.text.tooltip "添加文字">
+<!ENTITY editor.line.tooltip "添加直線">
+<!ENTITY editor.pencile.tooltip "鉛筆">
 <!ENTITY editor.blur.tooltip "模糊">
 <!ENTITY editor.undo.tooltip "撤銷">
 <!ENTITY editor.local.tooltip "保存到本地">

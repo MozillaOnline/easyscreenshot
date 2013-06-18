@@ -7,6 +7,7 @@
     <title>&editor.title;</title>
     <script type="text/javascript">
     <![CDATA[
+    window.ssInstalled = true;
     (function() {
 
     Components.utils.import("resource://easyscreenshot/snapshot.js");
@@ -186,6 +187,16 @@
         _origRect: null,
         _rect: null,
         _startxy: null,
+//               _dir's value
+//
+//                  |
+//               2  |  1
+//             -----------
+//               3  |  4
+//                  |
+//
+
+        _dir: 1,
         _mousedown: function(evt) {
             var rx = evt.pageX - this._origRect[0];
             var ry = evt.pageY - this._origRect[1];
@@ -214,6 +225,14 @@
                     y = this._startxy[1] - h;
                 }
             }
+            if(rx > this._startxy[0] && ry < this._startxy[1])
+              this._dir = 1;
+            else if(rx < this._startxy[0] && ry < this._startxy[1])
+              this._dir = 2;
+            else if(rx < this._startxy[0] && ry > this._startxy[1])
+              this._dir = 3;
+            else if(rx > this._startxy[0] && ry > this._startxy[1])
+              this._dir = 4;
             this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
             this._rect = [x, y, w, h];
             var dx = Math.min(3, x);
@@ -224,6 +243,8 @@
             y += this._origRect[1];
             this._canvas.style.left = x - dx + 'px';
             this._canvas.style.top = y - dy + 'px';
+            this._canvas.left = x - dx;
+            this._canvas.top = y - dy;
             this._canvas.width = dw;
             this._canvas.height = dh;
             this._ctx.lineWidth = 3.0;
@@ -292,6 +313,32 @@
         },
         start: function(x, y, w, h) {
             this.__proto__.start.bind(this)(x, y, w, h, 'rectcanvas');
+        }
+    };
+    var Line = {
+        __proto__: BaseControl,
+        _canvas: null,
+        _ctx: null,
+        _listeners: {},
+        _origRect: null,
+        _rect: null,
+        _startxy: null,
+        _stroke: function(ctx, x, y, w, h) {
+  					ctx.beginPath();
+  					var dir = this._dir;
+  				  if(dir == 1 || dir == 3){
+    					ctx.moveTo(x, y+h);
+    					ctx.lineTo(x+w, y);
+  				  } else {
+    					ctx.moveTo(x, y);
+    					ctx.lineTo(x+w, y+h);
+  				  }
+
+  					ctx.stroke();
+  					ctx.closePath();
+        },
+        start: function(x, y, w, h) {
+            this.__proto__.start.bind(this)(x, y, w, h, 'linecanvas');
         }
     };
     var Circ = {
@@ -443,12 +490,71 @@
             this._bluredData = null;
         }
     };
+    var Pencile = {
+        __proto__: BaseControl,
+        _canvas: null,
+        _ctx: null,
+        _listeners: {},
+        _origData: null,
+        _bluredData: null,
+        _origRect: null,
+        _radius: 1,
+        _draw: function(x, y) {
+            var sx = Math.max(0, x - this._radius); //line
+            var sy = Math.max(0, y - this._radius);
+            var ex = Math.min(this._origRect[2], x + this._radius); //canvas
+            var ey = Math.min(this._origRect[3], y + this._radius);
+  					Editor.ctx.lineTo(ex, ey);
+  					Editor.ctx.stroke();
+        },
+        _mousedown: function(evt) {
+            var rx = evt.pageX - this._origRect[0];
+            var ry = evt.pageY - this._origRect[1];
+            this._startxy = [rx, ry];
+            Editor.ctx.lineWidth = 3.0;
+            Editor.ctx.strokeStyle = Color.selected;
+  					Editor.ctx.moveTo(rx, ry);
+  					Editor.ctx.beginPath();
+            document.addEventListener('mousemove', this._listeners.mousemove, false);
+            document.addEventListener('mouseup', this._listeners.mouseup, false);
+            evt.stopPropagation();
+            evt.preventDefault();
+        },
+        _mouseup: function(evt) {
+  					Editor.ctx.closePath();
+            document.removeEventListener('mousemove', this._listeners.mousemove, false);
+            document.removeEventListener('mouseup', this._listeners.mouseup, false);
+            evt.stopPropagation();
+            evt.preventDefault();
+            this._refreshImageData();
+            Editor.updateHistory();
+        },
+        _mousemove: function(evt) {
+            var x = this._origRect[0];
+            var y = this._origRect[1];
+            var rx = Math.min(Math.max(evt.pageX - x, 0), this._origRect[2]);
+            var ry = Math.min(Math.max(evt.pageY - y, 0), this._origRect[3]);
+            this._draw(rx, ry);
+            evt.stopPropagation();
+            evt.preventDefault();
+        },
+        _refreshImageData: function() {
+        },
+        start: function(x, y, w, h) {
+            this.__proto__.start.bind(this)(x, y, w, h, 'blurcanvas');
+        },
+        cancel: function() {
+            this.__proto__.cancel.bind(this)();
+            this._origData = null;
+            this._bluredData = null;
+        }
+    };
     var Color = {
         _colorpicker: null,
         _hoverCss: null,
         _normalCss: null,
         _listeners: {},
-        _selected: 'red',
+        _selected: '#FF0000',
         _usePrefix: false,
         get selected() {
             return this._selected;
@@ -504,10 +610,13 @@
             }
         }
     }
+    const HISTORY_LENGHT_MAX = 50;
     var Editor = {
         _controls: {
             'Crop': CropOverlay,
             'Rectangle': Rect,
+            'Line': Line,
+            'Pencile': Pencile,
             'Circle': Circ,
             'Text': TextInput,
             'Blur': Blur
@@ -595,13 +704,13 @@
                     self.current = {textContent: 'Undo'};
                 }
             }, false);
-            [CropOverlay, Rect, Circ, TextInput, Blur, Color].forEach(function(control) {
+            [CropOverlay, Rect, Line, Pencile, Circ, TextInput, Blur, Color].forEach(function(control) {
                 control.init();
             });
         },
         updateHistory: function() {
             this._history.push(this.canvasData);
-            if (this._history.length > 10) {
+            if (this._history.length > HISTORY_LENGHT_MAX) {
                 this._history.shift();
                 //this._history.splice(1, 1);
             }
@@ -639,7 +748,7 @@
 
             var fp = Cc['@mozilla.org/filepicker;1'].createInstance(Ci.nsIFilePicker);
             fp.init(window.parent, _strings.GetStringFromName('saveImageTo'), Ci.nsIFilePicker.modeSave);
-            fp.defaultString = _strings.GetStringFromName('AppcenterSnap') + '_' + (new Date()).toISOString().replace(/:/g, '-') + '.png';
+            fp.defaultString = _strings.GetStringFromName('SnapFilePrefix') + '_' + (new Date()).toISOString().replace(/:/g, '-') + '.png';
             fp.appendFilter(_strings.GetStringFromName('pngImage'), '*.png');
 
             if (fp.show() != Ci.nsIFilePicker.returnCancel) {
@@ -670,6 +779,7 @@
             window.close();
         },
     };
+    window.ccc = Color;
     window.addEventListener('load', function(evt) {
         Editor.init();
     }, false);
@@ -695,13 +805,15 @@
     #toolbar > li:nth-of-type(4) { background-position: -35px 7px, 0 0; }
     #toolbar > li:nth-of-type(5) { background-position: -63px 7px, 0 0; }
     #toolbar > li:nth-of-type(6) { background-position: -91px 7px, 0 0; }
-    #toolbar > li:nth-of-type(7) { background-position: -147px 7px, 0 0; }
-    #toolbar > li:nth-of-type(7)[disabled='true'] { background-position: -147px 35px, 0 0; }
-    #toolbar > li:nth-of-type(7):hover[disabled='true'] { background-image: url(chrome://easyscreenshot/skin/editoricons.png), -moz-linear-gradient(top, white, #ccc); background-image: url(chrome://easyscreenshot/skin/editoricons.png), linear-gradient(to bottom, white, #ccc); cursor: default; }
-    #toolbar > li:nth-of-type(8) { background-position: -175px 7px, 0 0; }
+    #toolbar > li:nth-of-type(7) { background-position: -119px 7px, 0 0; }
+    #toolbar > li:nth-of-type(8) { background-position: -147px 7px, 0 0; }
+    #toolbar > li:nth-of-type(9) { background-position: -203px 7px, 0 0; }
+    #toolbar > li:nth-of-type(9)[disabled='true'] { background-position: -203px 35px, 0 0; }
+    #toolbar > li:nth-of-type(9):hover[disabled='true'] { background-image: url(chrome://easyscreenshot/skin/editoricons.png), -moz-linear-gradient(top, white, #ccc); background-image: url(chrome://easyscreenshot/skin/editoricons.png), linear-gradient(to bottom, white, #ccc); cursor: default; }
+    #toolbar > li:nth-of-type(10) { background-position: -231px 7px, 0 0; }
     #display { display: block; margin: 42px auto 21px; }
     #crop { overflow: hidden; }
-    #crop, #crop > div, #croptarget > div, #blurcanvas, #rectcanvas, #circcanvas, #textcanvas, #textinput { position: absolute; }
+    #crop, #crop > div, #croptarget > div, #blurcanvas, #pencilecanvas, #rectcanvas, #linecanvas, #circcanvas, #textcanvas, #textinput { position: absolute; }
     #crop > div:not(#croptarget) { background: rgba(0, 0, 0, 0.6); cursor: crosshair; }
     #croptarget { cursor: move; }
     #croptarget > div { background: #ccc; border-radius: 4px; height: 8px; width: 8px; }
@@ -711,9 +823,10 @@
     #ctrlsw, #ctrlnw { left: -4px; }
     #ctrlne, #ctrlsw { cursor: nesw-resize; }
     #ctrlnw, #ctrlse { cursor: nwse-resize; }
-    #display.rectcanvas, #display.circcanvas, #rectcanvas, #circcanvas { cursor: crosshair; }
+    #display.rectcanvas, #display.linecanvas,, #display.circcanvas, #rectcanvas, #linecanvas, #circcanvas { cursor: crosshair; }
     #display.textcanvas, #textcanvas { cursor: text; }
     #display.blurcanvas, #blurcanvas { cursor: url(chrome://easyscreenshot/skin/cursor-blur.png) 7 7, -moz-grab; }
+    #display.pencilecanvas, #pencilecanvas { cursor: url(chrome://easyscreenshot/skin/cursor-pencile.png) 7 7, -moz-grab; }
     #textinput { background: transparent; border: none; border-bottom: 1px dashed red; font: bold 14px/18px Arial,Helvetica,sans-serif; z-index: 1; }
     #colorpicker { background: -moz-linear-gradient(bottom, #ccc, white); background: linear-gradient(to top, #ccc, white); padding: 5px; position: fixed; top: 42px; z-index: 1; }
     </style>
@@ -723,6 +836,8 @@
             <li title="&editor.crop.tooltip;">Crop</li>
             <li title="&editor.rectangle.tooltip;">Rectangle</li>
             <li title="&editor.circle.tooltip;">Circle</li>
+            <li title="&editor.line.tooltip;">Line</li>
+            <li title="&editor.pencile.tooltip;">Pencile</li>
             <li title="&editor.text.tooltip;">Text</li>
             <li title="&editor.blur.tooltip;">Blur</li>
             <li title="&editor.undo.tooltip; (Ctrl+Z)">Undo</li>

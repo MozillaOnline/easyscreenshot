@@ -5,14 +5,59 @@
 var ceEasyScreenshot = {
   handleEvent: function ce_easyscreenshot__handleEvent(aEvent) {
     switch (aEvent.type) {
+      case "unload":
+        this.uninit();
+        break;
       case "load":
         setTimeout(this.init.bind(this), 500);
         break;
+      case "TabSelect":
+      case "DOMContentLoaded":
+        this.updateUI(this.isHttp());
+        break;
+    }
+  },
+
+  onCommand: function ce_easyscreenshot__onCommand(){
+    if(this.isHttp()){
+      MOA.ESS.Snapshot.ssSelector();
+    } else {
+      MOA.ESS.Snapshot.getSnapshot('visible');
+    }
+  },
+
+  isHttp: function ce_easyscreenshot__isHttp(){
+    var tab = gBrowser.mCurrentTab;
+    var uri = null;
+    if(tab && tab.linkedBrowser)
+      uri = tab.linkedBrowser.currentURI;
+
+    return (uri && (uri.scheme == "http" || uri.scheme == "https"));
+  },
+
+  updateUI: function ce_easyscreenshot__updateUI(isHttp){
+    var btn =  document.getElementById("ce_easyscreenshot");
+//    var select = document.getElementById("easyscreenshot-snapshot-select");
+//    var entire = document.getElementById("easyscreenshot-snapshot-entire");
+    if(this.isHttp()){
+      btn.setAttribute("disabled", "false")
+//      select.setAttribute("disabled", "false")
+//      entire.setAttribute("disabled", "false")
+    } else {
+      btn.setAttribute("disabled", "true")
+//      select.setAttribute("disabled", "true")
+//      entire.setAttribute("disabled", "true")
     }
   },
 
   init: function ce_easyscreenshot__init() {
     this.installButton("ce_easyscreenshot", "nav-bar");
+    gBrowser.tabContainer.addEventListener("TabSelect", this, false);
+  	window.addEventListener("DOMContentLoaded", this, false);
+  },
+
+  uninit: function ce_easyscreenshot__init() {
+  	window.removeEventListener("DOMContentLoaded", this, false);
   },
 
   installButton: function ce_easyscreenshot__installButton(buttonId,toolbarId) {
@@ -144,4 +189,5 @@ var ceEasyScreenshot = {
 };
 
 window.addEventListener("load", ceEasyScreenshot, false);
+window.addEventListener("unload", ceEasyScreenshot, false);
 
