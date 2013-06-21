@@ -2,7 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-var ceEasyScreenshot = {
+var ns = MOA.ns('ESS');
+ns.ceEasyScreenshot = {
   handleEvent: function ce_easyscreenshot__handleEvent(aEvent) {
     switch (aEvent.type) {
       case "unload":
@@ -188,6 +189,6 @@ var ceEasyScreenshot = {
   },
 };
 
-window.addEventListener("load", ceEasyScreenshot, false);
-window.addEventListener("unload", ceEasyScreenshot, false);
+window.addEventListener("load", ns.ceEasyScreenshot, false);
+window.addEventListener("unload", ns.ceEasyScreenshot, false);
 
