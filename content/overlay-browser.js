@@ -41,7 +41,7 @@ ns.ceEasyScreenshot = {
 //    var select = document.getElementById("easyscreenshot-snapshot-select");
 //    var entire = document.getElementById("easyscreenshot-snapshot-entire");
     if(this.isHttp()){
-      btn.setAttribute("disabled", "false")
+      btn.removeAttribute("disabled")
 //      select.setAttribute("disabled", "false")
 //      entire.setAttribute("disabled", "false")
     } else {

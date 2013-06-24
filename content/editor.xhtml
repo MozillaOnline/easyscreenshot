@@ -490,13 +490,11 @@
             this._bluredData = null;
         }
     };
-    var Pencile = {
+    var Pencil = {
         __proto__: BaseControl,
         _canvas: null,
         _ctx: null,
         _listeners: {},
-        _origData: null,
-        _bluredData: null,
         _origRect: null,
         _radius: 1,
         _draw: function(x, y) {
@@ -541,12 +539,10 @@
         _refreshImageData: function() {
         },
         start: function(x, y, w, h) {
-            this.__proto__.start.bind(this)(x, y, w, h, 'blurcanvas');
+            this.__proto__.start.bind(this)(x, y, w, h, 'pencilcanvas');
         },
         cancel: function() {
             this.__proto__.cancel.bind(this)();
-            this._origData = null;
-            this._bluredData = null;
         }
     };
     var Color = {
@@ -616,7 +612,7 @@
             'Crop': CropOverlay,
             'Rectangle': Rect,
             'Line': Line,
-            'Pencile': Pencile,
+            'Pencil': Pencil,
             'Circle': Circ,
             'Text': TextInput,
             'Blur': Blur
@@ -704,7 +700,7 @@
                     self.current = {textContent: 'Undo'};
                 }
             }, false);
-            [CropOverlay, Rect, Line, Pencile, Circ, TextInput, Blur, Color].forEach(function(control) {
+            [CropOverlay, Rect, Line, Pencil, Circ, TextInput, Blur, Color].forEach(function(control) {
                 control.init();
             });
         },
@@ -779,7 +775,6 @@
             window.close();
         },
     };
-    window.ccc = Color;
     window.addEventListener('load', function(evt) {
         Editor.init();
     }, false);
@@ -813,7 +808,7 @@
     #toolbar > li:nth-of-type(10) { background-position: -231px 7px, 0 0; }
     #display { display: block; margin: 42px auto 21px; }
     #crop { overflow: hidden; }
-    #crop, #crop > div, #croptarget > div, #blurcanvas, #pencilecanvas, #rectcanvas, #linecanvas, #circcanvas, #textcanvas, #textinput { position: absolute; }
+    #crop, #crop > div, #croptarget > div, #blurcanvas, #pencilcanvas, #rectcanvas, #linecanvas, #circcanvas, #textcanvas, #textinput { position: absolute; }
     #crop > div:not(#croptarget) { background: rgba(0, 0, 0, 0.6); cursor: crosshair; }
     #croptarget { cursor: move; }
     #croptarget > div { background: #ccc; border-radius: 4px; height: 8px; width: 8px; }
@@ -826,7 +821,7 @@
     #display.rectcanvas, #display.linecanvas,, #display.circcanvas, #rectcanvas, #linecanvas, #circcanvas { cursor: crosshair; }
     #display.textcanvas, #textcanvas { cursor: text; }
     #display.blurcanvas, #blurcanvas { cursor: url(chrome://easyscreenshot/skin/cursor-blur.png) 7 7, -moz-grab; }
-    #display.pencilecanvas, #pencilecanvas { cursor: url(chrome://easyscreenshot/skin/cursor-pencile.png) 7 7, -moz-grab; }
+    #display.pencilcanvas, #pencilcanvas { cursor: url(chrome://easyscreenshot/skin/cursor-pencil.png) 2 2, -moz-grab; }
     #textinput { background: transparent; border: none; border-bottom: 1px dashed red; font: bold 14px/18px Arial,Helvetica,sans-serif; z-index: 1; }
     #colorpicker { background: -moz-linear-gradient(bottom, #ccc, white); background: linear-gradient(to top, #ccc, white); padding: 5px; position: fixed; top: 42px; z-index: 1; }
     </style>
@@ -837,7 +832,7 @@
             <li title="&editor.rectangle.tooltip;">Rectangle</li>
             <li title="&editor.circle.tooltip;">Circle</li>
             <li title="&editor.line.tooltip;">Line</li>
-            <li title="&editor.pencile.tooltip;">Pencile</li>
+            <li title="&editor.pencil.tooltip;">Pencil</li>
             <li title="&editor.text.tooltip;">Text</li>
             <li title="&editor.blur.tooltip;">Blur</li>
             <li title="&editor.undo.tooltip; (Ctrl+Z)">Undo</li>

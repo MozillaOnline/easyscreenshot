@@ -6,7 +6,7 @@
 <!ENTITY editor.text.tooltip "Add text">
 <!ENTITY editor.blur.tooltip "Drag to blur">
 <!ENTITY editor.line.tooltip "Add a line">
-<!ENTITY editor.pencile.tooltip "Free Line">
+<!ENTITY editor.pencil.tooltip "Free Line">
 <!ENTITY editor.undo.tooltip "Undo">
 <!ENTITY editor.local.tooltip "Save to local disk">
 <!ENTITY editor.crop.instruction "Drag to start, double click to finish">

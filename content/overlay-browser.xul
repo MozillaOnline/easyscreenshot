@@ -14,7 +14,7 @@
 	<script type="application/x-javascript" src="snapshot.js"/>
   <script type="application/javascript" src="chrome://easyscreenshot/content/overlay-browser.js" />
 
-	<script src="chrome://easyscreenshot/content/ssSelector.js" />
+	<script type="application/javascript" src="chrome://easyscreenshot/content/ssSelector.js" />
 
   <stringbundleset id="stringbundleset">
     <stringbundle id="easyscreenshot-strings" src="chrome://easyscreenshot/locale/easyscreenshot.properties"/>

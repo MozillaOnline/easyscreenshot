@@ -8,5 +8,3 @@ resource easyscreenshot                 modules/
 style   chrome://global/content/customizeToolbar.xul chrome://easyscreenshot/skin/easyscreenshot.css
 
 overlay  chrome://browser/content/browser.xul  chrome://easyscreenshot/content/overlay-browser.xul
-
-resource abduction chrome/content/
