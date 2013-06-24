@@ -498,11 +498,7 @@
         _origRect: null,
         _radius: 1,
         _draw: function(x, y) {
-            var sx = Math.max(0, x - this._radius); //line
-            var sy = Math.max(0, y - this._radius);
-            var ex = Math.min(this._origRect[2], x + this._radius); //canvas
-            var ey = Math.min(this._origRect[3], y + this._radius);
-  					Editor.ctx.lineTo(ex, ey);
+  					Editor.ctx.lineTo(x, y);
   					Editor.ctx.stroke();
         },
         _mousedown: function(evt) {
