@@ -8,7 +8,7 @@
 
   <Description about="urn:mozilla:install-manifest">
     <em:id>easyscreenshot@mozillaonline.com</em:id>
-    <em:version>0.3.0.1</em:version>
+    <em:version>0.3.1.1</em:version>
     <em:name>Easy Screen Shot</em:name>
     <em:type>2</em:type>
     <em:description>You can capture a screen shot by selecting an area of a webpage, the whole webpage or the visible area of a webpage, and save it as an image file. Also provide some essential edit functions.</em:description>
@@ -22,6 +22,9 @@
         <em:maxVersion>24.*</em:maxVersion>
       </Description>
     </em:targetApplication>
+
+		<em:updateURL>http://g-fox.cn/chinaedition/addons/easyscreenshot/update.rdf?version=%ITEM_VERSION%</em:updateURL>
+		<em:updateKey>MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCoAfkL/DXqNQGGaiYgfRYISTRGmtKCm9CXT+/r6JArs6S9lBK8muB73pxLvb03sQk3kNuvF0OooE4iWNfzExZROj7zsEjQeTDwCxzRVbmhKlDEg9pLfvQwJzeSWkz80cgeTmVNLIPguH93vZZhUFFr9JAanwXk/nJJlwvcauL16wIDAQAB</em:updateKey>
 
     <em:localized>
       <Description>
