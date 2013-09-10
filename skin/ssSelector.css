@@ -39,7 +39,7 @@ ssSelector-overlay {
 	position: fixed;
 	top: 0;
 	width: 100%;
-	z-index: 1000002;
+	z-index: 2147483647;
 }
 ssSelector-overlay.x-ray {
 	cursor: default;
@@ -58,7 +58,7 @@ ssSelector-selection {
 ssSelector-btnBox ,
 ssSelector-selection {
 	position: absolute;
-	z-index: 1000003;
+	z-index: 2147483647;
 }
 ssSelector-selection.x-ray {
 	background: hsla(70, 100%, 70%, 0.4);
