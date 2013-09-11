@@ -94,7 +94,7 @@ ns.ceEasyScreenshot = {
         process.init(file);
         process.runw(false, args, args.length);
       } catch(e) {
-        alert(e);
+        Application.console.log("overlay-browser.js::97 " + e);
       }
     }
 
@@ -184,7 +184,7 @@ ns.ceEasyScreenshot = {
       runProc("/usr/bin/open", ['-a', 'Preview', file.path]);
     } else {
       var message = _stringBundle.getFormattedString("screentShotSaved", [file.path]);
-      alert(message)
+      Application.console.log("overlay-browser.js::187 " + message)
     }
   },
 };

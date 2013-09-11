@@ -855,7 +855,7 @@
     						}
 
     						catch (error) {
-    							alert(error);
+    							Application.console.log("ssSelector.js::858 " + error);
     						}
 
     						return true;
@@ -869,7 +869,7 @@
     							action_save();
     						}
     						catch (error) {
-    							alert(error);
+    							alert(getString("outOfMemory"));
     						}
     						return true;
     					}
