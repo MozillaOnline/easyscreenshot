@@ -1,0 +1,330 @@
+/* vim: set ts=2 et sw=2 tw=80: */
+body {
+  background: gray;
+  margin: 0;
+  overflow-y: scroll;
+}
+
+#toolbar {
+  background-image: url(chrome://easyscreenshot/skin/image/toolbar-bg.png);
+  cursor: default;
+  height: 35px;
+  list-style: none;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  position: fixed;
+  text-align: center;
+  top: 0;
+  -moz-user-select: none;
+  user-select: none;
+  width: 100%;
+  z-index: 2;
+}
+
+#toolbar > li {
+  cursor: pointer;
+  display: inline-block;
+  height: 20px;
+  list-style: none;
+  width: 20px;
+}
+
+#toolbar > li:not(:last-of-type) {
+  background-clip: content-box, border-box;
+  background-image: url(chrome://easyscreenshot/skin/image/toolbar.png),
+                    url(chrome://easyscreenshot/skin/image/button.png);
+  background-origin: content-box, border-box;
+  background-repeat: no-repeat, no-repeat;
+  margin-left: 1px;
+  outline: 1px solid #1d2028;
+  padding: 7px 30px 8px 30px;
+}
+
+#toolbar > li:last-of-type {
+  background-clip: content-box;
+  background-image: url(chrome://easyscreenshot/skin/image/toolbar.png);
+  background-origin: content-box;
+  background-repeat: no-repeat;
+  float: right;
+  padding: 7px 7px 8px 0;
+}
+
+#toolbar > li:not(:last-of-type):hover {
+  background-image: url(chrome://easyscreenshot/skin/image/toolbar.png),
+                    url(chrome://easyscreenshot/skin/image/button-hover.png);
+}
+
+#toolbar >li:last-of-type:hover {
+  background-image: url(chrome://easyscreenshot/skin/image/toolbar-secondary.png);
+}
+
+#toolbar > li:not(:last-of-type):active, #toolbar > li.current, #toolbar > li.current:hover {
+  background-image: url(chrome://easyscreenshot/skin/image/toolbar-secondary.png),
+                    url(chrome://easyscreenshot/skin/image/button-active.png);
+}
+
+#button-crop {
+  background-position: -20px 0, 0 0;
+}
+
+#button-rectangle {
+  background-position: -40px 0, 0 0;
+}
+
+#button-circle {
+  background-position: -60px 0, 0 0;
+}
+
+#button-line {
+  background-position: -80px 0, 0 0;
+}
+
+#button-pencil {
+  background-position: -100px 0, 0 0;
+}
+
+#button-text {
+  background-position: -120px 0, 0 0;
+}
+
+#button-blur {
+  background-position: -140px 0, 0 0;
+}
+
+#button-undo {
+  background-position: -160px 0, 0 0;
+}
+
+#button-local {
+  background-position: -180px 0, 0 0;
+}
+
+#button-copy {
+  background-position: -200px 0, 0 0;
+}
+
+#button-cancel {
+  background-position: 0 0;
+}
+
+#floatbar {
+  background-color: rgba(48, 54, 70, 0.6);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
+  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.75);
+  cursor: default;
+  display: block;
+  height: 22px;
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  position: fixed;
+  top: 36px;
+  -moz-user-select: none;
+  user-select: none;
+  z-index: 2;
+}
+
+#floatbar > li {
+  font: Bold 12px Arial, Helvetica, sans-serif;
+  line-height: 22px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+#floatbar li {
+  border: none;
+  cursor: pointer;
+  display: inline-block;
+  height: 22px;
+  position: relative;
+}
+
+#floatbar li:not(.container) {
+  background-image: url(chrome://easyscreenshot/skin/image/floatbar.png);
+}
+
+#floatbar li:not(.container):hover {
+  background-image: url(chrome://easyscreenshot/skin/image/floatbar-hover.png);
+}
+
+#floatbar li:not(.container):active, #floatbar li:not(.container).current, #floatbar li:not(.container).current:hover {
+  background-image: url(chrome://easyscreenshot/skin/image/floatbar-active.png);
+}
+
+li.container > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#button-lineWidth > ul {
+  height: 22px;
+}
+
+#button-lineWidth li:first-of-type {
+  background-position: 0 0, 0 0;
+  width: 41px;
+}
+
+#button-lineWidth li:nth-of-type(2) {
+  background-position: -41px 0, 0 0;
+  width: 41px;
+}
+
+#button-lineWidth li:last-of-type {
+  background-position: -82px 0, 0 0;
+  width: 42px;
+}
+
+#button-fontSize {
+  background-position: -124px 0, 0 0;
+  color: #FFFFFF;
+  width: 67px;
+}
+
+#button-color {
+  background-position: -191px 0, 0 0;
+  margin-left: 5px;
+  width: 35px;
+}
+
+#button-color > div {
+  top: 6px;
+  height: 10px;
+  left: 7px;
+  position: relative;
+  width: 12px;
+}
+
+#fontselect {
+  background-color: rgba(28, 34, 49, 0.8);
+  border-radius: 3px;
+  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.75);
+  color: #FFFFFF;
+  cursor: pointer;
+  display: block;
+  font: Bold 12px Arial, Helvetica, sans-serif;
+  left: 12px;
+  list-style: none;
+  padding: 2px 0 2px 0;
+  position: absolute;
+  text-align: left;
+  top: 25px;
+  width: 42px;
+  z-index: 2;
+}
+
+#fontselect > li {
+  background-image: none !important;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 4px 0 4px 6px;
+  width: 42px;
+}
+
+#fontselect > li:hover {
+  background-color: #3070C7;
+}
+
+#display {
+  display: block;
+  margin: 42px auto 21px;
+}
+
+#crop {
+  overflow: hidden;
+}
+
+#crop, #crop > div, #croptarget > div, #blurcanvas, #pencilcanvas, #rectcanvas, #linecanvas, #circcanvas, #textcanvas, #textinput {
+  position: absolute;
+}
+
+#crop > div:not(#croptarget) {
+  background: rgba(0, 0, 0, 0.6);
+  cursor: crosshair;
+}
+
+#croptarget {
+  cursor: move;
+}
+
+#croptarget > div {
+  background: #ccc;
+  border-radius: 4px;
+  height: 8px;
+  width: 8px;
+}
+
+#ctrlnw, #ctrlne {
+  top: -4px;
+}
+#ctrlne, #ctrlse {
+  right: -4px;
+}
+#ctrlse, #ctrlsw {
+  bottom: -4px;
+}
+#ctrlsw, #ctrlnw {
+  left: -4px;
+}
+#ctrlne, #ctrlsw {
+  cursor: nesw-resize;
+}
+#ctrlnw, #ctrlse {
+  cursor: nwse-resize;
+}
+
+#display.rectcanvas, #display.linecanvas, #display.circcanvas, #rectcanvas, #linecanvas, #circcanvas {
+  cursor: crosshair;
+}
+
+#display.textcanvas, #textcanvas {
+  cursor: text;
+}
+
+#display.blurcanvas, #blurcanvas {
+  cursor: url(chrome://easyscreenshot/skin/cursor-blur.png) 7 7, -moz-grab;
+}
+
+#display.pencilcanvas, #pencilcanvas {
+  cursor: url(chrome://easyscreenshot/skin/cursor-pencil.png) 2 2, -moz-grab;
+}
+
+#textcanvas {
+  display: none;
+}
+
+#textinput {
+  background: transparent;
+  border: 1px dashed;
+  display: block;
+  font: 14px Arial, Helvetica, sans-serif;
+  height: 100px;
+  max-height: 200px;
+  max-width: 400px;
+  min-height: 100px;
+  min-width: 200px;
+  overflow: hidden;
+  padding: 1px;
+  resize: none;
+  width: 200px;
+  z-index: 1;
+}
+
+#colorpicker {
+  background-color: rgba(28, 34, 49, 0.8);
+  border-radius: 3px;
+  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.75);
+  display: block;
+  left: 0;
+  padding: 5px;
+  position: absolute;
+  top: 25px;
+  z-index: 3;
+}
+
+audio {
+  display: none;
+}

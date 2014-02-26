@@ -32,7 +32,7 @@
  /**From Abduction!**/
 
 ssSelector-overlay {
-	background: hsla(0, 0%, 20%, 0.4);
+	background: transparent;
 	cursor: crosshair;
 	height: 100%;
 	left: 0;
@@ -50,9 +50,9 @@ ssSelector-selection * {
 	display: block;
 }
 ssSelector-selection {
-	background: hsla(212, 100%, 70%, 0.4);
-	border: 1px solid hsla(0, 0%, 100%, 0.3);
-	-moz-box-shadow: 0 0 10px hsla(0, 0%, 0%, 0.2);
+	background: transparent;
+	border: none;
+	box-shadow: 0 0 0 100000px rgba(0, 0, 0, 0.6);
 	overflow: hidden;
 }
 ssSelector-btnBox ,
@@ -74,7 +74,6 @@ ssSelector-selection.x-ray ssSelector-selection-inner {
 	display: none;
 }
 ssSelector-selection-top {
-	border-bottom: 1px dashed hsla(0, 0%, 100%, 0.3);
 	cursor: n-resize;
 	height: 8px;
 	left: 8px;
@@ -99,7 +98,6 @@ ssSelector-selection-top-right {
 	width: 8px;
 }
 ssSelector-selection-bottom {
-	border-top: 1px dashed hsla(0, 0%, 100%, 0.3);
 	bottom: 0;
 	cursor: s-resize;
 	height: 8px;
@@ -124,7 +122,6 @@ ssSelector-selection-bottom-right {
 	width: 8px;
 }
 ssSelector-selection-left {
-	border-right: 1px dashed hsla(0, 0%, 100%, 0.3);
 	bottom: 8px;
 	cursor: w-resize;
 	left: 0;
@@ -133,7 +130,6 @@ ssSelector-selection-left {
 	width: 8px;
 }
 ssSelector-selection-right {
-	border-left: 1px dashed hsla(0, 0%, 100%, 0.3);
 	bottom: 8px;
 	cursor: e-resize;
 	position: absolute;

@@ -9,5 +9,9 @@
 <!ENTITY editor.pencil.tooltip "Free Line">
 <!ENTITY editor.undo.tooltip "Undo">
 <!ENTITY editor.local.tooltip "Save to local disk">
+<!ENTITY editor.copy.tooltip "Copy">
+<!ENTITY editor.cancel.tooltip "Close">
+<!ENTITY editor.linewidth.tooltip "Line Width">
+<!ENTITY editor.fontsize.tooltip "Font Size">
 <!ENTITY editor.crop.instruction "Drag to start, double click to finish">
 

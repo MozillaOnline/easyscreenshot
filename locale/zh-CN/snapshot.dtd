@@ -9,4 +9,8 @@
 <!ENTITY editor.blur.tooltip "模糊">
 <!ENTITY editor.undo.tooltip "撤销">
 <!ENTITY editor.local.tooltip "保存到本地">
+<!ENTITY editor.copy.tooltip "复制到剪贴板">
+<!ENTITY editor.cancel.tooltip "关闭">
+<!ENTITY editor.linewidth.tooltip "线条粗细">
+<!ENTITY editor.fontsize.tooltip "文字大小">
 <!ENTITY editor.crop.instruction "拖动开始，双击完成">

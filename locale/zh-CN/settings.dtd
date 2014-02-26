@@ -1,0 +1,4 @@
+<!ENTITY easyscreenshot.settings.dialogtitle "设置">
+<!ENTITY easyscreenshot.settings.savelabel "截图保存到">
+<!ENTITY easyscreenshot.settings.savebutton "选择">
+<!ENTITY easyscreenshot.settings.opendirectory "保存截图后立即打开所在文件夹">

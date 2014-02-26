@@ -1,7 +1,6 @@
 content  easyscreenshot               content/  contentaccessible=yes
 locale   easyscreenshot  en-US        locale/en-US/
 locale   easyscreenshot  zh-CN        locale/zh-CN/
-locale   easyscreenshot  zh-TW        locale/zh-TW/
 skin     easyscreenshot  classic/1.0  skin/
 resource easyscreenshot                 modules/
 

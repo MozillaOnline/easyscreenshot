@@ -4,3 +4,6 @@
 <!ENTITY easyscreenshot_snapshot_select "截取选定区域">
 <!ENTITY easyscreenshot_snapshot_visible "截取可视区域">
 <!ENTITY easyscreenshot_snapshot_entire "截取整个网页">
+
+<!ENTITY easyscreenshot_snapshot_settings "设置">
+<!ENTITY easyscreenshot_snapshot_feedback "意见反馈">

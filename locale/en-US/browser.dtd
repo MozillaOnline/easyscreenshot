@@ -4,3 +4,6 @@
 <!ENTITY easyscreenshot_snapshot_select "Capture Page Region">
 <!ENTITY easyscreenshot_snapshot_visible "Capture Visible Content">
 <!ENTITY easyscreenshot_snapshot_entire "Capture Whole Page">
+
+<!ENTITY easyscreenshot_snapshot_settings "Settings">
+<!ENTITY easyscreenshot_snapshot_feedback "Feedback">

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css" ?>
+<!DOCTYPE window [
+<!ENTITY % easyscreenshotDTD SYSTEM "chrome://easyscreenshot/locale/settings.dtd">
+%easyscreenshotDTD;
+]>
+<prefwindow xmlns:html="http://www.w3.org/1999/xhtml"
+  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <script type="application/x-javascript" src="chrome://easyscreenshot/content/settings-dialog.js"/>
+
+  <prefpane id="settings" label="&easyscreenshot.settings.dialogtitle;">
+    <preferences>
+      <preference id="pref-saveposition" name="extensions.easyscreenshot.savePosition" type="file"/>
+      <preference id="pref-opendirectory" name="extensions.easyscreenshot.openDirectory" type="bool"/>
+    </preferences>
+    <stringbundle id="bundlePreferences" src="chrome://easyscreenshot/locale/easyscreenshot.properties"/>
+    <hbox id="saveToRow" align="center">
+      <label value="&easyscreenshot.settings.savelabel;" control="settings-choosefolder"/>
+      <filefield id="settings-saveposition" flex="1" preference="pref-saveposition"/>
+      <button id="settings-choosefolder" oncommand="settings.chooseSaveDir();event.stopPropagation();"
+              label="&easyscreenshot.settings.savebutton;"/>
+    </hbox>
+    <checkbox label="&easyscreenshot.settings.opendirectory;" preference="pref-opendirectory"/>
+  </prefpane>
+</prefwindow>
