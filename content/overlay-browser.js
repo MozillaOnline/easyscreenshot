@@ -60,8 +60,9 @@ ns.ceEasyScreenshot = {
     }
   },
 
-  init: function ce_easyscreenshot__init() {
+ init: function ce_easyscreenshot__init() {
     this.installButton('ce_easyscreenshot', 'nav-bar');
+    this.logUsage();
     gBrowser.tabContainer.addEventListener('TabSelect', this, false);
     window.addEventListener('DOMContentLoaded', this, false);
   },
@@ -92,6 +93,14 @@ ns.ceEasyScreenshot = {
     }
     document.persist(toolbar.id, 'collapsed');
     Application.prefs.setValue(key, true);
+  },
+
+  logUsage: function() {
+    try {
+      Cu.import('resource://cmtracking/ExtensionUsage.jsm', this);
+      this.ExtensionUsage.register('ce_easyscreenshot', 'window:button',
+        'easyscreenshot@mozillaonline.com');
+    } catch(e) {};
   },
 
   getScreenShot: function() {
