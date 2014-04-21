@@ -3,6 +3,8 @@ locale   easyscreenshot  en-US        locale/en-US/
 locale   easyscreenshot  zh-CN        locale/zh-CN/
 locale   easyscreenshot  zh-TW        locale/zh-TW/
 skin     easyscreenshot  classic/1.0  skin/
+skin     easyscreenshot-os  classic/1.0  skin/
+skin     easyscreenshot-os  classic/1.0  skin/mac/  os=Darwin
 resource easyscreenshot                 modules/
 
 style   chrome://global/content/customizeToolbar.xul chrome://easyscreenshot/skin/easyscreenshot.css

@@ -10,30 +10,23 @@
 <overlay id="easyscreenshot" xmlns:html="http://www.w3.org/1999/xhtml"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
-	<script type="application/x-javascript" src="moa.js"/>
-	<script type="application/x-javascript" src="snapshot.js"/>
+    <script type="application/x-javascript" src="moa.js"/>
+    <script type="application/x-javascript" src="snapshot.js"/>
   <script type="application/javascript" src="chrome://easyscreenshot/content/overlay-browser.js" />
 
-	<script type="application/javascript" src="chrome://easyscreenshot/content/ssSelector.js" />
+    <script type="application/javascript" src="chrome://easyscreenshot/content/ssSelector.js" />
 
   <stringbundleset id="stringbundleset">
     <stringbundle id="easyscreenshot-strings" src="chrome://easyscreenshot/locale/easyscreenshot.properties"/>
     <stringbundle id="ssSelector-strings" src="chrome://easyscreenshot/locale/ssSelector.properties"/>
   </stringbundleset>
 
-  <toolbarpalette id="BrowserToolbarPalette">
-  	<toolbarbutton
-  		id="ce_easyscreenshot"
-  		type="menu-button"
-  		class="toolbarbutton-1 chromeclass-toolbar-additional"
-  		label="&easyscreenshot.button.label;"
-  		tooltiptext="&easyscreenshot.button.tooltip;"
-			oncommand="MOA.ESS.ceEasyScreenshot.onCommand();event.stopPropagation();">
-  		<menupopup>
-  			<menuitem id="easyscreenshot-snapshot-select" label="&easyscreenshot_snapshot_select;" oncommand="MOA.ESS.Snapshot.ssSelector();event.stopPropagation();"/>
-  			<menuitem id="easyscreenshot-snapshot-entire" label="&easyscreenshot_snapshot_entire;" oncommand="MOA.ESS.Snapshot.getSnapshot('entire');event.stopPropagation();"/>
-  			<menuitem id="easyscreenshot-snapshot-visible" label="&easyscreenshot_snapshot_visible;" oncommand="MOA.ESS.Snapshot.getSnapshot('visible');event.stopPropagation();"/>
-  		</menupopup>
-  	</toolbarbutton>
-  </toolbarpalette>
+  <panelmultiview id="PanelUI-multiView" mainViewId="PanelUI-mainView">
+    <panelview id="PanelUI-easyscreenshot-view" flex="1" class="PanelUI-subView">
+      <label value="&easyscreenshot.button.label;" class="panel-subview-header"/>
+      <toolbarbutton id="easyscreenshot-snapshot-select" class="subviewbutton" label="&easyscreenshot_snapshot_select;" oncommand="MOA.ESS.Snapshot.ssSelector();event.stopPropagation();"/>
+      <toolbarbutton id="easyscreenshot-snapshot-entire" class="subviewbutton" label="&easyscreenshot_snapshot_entire;" oncommand="MOA.ESS.Snapshot.getSnapshot('entire');event.stopPropagation();"/>
+      <toolbarbutton id="easyscreenshot-snapshot-visible" class="subviewbutton" label="&easyscreenshot_snapshot_visible;" oncommand="MOA.ESS.Snapshot.getSnapshot('visible');event.stopPropagation();"/>
+    </panelview>
+  </panelmultiview>
 </overlay>

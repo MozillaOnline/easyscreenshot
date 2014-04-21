@@ -1,4 +1,4 @@
-<!ENTITY editor.title "Firefox Screen Shot Editor">
+<!ENTITY editor.title "Firefox Screenshot Editor">
 <!ENTITY editor.color.tooltip "Choose a color">
 <!ENTITY editor.crop.tooltip "Crop the snapshot">
 <!ENTITY editor.rectangle.tooltip "Add a rectangle">

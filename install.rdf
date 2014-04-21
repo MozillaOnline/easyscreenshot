@@ -8,18 +8,18 @@
 
   <Description about="urn:mozilla:install-manifest">
     <em:id>easyscreenshot@mozillaonline.com</em:id>
-    <em:version>0.3.0.2</em:version>
-    <em:name>Easy Screen Shot</em:name>
+    <em:version>0.3.3</em:version>
+    <em:name>Easy Screenshot</em:name>
     <em:type>2</em:type>
-    <em:description>You can capture a screen shot by selecting an area of a webpage, the whole webpage or the visible area of a webpage, and save it as an image file. Also provide some essential edit functions.</em:description>
+    <em:description>You can capture a screenshot by selecting an area of a webpage, the whole webpage or the visible area of a webpage, and then save it as an image file. We also provide some essential edit functions.</em:description>
     <em:creator>Mozilla Online</em:creator>
     <em:homepageURL>http://www.firefox.com.cn/</em:homepageURL>
     <em:iconURL>chrome://easyscreenshot/skin/image/easyscreenshot.png</em:iconURL>
     <em:targetApplication>
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
-        <em:minVersion>4.0</em:minVersion>
-        <em:maxVersion>24.*</em:maxVersion>
+        <em:minVersion>29.0</em:minVersion>
+        <em:maxVersion>29.*</em:maxVersion>
       </Description>
     </em:targetApplication>
 

@@ -1,5 +1,5 @@
-<!ENTITY easyscreenshot.button.label "Easy Screen Shot">
-<!ENTITY easyscreenshot.button.tooltip "Easy Screen Shot">
+<!ENTITY easyscreenshot.button.label "Easy Screenshot">
+<!ENTITY easyscreenshot.button.tooltip "Easy Screenshot">
 
 <!ENTITY easyscreenshot_snapshot_select "Capture Page Region">
 <!ENTITY easyscreenshot_snapshot_visible "Capture Visible Content">
