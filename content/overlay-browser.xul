@@ -22,9 +22,9 @@
   </stringbundleset>
 
   <commandset>
-    <command id="cmd-snapshot-select" oncommand="if (MOA.ESS.ceEasyScreenshot.isHttp()) MOA.ESS.Snapshot.ssSelector();event.stopPropagation();"/>
-    <command id="cmd-snapshot-entire" oncommand="if (MOA.ESS.ceEasyScreenshot.isHttp()) MOA.ESS.Snapshot.getSnapshot('entire');event.stopPropagation();"/>
-    <command id="cmd-snapshot-visible" oncommand="if (MOA.ESS.ceEasyScreenshot.isHttp()) MOA.ESS.Snapshot.getSnapshot('visible');event.stopPropagation();"/>
+    <command id="cmd-snapshot-select" oncommand="if (MOA.ESS.ceEasyScreenshot.shouldEnable(event)) MOA.ESS.Snapshot.ssSelector();event.stopPropagation();"/>
+    <command id="cmd-snapshot-entire" oncommand="if (MOA.ESS.ceEasyScreenshot.shouldEnable(event)) MOA.ESS.Snapshot.getSnapshot('entire');event.stopPropagation();"/>
+    <command id="cmd-snapshot-visible" oncommand="if (MOA.ESS.ceEasyScreenshot.shouldEnable(event)) MOA.ESS.Snapshot.getSnapshot('visible');event.stopPropagation();"/>
   </commandset>
 
   <keyset>
@@ -33,23 +33,15 @@
     <key id="key-snapshot-visible" modifiers="accel shift" key="V" command="cmd-snapshot-visible"/>
   </keyset>
 
-  <toolbarpalette id="BrowserToolbarPalette">
-    <toolbarbutton
-        id="ce_easyscreenshot"
-        type="menu-button"
-        class="toolbarbutton-1 chromeclass-toolbar-additional"
-        label="&easyscreenshot.button.label;"
-        tooltiptext="&easyscreenshot.button.tooltip;"
-        oncommand="MOA.ESS.ceEasyScreenshot.onCommand();event.stopPropagation();"
-        disabled="true">
-        <menupopup>
-            <menuitem id="easyscreenshot-snapshot-select" label="&easyscreenshot_snapshot_select;" accesskey="c" key="key-snapshot-select" command="cmd-snapshot-select"/>
-            <menuitem id="easyscreenshot-snapshot-entire" label="&easyscreenshot_snapshot_entire;" accesskey="l" key="key-snapshot-entire" command="cmd-snapshot-entire"/>
-            <menuitem id="easyscreenshot-snapshot-visible" label="&easyscreenshot_snapshot_visible;" accesskey="v" key="key-snapshot-visible" command="cmd-snapshot-visible"/>
-            <menuseparator/>
-            <menuitem id="easyscreenshot-snapshot-settings" label="&easyscreenshot_snapshot_settings;" oncommand="MOA.ESS.Snapshot.openSettings();event.stopPropagation();"/>
-            <menuitem id="easyscreenshot-snapshot-feedback" label="&easyscreenshot_snapshot_feedback;" oncommand="MOA.ESS.Snapshot.openSnapshotFeedback();event.stopPropagation();"/>
-        </menupopup>
-    </toolbarbutton>
-  </toolbarpalette>
+  <panelmultiview id="PanelUI-multiView" mainViewId="PanelUI-mainView">
+    <panelview id="PanelUI-easyscreenshot-view" flex="1" class="PanelUI-subView">
+      <label value="&easyscreenshot.button.label;" class="panel-subview-header"/>
+      <toolbarbutton id="easyscreenshot-snapshot-select" class="subviewbutton" label="&easyscreenshot_snapshot_select;" accesskey="c" key="key-snapshot-select" command="cmd-snapshot-select"/>
+      <toolbarbutton id="easyscreenshot-snapshot-entire" class="subviewbutton" label="&easyscreenshot_snapshot_entire;" accesskey="l" key="key-snapshot-entire" command="cmd-snapshot-entire"/>
+      <toolbarbutton id="easyscreenshot-snapshot-visible" class="subviewbutton" label="&easyscreenshot_snapshot_visible;" accesskey="v" key="key-snapshot-visible" command="cmd-snapshot-visible"/>
+      <toolbarseparator/>
+      <toolbarbutton id="easyscreenshot-snapshot-settings" class="subviewbutton" label="&easyscreenshot_snapshot_settings;" oncommand="MOA.ESS.Snapshot.openSettings();event.stopPropagation();"/>
+      <toolbarbutton id="easyscreenshot-snapshot-feedback" class="subviewbutton" label="&easyscreenshot_snapshot_feedback;" oncommand="MOA.ESS.Snapshot.openSnapshotFeedback();event.stopPropagation();"/>
+    </panelview>
+  </panelmultiview>
 </overlay>

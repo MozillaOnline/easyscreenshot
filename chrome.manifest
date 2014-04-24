@@ -2,10 +2,10 @@ content  easyscreenshot               content/  contentaccessible=yes
 locale   easyscreenshot  en-US        locale/en-US/
 locale   easyscreenshot  zh-CN        locale/zh-CN/
 skin     easyscreenshot  classic/1.0  skin/
+skin     easyscreenshot-os  classic/1.0  skin/
+skin     easyscreenshot-os  classic/1.0  skin/mac/  os=Darwin
 resource easyscreenshot                 modules/
 
 style   chrome://global/content/customizeToolbar.xul chrome://easyscreenshot/skin/easyscreenshot.css
 
 overlay  chrome://browser/content/browser.xul  chrome://easyscreenshot/content/overlay-browser.xul
-
-override  chrome://easyscreenshot/skin/tb.png  chrome://easyscreenshot/skin/tb-mac.png  os=Darwin

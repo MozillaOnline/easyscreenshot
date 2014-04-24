@@ -2,12 +2,26 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+#ce_easyscreenshot[cui-areatype="menu-panel"] > .toolbarbutton-menubutton-dropmarker {
+    display: none;
+}
+
 #ce_easyscreenshot {
-  list-style-image: url("chrome://easyscreenshot/skin/tb.png") !important;
+  list-style-image: url(chrome://easyscreenshot-os/skin/icon16.png) !important;
 }
-#ce_easyscreenshot:-moz-lwtheme-brighttext {
-  list-style-image: url("chrome://easyscreenshot/skin/tb-inverted.png") !important;
+#ce_easyscreenshot[cui-areatype="toolbar"]:not([overflowedItem="true"]):-moz-lwtheme-brighttext {
+  list-style-image: url(chrome://easyscreenshot-os/skin/icon16-inverted.png) !important;
 }
-#TabsToolbar:last-child :-moz-any(#ce_easyscreenshot) {
-  list-style-image: url("chrome://easyscreenshot/skin/tb-inverted.png") !important;
+#ce_easyscreenshot[cui-areatype="menu-panel"],
+toolbarpaletteitem[place="palette"] > #ce_easyscreenshot {
+    list-style-image: url(chrome://easyscreenshot-os/skin/icon32.png) !important;
+}
+
+@media (-moz-mac-lion-theme) {
+  #ce_easyscreenshot:hover:active:not([disabled="true"]):not([cui-areatype="menu-panel"]) {
+    list-style-image: url(chrome://easyscreenshot-os/skin/icon16-pressed.png) !important;
+  }
+  #ce_easyscreenshot[cui-areatype="toolbar"]:not([overflowedItem="true"]):hover:active:not([disabled="true"]):-moz-lwtheme-brighttext {
+    list-style-image: url(chrome://easyscreenshot-os/skin/icon16-inverted-pressed.png) !important;
+  }
 }
