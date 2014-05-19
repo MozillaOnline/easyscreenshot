@@ -78,7 +78,7 @@
                      'error: ' + ex);
       Cc['@mozilla.org/alerts-service;1']
         .getService(Ci.nsIAlertsService)
-        .showAlertNotification('chrome://easyscreenshot/skin/image/easyscreenshot.png',
+        .showAlertNotification('chrome://easyscreenshot/skin/image/logo32.png',
           document.getElementById("easyscreenshot-strings")
                   .getString('failToCaptureNotification'),
           null);

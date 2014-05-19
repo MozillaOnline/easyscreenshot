@@ -268,7 +268,7 @@ window.ssInstalled = true;
     notify: function(title, text) {
       Cc['@mozilla.org/alerts-service;1']
         .getService(Ci.nsIAlertsService)
-        .showAlertNotification('chrome://easyscreenshot/skin/image/easyscreenshot.png', title, text || null);
+        .showAlertNotification('chrome://easyscreenshot/skin/image/logo32.png', title, text || null);
     },
     /* e.g. (#FFFFFF, 0.5) => (255, 255, 255, 0.5) */
     hex2rgba: function(hex, alpha) {
