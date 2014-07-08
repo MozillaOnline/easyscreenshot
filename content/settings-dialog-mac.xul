@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+<overlay xmlns:html="http://www.w3.org/1999/xhtml"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <menupopup id="menupopup-select">
+    <menuitem value="meta shift" label="&#x2318; + Shift"/>
+    <menuitem value="meta alt" label="&#x2318; + Alt"/>
+  </menupopup>
+
+  <menupopup id="menupopup-entire">
+    <menuitem value="meta shift" label="&#x2318; + Shift"/>
+    <menuitem value="meta alt" label="&#x2318; + Alt"/>
+  </menupopup>
+
+  <menupopup id="menupopup-visible">
+    <menuitem value="meta shift" label="&#x2318; + Shift"/>
+    <menuitem value="meta alt" label="&#x2318; + Alt"/>
+  </menupopup>
+
+</overlay>

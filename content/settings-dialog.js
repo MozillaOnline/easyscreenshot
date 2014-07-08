@@ -4,14 +4,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 const {classes: Cc, interfaces: Ci, utils: Cu, results: Cr} = Components;
+Cu.import('resource://gre/modules/Services.jsm');
 
 var settings = {
   _getDownloadsFolder: function(aFolder) {
     switch (aFolder) {
       case 'Desktop': {
-        let fileLoc = Cc['@mozilla.org/file/directory_service;1']
-                      .getService(Components.interfaces.nsIProperties);
-        return fileLoc.get('Desk', Ci.nsILocalFile);
+        return Services.dirsvc.get('Desk', Ci.nsILocalFile);
         break;
       }
       case 'Downloads': {
@@ -72,6 +71,23 @@ var settings = {
       saveDirPref.value = this._getDownloadsFolder('Desktop');
     }
     this._setSaveDirElem(saveDirPref.value);
+
+    this.refreshHotkeysBox();
+  },
+
+  refreshHotkeysBox: function(toDisable) {
+    if (toDisable === undefined) {
+      let enableHotkeysPref = document.getElementById('pref-enablehotkeys');
+      toDisable = !enableHotkeysPref.value;
+    }
+    let hotkeysBox = document.getElementById('settings-hotkeys');
+    ['label', 'menulist'].forEach((tag) => {
+      [].forEach.call(hotkeysBox.getElementsByTagName(tag), function(ele) {
+        toDisable ?
+          ele.setAttribute('disabled', 'true') :
+          ele.removeAttribute('disabled');
+      });
+    });
   },
 
   chooseSaveDir: function() {

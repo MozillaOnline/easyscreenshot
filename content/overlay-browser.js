@@ -91,6 +91,7 @@ ns.ceEasyScreenshot = {
   init: function ce_easyscreenshot__init() {
     this.createButton();
     this.logUsage();
+    this.setupHotkeys();
     document.getElementById('PanelUI-popup')
             .addEventListener('popupshown',
                               (aEvent) => this.updateUI(aEvent));
@@ -172,6 +173,34 @@ ns.ceEasyScreenshot = {
       this.ExtensionUsage.register(this.buttonID, 'window:button',
         'easyscreenshot@mozillaonline.com');
     } catch(e) {};
+  },
+
+  setupHotkeys: function() {
+    try {
+      let hotkeys = [{
+        keyID: 'key-snapshot-select',
+        modifiersPref: 'extensions.easyscreenshot.hotkeys.select.modifiers',
+        keyPref: 'extensions.easyscreenshot.hotkeys.select.key'
+      }, {
+        keyID: 'key-snapshot-entire',
+        modifiersPref: 'extensions.easyscreenshot.hotkeys.entire.modifiers',
+        keyPref: 'extensions.easyscreenshot.hotkeys.entire.key'
+      }, {
+        keyID: 'key-snapshot-visible',
+        modifiersPref: 'extensions.easyscreenshot.hotkeys.visible.modifiers',
+        keyPref: 'extensions.easyscreenshot.hotkeys.visible.key'
+      }];
+      hotkeys.forEach((hotkey) => {
+        if (Services.prefs.getBoolPref('extensions.easyscreenshot.hotkeys.enabled')) {
+          let keyItem = document.getElementById(hotkey.keyID);
+          if (keyItem) {
+              keyItem.removeAttribute('disabled') ;
+              keyItem.setAttribute('modifiers', Services.prefs.getCharPref(hotkey.modifiersPref));
+              keyItem.setAttribute('key', Services.prefs.getCharPref(hotkey.keyPref));
+          }
+        }
+      });
+    } catch (e) {}
   },
 
   getScreenShot: function() {

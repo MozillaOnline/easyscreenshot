@@ -9,3 +9,5 @@ resource easyscreenshot                 modules/
 style   chrome://global/content/customizeToolbar.xul chrome://easyscreenshot/skin/easyscreenshot.css
 
 overlay  chrome://browser/content/browser.xul  chrome://easyscreenshot/content/overlay-browser.xul
+
+overlay  chrome://easyscreenshot/content/settings-dialog.xul  chrome://easyscreenshot/content/settings-dialog-mac.xul os=Darwin
