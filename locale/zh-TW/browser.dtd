@@ -1,0 +1,9 @@
+<!ENTITY easyscreenshot.button.label "網頁截圖">
+<!ENTITY easyscreenshot.button.tooltip "網頁截圖">
+
+<!ENTITY easyscreenshot_snapshot_select "截取選定區域">
+<!ENTITY easyscreenshot_snapshot_visible "截取可視區域">
+<!ENTITY easyscreenshot_snapshot_entire "截取整個網頁">
+
+<!ENTITY easyscreenshot_snapshot_settings "設定">
+<!ENTITY easyscreenshot_snapshot_feedback "意見回饋">

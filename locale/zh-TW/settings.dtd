@@ -1,0 +1,5 @@
+<!ENTITY easyscreenshot.settings.dialogtitle "設定">
+<!ENTITY easyscreenshot.settings.savelabel "截圖儲存至">
+<!ENTITY easyscreenshot.settings.savebutton "選擇">
+<!ENTITY easyscreenshot.settings.opendirectory "儲存截圖後立刻打開資料夾">
+<!ENTITY easyscreenshot.settings.enablehotkeys "啟用快速鍵 (重新啟動 Firefox 後生效)">
