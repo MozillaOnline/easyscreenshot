@@ -67,11 +67,7 @@ ns.ceEasyScreenshot = {
 
   shouldEnable: function ce_easyscreenshot__shouldEnable(aEvent) {
     let {win} = this.infoFromEvent(aEvent);
-    let tab = win.gBrowser.mCurrentTab;
-    let uri = null;
-    if (tab && tab.linkedBrowser) {
-      uri = tab.linkedBrowser.currentURI;
-    }
+    let uri = win.gBrowser.selectedBrowser.currentURI;
 
     // Button shouldn't be disabled on customization page.
     let whitelist = ['about:customizing'];
