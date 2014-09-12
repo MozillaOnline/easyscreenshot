@@ -31,13 +31,15 @@
  */
 /**From Abduction!**/
 
+const {classes: Cc, interfaces: Ci, results: Cr, utils: Cu} = Components;
+
 (function() {
   var jsm = { };
   if (typeof XPCOMUtils == 'undefined') {
     Cu.import('resource://gre/modules/XPCOMUtils.jsm');
   }
   XPCOMUtils.defineLazyGetter(jsm, 'utils', function() {
-    let obj = { };
+    let obj = {};
     Cu['import']('resource://easyscreenshot/utils.jsm', obj);
     return obj.utils;
   });
@@ -47,16 +49,14 @@
     return obj.SnapshotStorage;
   });
 
-  var ns = MOA.ns('ESS.Snapshot');
+  // var ns = MOA.ns('ESS.Snapshot');
   var _logger = jsm.utils.logger('ESS.snapshot');
   var _strings = null;
 
-  ns.init = function (evt) {
-  };
-
-  ns.ssSelector = function() {
-    var doc = window.top.getBrowser().selectedBrowser.contentWindow.document;
-    if(doc.defaultView.ssInstalled)
+  let ssSelector = function() {
+    var doc = content.document;// window.top.getBrowser().selectedBrowser.contentWindow.document;
+    // if(doc.defaultView.ssInstalled)
+    if(content.ssInstalled)
       return;
 
     function getString(key){
@@ -710,8 +710,8 @@
     };
 
     // Define widgets:
-    widget.document = window.top.getBrowser().selectedBrowser.contentWindow.document;
-    widget.window = widget.document.defaultView;
+    widget.document = content.document;//window.top.getBrowser().selectedBrowser.contentWindow.document;
+    widget.window = content;//widget.document.defaultView;
     widget.window.ssInstalled = true;
 
     widget.root = widget.document.documentElement;
@@ -771,7 +771,7 @@
     /*-------------------------------------------------------------------------------------------*/
 
     var capture = function() {
-      var canvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'html:canvas');
+      var canvas = content.document.createElementNS('http://www.w3.org/1999/xhtml', 'html:canvas');
       var context = canvas.getContext('2d');
       var selection = get_position(widget.selection);
       // too small,ignore it!
@@ -881,9 +881,11 @@
     var notificationBox = null;
     var notice = null;
     if (showNotification) {
-      notificationBox = window.getNotificationBox(widget.window);
+      /*notificationBox = window.getNotificationBox(widget.window);
+      notificationBox = getNotificationBox();
       notice = append_notice();
-      event_connect(notice, 'command', action_close);
+      event_connect(notice, 'command', action_close);*/
+      sendAsyncMessage('easyscreenshot@mozillaonline.com:showNotification');
     }
 
     event_connect(widget.window, 'unload', action_close);
@@ -891,9 +893,11 @@
     event_connect(widget.selection, 'dblclick', action_save);
   };
 
-  ns.cancel = function() {
-    var doc = window.top.getBrowser().selectedBrowser.contentWindow.document;
+  let cancel = function() {
+    var doc = content.document;//window.top.getBrowser().selectedBrowser.contentWindow.document;
     var evt = doc.defaultView.CustomEvent('ssSelector:cancel');
     doc.dispatchEvent(evt);
   };
+
+  ssSelector();
 })();

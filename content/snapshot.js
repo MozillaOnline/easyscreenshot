@@ -147,4 +147,13 @@
     }, 1000);
     window.removeEventListener('load', arguments.callee, false);
   }, false);
+
+  addMessageListener('easyscreenshot@mozillaonline.com:captureEntirePage',function() {
+    ns.getSnapshot('entire');
+  });
+
+  addMessageListener('easyscreenshot@mozillaonline.com:captureVisiblePart',function() {
+    ns.getSnapshot('visible');
+  });
+
 })();

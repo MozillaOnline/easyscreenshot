@@ -59,9 +59,9 @@ ns.ceEasyScreenshot = {
 
   onCommand: function ce_easyscreenshot__onCommand(aEvent) {
     if(this.shouldEnable(aEvent)){
-      MOA.ESS.Snapshot.ssSelector();
+      MOA.ESS.Snapshot.startSelection();
     } else {
-      MOA.ESS.Snapshot.getSnapshot('visible');
+      MOA.ESS.Snapshot.captureVisiblePart();
     }
   },
 
