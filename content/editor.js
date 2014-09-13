@@ -273,11 +273,11 @@ window.ssInstalled = true;
     /* e.g. (#FFFFFF, 0.5) => (255, 255, 255, 0.5) */
     hex2rgba: function(hex, alpha) {
       if (hex.length == 7 && hex[0] === '#' && alpha !== undefined) {
-        return 'rgba('
-          + parseInt(hex.slice(1, 3), 16) + ','
-          + parseInt(hex.slice(3, 5), 16) + ','
-          + parseInt(hex.slice(5, 7), 16) + ','
-          + alpha + ')';
+        return 'rgba(' +
+                parseInt(hex.slice(1, 3), 16) + ',' +
+                parseInt(hex.slice(3, 5), 16) + ',' +
+                parseInt(hex.slice(5, 7), 16) + ',' +
+                alpha + ')';
       }
       return hex;
     }
@@ -313,8 +313,8 @@ window.ssInstalled = true;
       this._overlay.overlay.style.display = 'none';
     },
     _mousedown: function(evt) {
-      var { x, y } = Utils.parse(this._overlay.overlay);
-      var { x:ix, y:iy } = Utils.parse(this._overlay.target);
+      var {x, y} = Utils.parse(this._overlay.overlay);
+      var {x:ix, y:iy} = Utils.parse(this._overlay.target);
       var rx = evt.pageX - x;
       var ry = evt.pageY - y;
       if (this._overlay.target == evt.target) {
@@ -330,8 +330,8 @@ window.ssInstalled = true;
       evt.preventDefault();
     },
     _mousemove: function(evt) {
-      var { x, y, w, h } = Utils.parse(this._overlay.overlay);
-      var { x:ix, y:iy, w:iw, h:ih } = Utils.parse(this._overlay.target);
+      var {x, y, w, h} = Utils.parse(this._overlay.overlay);
+      var {x:ix, y:iy, w:iw, h:ih} = Utils.parse(this._overlay.target);
       var rx = evt.pageX - x;
       var ry = evt.pageY - y;
       var nix, niy, nih, niw;
@@ -397,7 +397,7 @@ window.ssInstalled = true;
       evt.preventDefault();
     },
     _refreshImageData: function() {
-      var { x, y, w, h } = Utils.parse(this._overlay.target);
+      var {x, y, w, h} = Utils.parse(this._overlay.target);
       if (!h || !w) {
         return;
       }
@@ -1173,6 +1173,7 @@ window.ssInstalled = true;
       'blur': Blur
     },
     _canvas: null,
+    _canvasData: null,
     _ctx: null,
     _current: null,
     _history: [],
@@ -1219,9 +1220,10 @@ window.ssInstalled = true;
       var self = this;
 
       this.canvas = Utils.qs('#display');
-      try {
-        this.canvasData = SnapshotStorage.pop();
-      } catch(ex) {
+      // this.canvas = document.getElementById('display');
+      if (this._canvasData) {
+        this.canvasData = this._canvasData;
+      } else {
         ['fontselect', 'floatbar', 'textinput'].forEach(function(id) {
           Utils.qs('#' + id).style.display = 'none';
         });
@@ -1430,11 +1432,18 @@ window.ssInstalled = true;
     }
   };
 
-  window.addEventListener('load', function(evt) {
+  window.addEventListener('message', function(aEvt) {
+    if (aEvt.origin == 'chrome://easyscreenshot') {
+      Editor._canvasData = aEvt.data;
+    }
+  });
+
+  window.addEventListener('load', function(aEvt) {
     Editor.init();
-    window.addEventListener('resize', function(evt) {
+    window.addEventListener('resize', function(aEvt) {
       Floatbar.reposition();
       CropOverlay.reposition();
     });
   });
+
 })();

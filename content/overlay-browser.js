@@ -190,117 +190,30 @@ ns.ceEasyScreenshot = {
         if (Services.prefs.getBoolPref('extensions.easyscreenshot.hotkeys.enabled')) {
           let keyItem = document.getElementById(hotkey.keyID);
           if (keyItem) {
-              keyItem.removeAttribute('disabled') ;
-              keyItem.setAttribute('modifiers', Services.prefs.getCharPref(hotkey.modifiersPref));
-              keyItem.setAttribute('key', Services.prefs.getCharPref(hotkey.keyPref));
+            keyItem.removeAttribute('disabled') ;
+            keyItem.setAttribute('modifiers', Services.prefs.getCharPref(hotkey.modifiersPref));
+            keyItem.setAttribute('key', Services.prefs.getCharPref(hotkey.keyPref));
           }
         }
       });
     } catch (e) {}
   },
 
-  getScreenShot: function() {
-    function runProc(relPath,args) {
-      try {
-        var file = Components.classes['@mozilla.org/file/local;1'].createInstance(Components.interfaces.nsILocalFile);
-        file.initWithPath(relPath);
-        var process=Components.classes['@mozilla.org/process/util;1'].createInstance(Components.interfaces.nsIProcess);
-        process.init(file);
-        process.runw(false, args, args.length);
-      } catch(e) {
-        Application.console.log('overlay-browser.js::98 ' + e);
-      }
+  openSettings: function() {
+    let features = 'chrome,titlebar,toolbar,centerscreen';
+    try {
+      let instantApply = Services.prefs.getBranch('browser.preferences.').getBoolPref('instantApply');
+      features += instantApply ? ',dialog=no' : ',modal';
+    } catch (e) {
+      features += ',modal';
     }
-
-    function iso8601FromDate(date, punctuation) {
-      var string = date.getFullYear().toString();
-      if (punctuation) {
-        string += '-';
-      }
-      string += (date.getMonth() + 1).toString().replace(/\b(\d)\b/g, '0$1');
-      if (punctuation) {
-        string += '-';
-      }
-      string += date.getDate().toString().replace(/\b(\d)\b/g, '0$1');
-      if (1 || date.time) {
-        string += date.getHours().toString().replace(/\b(\d)\b/g, '0$1');
-        if (punctuation) {
-          string += ':';
-        }
-        string += date.getMinutes().toString().replace(/\b(\d)\b/g, '0$1');
-        if (punctuation) {
-          string += ':';
-        }
-        string += date.getSeconds().toString().replace(/\b(\d)\b/g, '0$1');
-        if (date.getMilliseconds() > 0) {
-          if (punctuation) {
-            string += '.';
-          }
-          string += date.getMilliseconds().toString();
-        }
-      }
-      return string;
-    }
-    var _stringBundle = document.getElementById('easyscreenshot-strings');
-
-    var file = Components.classes['@mozilla.org/file/directory_service;1']
-                         .getService(Components.interfaces.nsIProperties)
-                         .get('Desk', Components.interfaces.nsIFile);
-    var filename = _stringBundle.getFormattedString('screenshotFile', [iso8601FromDate(new Date()) + '.png']);
-    file.append(filename);
-    file.createUnique(Components.interfaces.nsIFile.NORMAL_FILE_TYPE, 0666);
-
-    var io = Components.classes['@mozilla.org/network/io-service;1']
-                  .getService(Components.interfaces.nsIIOService);
-    var target = io.newFileURI(file)
-
-    var mainwin = document.getElementById('main-window');
-    if (!mainwin.getAttribute('xmlns:html'))
-      mainwin.setAttribute('xmlns:html', 'http://www.w3.org/1999/xhtml');
-
-    var content = window.content;
-    if (content.document instanceof XULDocument) {
-      var insideBrowser = content.document.querySelector('browser');
-      content = insideBrowser ? insideBrowser.contentWindow : content;
-    }
-    var desth = content.innerHeight + content.scrollMaxY;
-    var destw = content.innerWidth + content.scrollMaxX;
-
-    // Unfortunately there is a limit:
-    if (desth > 16384) desth = 16384;
-
-    var canvas = document.createElementNS('http://www.w3.org/1999/xhtml', 'html:canvas');
-    var ctx = canvas.getContext('2d');
-
-    canvas.height = desth;
-    canvas.width = destw;
-    ctx.clearRect(0, 0, destw, desth);
-    ctx.save();
-    ctx.drawWindow(content, 0, 0, destw, desth, 'rgb(255,255,255)');
-    var data = canvas.toDataURL('image/png', '');
-    var source = io.newURI(data, 'UTF8', null);
-    // prepare to save the canvas data
-    var persist = Components.classes['@mozilla.org/embedding/browser/nsWebBrowserPersist;1']
-                            .createInstance(Components.interfaces.nsIWebBrowserPersist);
-
-    persist.persistFlags = Components.interfaces.nsIWebBrowserPersist.PERSIST_FLAGS_REPLACE_EXISTING_FILES;
-    persist.persistFlags |= Components.interfaces.nsIWebBrowserPersist.PERSIST_FLAGS_AUTODETECT_APPLY_CONVERSION;
-    // save the canvas data to the file
-
-    Cu.import('resource://gre/modules/PrivateBrowsingUtils.jsm')
-    var pc = PrivateBrowsingUtils.privacyContextFromWindow(content)
-    persist.saveURI(source, null, null, null, null, file, pc);
-    if (Services.appinfo.OS == 'WINNT') {
-      var winDir = Components.classes['@mozilla.org/file/directory_service;1'].
-        getService(Components.interfaces.nsIProperties).get('WinD', Components.interfaces.nsILocalFile);
-      runProc(winDir.path + '\\system32\\mspaint.exe', [file.path]);
-    } else if (Services.appinfo.OS == 'Darwin') {
-      runProc('/usr/bin/open', ['-a', 'Preview', file.path]);
-    } else {
-      var message = _stringBundle.getFormattedString('screenshotSaved', [file.path]);
-      Application.console.log('overlay-browser.js::188 ' + message)
-    }
+    window.openDialog('chrome://easyscreenshot/content/settings-dialog.xul', 'Settings', features).focus();
   },
+
+  openSnapshotFeedback: function() {
+    let src = 'http://mozilla.com.cn/addon/325-easyscreenshot/';
+    gBrowser.selectedTab = gBrowser.addTab(src);
+  }
 };
 
 window.addEventListener('load', ns.ceEasyScreenshot, false);

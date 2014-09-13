@@ -11,7 +11,7 @@
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
   <script type="application/x-javascript" src="moa.js"/>
-  <script type="application/x-javascript" src="essParent.js"/>
+  <script type="application/x-javascript" src="easyscreenshot.js"/>
   <script type="application/javascript" src="chrome://easyscreenshot/content/overlay-browser.js" />
 
   <stringbundleset id="stringbundleset">
@@ -38,8 +38,8 @@
       <toolbarbutton id="easyscreenshot-snapshot-entire" class="subviewbutton" label="&easyscreenshot_snapshot_entire;" key="key-snapshot-entire" command="cmd-snapshot-entire"/>
       <toolbarbutton id="easyscreenshot-snapshot-visible" class="subviewbutton" label="&easyscreenshot_snapshot_visible;" key="key-snapshot-visible" command="cmd-snapshot-visible"/>
       <toolbarseparator/>
-      <toolbarbutton id="easyscreenshot-snapshot-settings" class="subviewbutton" label="&easyscreenshot_snapshot_settings;" oncommand="MOA.ESS.Snapshot.openSettings();event.stopPropagation();"/>
-      <toolbarbutton id="easyscreenshot-snapshot-feedback" class="subviewbutton" label="&easyscreenshot_snapshot_feedback;" oncommand="MOA.ESS.Snapshot.openSnapshotFeedback();event.stopPropagation();"/>
+      <toolbarbutton id="easyscreenshot-snapshot-settings" class="subviewbutton" label="&easyscreenshot_snapshot_settings;" oncommand="MOA.ESS.ceEasyScreenshot.openSettings();event.stopPropagation();"/>
+      <toolbarbutton id="easyscreenshot-snapshot-feedback" class="subviewbutton" label="&easyscreenshot_snapshot_feedback;" oncommand="MOA.ESS.ceEasyScreenshot.openSnapshotFeedback();event.stopPropagation();"/>
     </panelview>
   </panelmultiview>
 </overlay>

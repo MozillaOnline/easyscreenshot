@@ -34,17 +34,17 @@
 const {classes: Cc, interfaces: Ci, results: Cr, utils: Cu} = Components;
 
 (function() {
-  var jsm = { };
+  var jsm = {};
   if (typeof XPCOMUtils == 'undefined') {
     Cu.import('resource://gre/modules/XPCOMUtils.jsm');
   }
   XPCOMUtils.defineLazyGetter(jsm, 'utils', function() {
     let obj = {};
-    Cu['import']('resource://easyscreenshot/utils.jsm', obj);
+    Cu.import('resource://easyscreenshot/utils.jsm', obj);
     return obj.utils;
   });
   XPCOMUtils.defineLazyGetter(jsm, 'SnapshotStorage', function() {
-    let obj = { };
+    let obj = {};
     Cu['import']('resource://easyscreenshot/snapshot.js', obj);
     return obj.SnapshotStorage;
   });
@@ -799,9 +799,6 @@ const {classes: Cc, interfaces: Ci, results: Cr, utils: Cu} = Components;
     };
     var action_close = function(event) {
       widget.window.ssInstalled = false;
-      if (notice) {
-        event_release(notice, 'command', action_close);
-      }
       event_release(widget.window, 'unload', action_close);
       event_release(widget.window, 'keydown', action_keydown);
       event_release(widget.selection, 'dblclick', action_save);
@@ -811,9 +808,7 @@ const {classes: Cc, interfaces: Ci, results: Cr, utils: Cu} = Components;
       widget.root.removeChild(widget.overlay);
       widget.root.removeChild(widget.selection);
 
-      if (notificationBox) {
-        notificationBox.removeAllNotifications(true);
-      }
+      sendAsyncMessage('easyscreenshot@mozillaonline.com:removeNotification');
     };
     event_connect(widget.document, 'ssSelector:cancel', action_close);
 
@@ -824,7 +819,7 @@ const {classes: Cc, interfaces: Ci, results: Cr, utils: Cu} = Components;
         action_close();
         return;
       }
-      MOA.ESS.Snapshot.getSnapshot('data',data);
+      getSnapshot('data', data);
       // All done.
       action_close();
     };
@@ -835,69 +830,99 @@ const {classes: Cc, interfaces: Ci, results: Cr, utils: Cu} = Components;
 
       event_release(widget.window, 'keydown', action_keydown);
     };
-    var action_know = function() {
-      if (notificationBox) {
-        notificationBox.removeCurrentNotification();
-      }
-      prefs.setBoolPref('showNotification', false);
-    };
-    var append_notice = function() {
-      if (!notificationBox) {
-        return null;
-      }
-      return notificationBox.appendNotification(
-        getString('notice'),
-        'ssSelector-controls',
-        null,
-        notificationBox.PRIORITY_INFO_HIGH, [{
-          label:    getString('acknowledge'),
-          accessKey:  'K',
-          callback:  function() {
-            try {
-              action_know();
-            }
-            catch (error) {
-              Services.console.logStringMessage('Error occurs when showing help information: ' + error);
-            }
-            return true;
-          }
-        }]
-      );
-    };
 
     // Reposition ssSelector-selection to current viewport
     widget.selection.style.top = widget.root.scrollTop + 'px';
     widget.selection.style.left = widget.root.scrollLeft + 'px';
 
-    var showNotification = true;
-    var prefs = Components.classes['@mozilla.org/preferences-service;1']
-                          .getService(Components.interfaces.nsIPrefService)
-                          .getBranch('extensions.easyscreenshot.');
-    try {
-      showNotification = prefs.getBoolPref('showNotification');
-    } catch (ex) {
-      prefs.setBoolPref('showNotification', true);
-    }
-    var notificationBox = null;
-    var notice = null;
-    if (showNotification) {
-      /*notificationBox = window.getNotificationBox(widget.window);
-      notificationBox = getNotificationBox();
-      notice = append_notice();
-      event_connect(notice, 'command', action_close);*/
-      sendAsyncMessage('easyscreenshot@mozillaonline.com:showNotification');
-    }
+    sendAsyncMessage('easyscreenshot@mozillaonline.com:appendNotification');
 
     event_connect(widget.window, 'unload', action_close);
     event_connect(widget.window, 'keydown', action_keydown);
     event_connect(widget.selection, 'dblclick', action_save);
   };
 
-  let cancel = function() {
-    var doc = content.document;//window.top.getBrowser().selectedBrowser.contentWindow.document;
-    var evt = doc.defaultView.CustomEvent('ssSelector:cancel');
-    doc.dispatchEvent(evt);
+  let getSnapshot = function(part,data) {
+    if (part == 'data') {
+      sendSnapshot(data.canvas, data.ctx);
+      return;
+    }
+
+    var contentWindow = window.content;
+    var contentDocument = contentWindow.document;
+    var width, height, x, y;
+    switch (part) {
+      case 'visible':
+        // Cancel selection mode first.
+        ns.cancel();
+        x = contentDocument.documentElement.scrollLeft;
+        y = contentDocument.documentElement.scrollTop;
+        width = contentDocument.documentElement.clientWidth;
+        height = contentDocument.documentElement.clientHeight;
+        break;
+      case 'entire':
+        // Cancel selection mode first.
+        ns.cancel();
+        x = y = 0;
+        width = Math.max(contentDocument.documentElement.scrollWidth, contentDocument.body.scrollWidth);
+        height = Math.max(contentDocument.documentElement.scrollHeight, contentDocument.body.scrollHeight);
+        break;
+      default:
+        _logger.trace('unknown part argument')
+    }
+
+    try {
+      var canvas = contentDocument.createElementNS('http://www.w3.org/1999/xhtml', 'html:canvas');
+      canvas.height = height;
+      canvas.width = width;
+
+      // maybe https://bugzil.la/729026#c10 ?
+      var ctx = canvas.getContext('2d');
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.save();
+      ctx.drawWindow(contentWindow, x, y, width, height, 'rgb(255,255,255)');
+
+      if (width != canvas.width || height != canvas.height) {
+        throw new Error("Size error");
+      }
+
+      sendSnapshot(canvas, ctx);
+    } catch(ex) {
+      Cu.reportError('Unable to capture screenshot with\n' +
+                     'url: ' + contentWindow.location + '\n' +
+                     'x: ' + x + '\n' +
+                     'y: ' + y + '\n' +
+                     'width: ' + width + '\n' +
+                     'height: ' + height + '\n' +
+                     'error: ' + ex);
+      Cc['@mozilla.org/alerts-service;1']
+        .getService(Ci.nsIAlertsService)
+        .showAlertNotification('chrome://easyscreenshot/skin/image/logo32.png',
+          document.getElementById("easyscreenshot-strings")
+                  .getString('failToCaptureNotification'),
+          null);
+    }
   };
 
-  ssSelector();
+  let sendSnapshot = function(canvas, ctx) {
+    // send data to chrome
+    // chrome open a new page and send data
+    sendAsyncMessage('easyscreenshot@mozillaonline.com:openEditor', ctx.getImageData(0, 0, canvas.width, canvas.height));
+    // jsm.SnapshotStorage.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+    // openUILinkIn('chrome://easyscreenshot/content/editor.xhtml', 'tab');
+  };
+
+  addMessageListener('easyscreenshot@mozillaonline.com:startSelection', function() {
+    ssSelector();
+  });
+
+  addMessageListener('easyscreenshot@mozillaonline.com:captureEntirePage', function() {
+    // ns.getSnapshot('entire');
+  });
+
+  addMessageListener('easyscreenshot@mozillaonline.com:captureVisiblePart', function() {
+    // ns.getSnapshot('visible');
+  });
+
 })();
