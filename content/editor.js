@@ -2,6 +2,7 @@
 window.ssInstalled = true;
 
 (function() {
+
   const {classes: Cc, interfaces: Ci, utils: Cu, results: Cr} = Components;
 
   Cu.import('resource://gre/modules/XPCOMUtils.jsm');
@@ -18,6 +19,9 @@ window.ssInstalled = true;
     }
     return tmp.Downloads;
   });
+  var jsm = {};
+  XPCOMUtils.defineLazyModuleGetter(jsm, 'utils', 'resource://easyscreenshot/utils.jsm');
+  const prefs = jsm.utils.prefs;
 
   var Utils = {
     parse: function(element) {
@@ -182,87 +186,6 @@ window.ssInstalled = true;
         } else {
           return this._bundle.GetStringFromName(name);
         }
-      }
-    },
-    /* Simple preference tool object */
-    prefs: {
-      _branch: Services.prefs.getBranch('extensions.easyscreenshot.'),
-      _type: function(value) {
-        // Use typeof paramter to determine the pref type
-        return {
-          boolean: 'Bool',
-          number: 'Int',
-          string: 'Char',
-          object: 'Complex'
-        }[typeof value];
-      },
-      _getter: function(value) {
-        return {
-          boolean: 'getBoolPref',
-          number: 'getIntPref',
-          string: 'getCharPref',
-          object: 'getComplexPref'
-        }[typeof value];
-      },
-      _setter: function(value) {
-        return {
-          boolean: 'setBoolPref',
-          number: 'setIntPref',
-          string: 'setCharPref',
-          object: 'setComplexPref'
-        }[typeof value];
-      },
-      get: function(name, defaultValue) {
-        var type = this._type(defaultValue);
-        var getter = this._getter(defaultValue);
-        var value;
-
-        switch (type) {
-          case 'Complex': {
-            try {
-              value = this._branch.getComplexValue(name, defaultValue.type);
-            } catch (ex) {
-              this.set(name, defaultValue);
-              value = defaultValue.value;
-            }
-            break;
-          }
-          case 'Bool':
-          case 'Int':
-          case 'Char':
-          default: {
-            try {
-              value = this._branch[getter](name);
-            } catch (ex) {
-              this.set(name, defaultValue);
-              value = defaultValue;
-            }
-            break;
-          }
-        }
-
-        return value;
-      },
-      set: function(name, newValue) {
-        var type = this._type(newValue);
-        var setter = this._setter(newValue);
-
-        switch (type) {
-          case 'Complex': {
-            this._branch.setComplexValue(name, newValue.type, newValue.value);
-            break;
-          }
-          case 'Bool':
-          case 'Int':
-          case 'Char':
-          default: {
-            this._branch[setter](name, newValue);
-            break;
-          }
-        }
-      },
-      observe: function(name, callback) {
-        this._branch.addObserver(name, {observe: callback}, false);
       }
     },
     notify: function(title, text) {
@@ -535,19 +458,19 @@ window.ssInstalled = true;
     _stroke: function(ctx, x, y, w, h) {
     },
     get lineWidth() {
-      return Utils.prefs.get('lineWidth', 6);
+      return prefs.get('lineWidth', 6);
     },
     set lineWidth(value) {
       if (!isNaN(value)) {
-        Utils.prefs.set('lineWidth', Number(value));
+        prefs.set('lineWidth', Number(value));
       }
     },
     get fontSize() {
-      return Utils.prefs.get('fontSize', 18);
+      return prefs.get('fontSize', 18);
     },
     set fontSize(value) {
       if (!isNaN(value)) {
-        Utils.prefs.set('fontSize', Number(value));
+        prefs.set('fontSize', Number(value));
       }
     },
     init: function() {
@@ -953,10 +876,10 @@ window.ssInstalled = true;
     _listeners: {},
     usePrefix: false,
     get selected() {
-      return Utils.prefs.get('color', '#FF0000');
+      return prefs.get('color', '#FF0000');
     },
     set selected(value) {
-      Utils.prefs.set('color', value);
+      prefs.set('color', value);
     },
     select: function(evt) {
       this.selected = evt.target.color;
@@ -1009,7 +932,7 @@ window.ssInstalled = true;
     _init: function() {
       // refresh() is to update display of item according to prefs
       this.refresh();
-      Utils.prefs.observe(this.id, this.refresh.bind(this));
+      prefs.observe(this.id, this.refresh.bind(this));
       this._ele.addEventListener('click', this.click.bind(this));
       this._initPopup();
     },
@@ -1225,7 +1148,8 @@ window.ssInstalled = true;
         ['fontselect', 'floatbar', 'textinput'].forEach(function(id) {
           Utils.qs('#' + id).style.display = 'none';
         });
-        window.location.href = 'http://mozilla.com.cn/addon/325-easyscreenshot/';
+        var src = prefs.getLocale('homepage', 'http://mozilla.com.cn/addon/325-easyscreenshot/');
+        window.location.href = src;
         return;
       }
       this.updateHistory();
@@ -1367,17 +1291,16 @@ window.ssInstalled = true;
     },
     _saveLocal: function() {
       var self = this;
-      var file = Utils.prefs.get('savePosition', {
-        type: Ci.nsILocalFile,
-        value: Cc['@mozilla.org/file/directory_service;1']
-            .getService(Ci.nsIProperties)
-            .get('Desk', Ci.nsILocalFile)
-      });
+      var file = prefs.getFile('savePosition',
+        Cc['@mozilla.org/file/directory_service;1']
+          .getService(Ci.nsIProperties)
+          .get('Desk', Ci.nsILocalFile)
+      );
       var defaultFilename = Utils.strings.get('SnapFilePrefix') + '_' + (new Date()).toISOString().replace(/:/g, '-') + '.png';
       file.append(defaultFilename);
 
       Utils.download(this.canvas.toDataURL('image/png', ''), file.path, function() {
-        var openDirectory = Utils.prefs.get('openDirectory', true);
+        var openDirectory = prefs.get('openDirectory', true);
         if (openDirectory) {
           try {
             file.reveal();

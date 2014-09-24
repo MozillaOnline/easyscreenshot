@@ -15,6 +15,8 @@
     return obj.SnapshotStorage;
   });
 
+  const prefs = jsm.utils.prefs;
+
   var ns = MOA.ns('ESS.Snapshot');
   var _logger = jsm.utils.logger('ESS.snapshot');
   var _strings = null;
@@ -137,7 +139,7 @@
   }
 
   ns.openSnapshotFeedback = function() {
-    var src = 'http://mozilla.com.cn/addon/325-easyscreenshot/';
+    let src = prefs.getLocale('homepage', 'http://mozilla.com.cn/addon/325-easyscreenshot/');
     gBrowser.selectedTab = gBrowser.addTab(src);
   }
 

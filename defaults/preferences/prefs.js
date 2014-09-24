@@ -10,3 +10,5 @@ pref('extensions.easyscreenshot.hotkeys.entire.key', 'L');
 
 pref('extensions.easyscreenshot.hotkeys.visible.modifiers', 'control shift');
 pref('extensions.easyscreenshot.hotkeys.visible.key', 'V');
+
+pref('extensions.easyscreenshot.homepage', 'chrome://easyscreenshot/locale/easyscreenshot.properties');

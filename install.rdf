@@ -35,5 +35,15 @@
         <em:homepageURL>http://www.firefox.com.cn/</em:homepageURL>
       </Description>
     </em:localized>
+
+    <em:localized>
+      <Description>
+        <em:locale>zh-TW</em:locale>
+        <em:name>網頁截圖</em:name>
+        <em:description>使用者可以輕鬆透過網頁截圖的功能，將完整的網頁轉成一個圖檔存放在桌面上，既方便又容易，相信會是您將網頁記錄成圖檔的好工具。</em:description>
+        <em:creator>Mozilla Online</em:creator>
+      </Description>
+    </em:localized>
+
   </Description>
 </RDF>
