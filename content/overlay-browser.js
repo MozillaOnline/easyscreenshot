@@ -58,10 +58,11 @@ ns.ceEasyScreenshot = {
   },
 
   onCommand: function ce_easyscreenshot__onCommand(aEvent) {
+    let {win} = this.infoFromEvent(aEvent);
     if(this.shouldEnable(aEvent)){
-      MOA.ESS.Snapshot.ssSelector();
+      win.MOA.ESS.Snapshot.ssSelector();
     } else {
-      MOA.ESS.Snapshot.getSnapshot('visible');
+      win.MOA.ESS.Snapshot.getSnapshot('visible');
     }
   },
 

@@ -893,7 +893,7 @@
 
   ns.cancel = function() {
     var doc = window.top.getBrowser().selectedBrowser.contentWindow.document;
-    var evt = doc.defaultView.CustomEvent('ssSelector:cancel');
+    var evt = new doc.defaultView.CustomEvent('ssSelector:cancel');
     doc.dispatchEvent(evt);
   };
 })();
