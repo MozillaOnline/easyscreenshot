@@ -8,17 +8,10 @@ window.ssInstalled = true;
   Cu.import('resource://gre/modules/XPCOMUtils.jsm');
   XPCOMUtils.defineLazyModuleGetter(this, 'Services',
     'resource://gre/modules/Services.jsm');
+  XPCOMUtils.defineLazyModuleGetter(this, 'Downloads',
+    'resource://gre/modules/Downloads.jsm');
   XPCOMUtils.defineLazyModuleGetter(this, 'SnapshotStorage',
     'resource://easyscreenshot/snapshot.js');
-  XPCOMUtils.defineLazyGetter(this, 'Downloads', function() {
-    var tmp = {};
-    try {
-      Cu.import('resource://gre/modules/Downloads.jsm', tmp);
-    } catch (ex) {
-      return null;
-    }
-    return tmp.Downloads;
-  });
   var jsm = {};
   XPCOMUtils.defineLazyModuleGetter(jsm, 'utils', 'resource://easyscreenshot/utils.jsm');
   const prefs = jsm.utils.prefs;
@@ -65,116 +58,25 @@ window.ssInstalled = true;
     },
     /* Simple downloading tool function */
     download: function(url, path, onsuccess, onerror, oncancel) {
-      if (Downloads && Downloads.getList) {
-        Downloads.getList(Downloads.ALL).then(function(aDownloadList) {
-          Downloads.createDownload({
-            source: url,
-            target: path,
-            launchWhenSucceeded: false
-          }).then(function(aDownload) {
-            aDownloadList.add(aDownload);
-            aDownload.start().then(function() {
-              if (aDownload.succeeded && onsuccess) {
-                onsuccess();
-              }
-            }, function() {
-              if (aDownload.error && onerror) {
-                onerror();
-              } else if (aDownload.canceled && oncancel) {
-                oncancel();
-              }
-            }).then(null, onerror);
+      Downloads.getList(Downloads.ALL).then(function(aDownloadList) {
+        Downloads.createDownload({
+          source: url,
+          target: path
+        }).then(function(aDownload) {
+          aDownloadList.add(aDownload);
+          aDownload.start().then(function() {
+            if (aDownload.succeeded && onsuccess) {
+              onsuccess();
+            }
+          }, function() {
+            if (aDownload.error && onerror) {
+              onerror();
+            } else if (aDownload.canceled && oncancel) {
+              oncancel();
+            }
           }).then(null, onerror);
         }).then(null, onerror);
-      } else {
-        var ios = Cc['@mozilla.org/network/io-service;1'].getService(Ci.nsIIOService);
-        var source = ios.newURI(url, 'utf8', null);
-        var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
-        file.initWithPath(path);
-        var target = ios.newFileURI(file).QueryInterface(Ci.nsIFileURL);
-
-        var persist = Cc['@mozilla.org/embedding/browser/nsWebBrowserPersist;1'].
-                createInstance(Ci.nsIWebBrowserPersist);
-        persist.persistFlags = Ci.nsIWebBrowserPersist.PERSIST_FLAGS_REPLACE_EXISTING_FILES
-                   | Ci.nsIWebBrowserPersist.PERSIST_FLAGS_AUTODETECT_APPLY_CONVERSION;
-
-        var downloadManager = Cc['@mozilla.org/download-manager;1'].getService(Ci.nsIDownloadManager);
-        var theDownload = downloadManager.addDownload(Ci.nsIDownload.DOWNLOAD_TYPE_DOWNLOAD,
-          source, target, '', null, null, null, persist, null);
-        var downloadProgressListener = {
-          complete: [
-            Ci.nsIDownloadManager.DOWNLOAD_FINISHED,
-            Ci.nsIDownloadManager.DOWNLOAD_FAILED,
-            Ci.nsIDownloadManager.DOWNLOAD_CANCELED,
-            Ci.nsIDownloadManager.DOWNLOAD_BLOCKED_PARENTAL,
-            Ci.nsIDownloadManager.DOWNLOAD_DIRTY,
-            Ci.nsIDownloadManager.DOWNLOAD_BLOCKED_POLICY
-          ],
-          success: [
-            Ci.nsIDownloadManager.DOWNLOAD_FINISHED
-          ],
-          error: [
-            Ci.nsIDownloadManager.DOWNLOAD_FAILED,
-            Ci.nsIDownloadManager.DOWNLOAD_BLOCKED_PARENTAL,
-            Ci.nsIDownloadManager.DOWNLOAD_DIRTY,
-            Ci.nsIDownloadManager.DOWNLOAD_BLOCKED_POLICY
-          ],
-          cancel: [
-            Ci.nsIDownloadManager.DOWNLOAD_CANCELED,
-            Ci.nsIDownloadManager.DOWNLOAD_PAUSED
-          ],
-          status: function(state) {
-            var status = ['success', 'error', 'cancel'];
-            for (var i = 0; i < status.length; i++) {
-              if (this[status[i]].indexOf(state) >= 0) {
-                return status[i];
-              }
-            }
-            return 'unknown';
-          },
-          onDownloadStateChange: function(aPrevState, aDownload) {
-            if (aDownload.source.spec == source.spec &&
-                aDownload.targetFile.path == target.file.path &&
-                this.complete.indexOf(aDownload.state) >= 0) {
-              downloadManager.removeListener(downloadProgressListener);
-              switch (this.status(aDownload.state)) {
-                case 'success': {
-                  if (onsuccess) {
-                    onsuccess();
-                  }
-                  break;
-                }
-                case 'error': {
-                  if (onerror) {
-                    onerror();
-                  }
-                  break;
-                }
-                case 'cancel': {
-                  if (oncancel) {
-                    oncancel();
-                  }
-                  break;
-                }
-                default: {
-                  break;
-                }
-              }
-            }
-          },
-          /**
-           * These blank functions are to prevent exceptions.
-           * See https://developer.mozilla.org/en-US/docs/XPCOM_Interface_Reference/nsIDownloadProgressListener#Example
-           */
-          onSecurityChange: function(prog, req, state, dl) {},
-          onProgressChange: function(prog, req, prog, progMax, tProg, tProgMax, dl) {},
-          onStateChange: function(prog, req, flags, status, dl) {}
-        };
-        downloadManager.addListener(downloadProgressListener);
-        persist.progressListener = theDownload;
-
-        persist.saveURI(source, null, null, null, null, target, null);
-      }
+      }).then(null, onerror);
     },
     /* Simple string bundle tool object */
     strings: {
@@ -1300,14 +1202,14 @@ window.ssInstalled = true;
       file.append(defaultFilename);
 
       Utils.download(this.canvas.toDataURL('image/png', ''), file.path, function() {
-        var openDirectory = prefs.get('openDirectory', true);
-        if (openDirectory) {
+        if (prefs.get('openDirectory', true)) {
           try {
             file.reveal();
-          } catch (ex) {
+          } catch (e) {
             file.parent.launch();
           }
         }
+
         self.playSound('export');
         Utils.notify(Utils.strings.get('saveNotification'), file.parent.path);
         Utils.interrupt('window.close();');
