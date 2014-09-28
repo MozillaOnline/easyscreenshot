@@ -58,23 +58,20 @@ window.ssInstalled = true;
     },
     /* Simple downloading tool function */
     download: function(url, path, onsuccess, onerror, oncancel) {
-      Downloads.getList(Downloads.ALL).then(function(aDownloadList) {
-        Downloads.createDownload({
-          source: url,
-          target: path
-        }).then(function(aDownload) {
-          aDownloadList.add(aDownload);
-          aDownload.start().then(function() {
-            if (aDownload.succeeded && onsuccess) {
-              onsuccess();
-            }
-          }, function() {
-            if (aDownload.error && onerror) {
-              onerror();
-            } else if (aDownload.canceled && oncancel) {
-              oncancel();
-            }
-          }).then(null, onerror);
+      Downloads.createDownload({
+        source: url,
+        target: path
+      }).then(function(aDownload) {
+        aDownload.start().then(function() {
+          if (aDownload.succeeded && onsuccess) {
+            onsuccess();
+          }
+        }, function() {
+          if (aDownload.error && onerror) {
+            onerror();
+          } else if (aDownload.canceled && oncancel) {
+            oncancel();
+          }
         }).then(null, onerror);
       }).then(null, onerror);
     },
