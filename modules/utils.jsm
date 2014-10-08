@@ -1,12 +1,18 @@
-var EXPORTED_SYMBOLS = ['utils'];
+let EXPORTED_SYMBOLS = ['utils'];
 
 const {classes: Cc, interfaces: Ci, utils: Cu, results: Cr} = Components;
 
-var utils = {};
+if (typeof XPCOMUtils == 'undefined') {
+  Cu.import('resource://gre/modules/XPCOMUtils.jsm');
+}
 
-Cu.import('resource://gre/modules/XPCOMUtils.jsm');
+XPCOMUtils.defineLazyModuleGetter(this, 'Services',
+  'resource://gre/modules/Services.jsm');
+
 XPCOMUtils.defineLazyModuleGetter(this, 'Preferences',
   'resource://gre/modules/Preferences.jsm');
+
+let utils = {};
 
 utils.prefs = Object.create(new Preferences('extensions.easyscreenshot.'));
 
@@ -36,8 +42,25 @@ utils.prefs.setLocale = function(k, v) {
   this._prefSvc.setComplexValue(k, Ci.nsIPrefLocalizedString, pls);
 };
 
+function Strings(aBundleName) {
+  this._bundle = Services.strings.createBundle('chrome://easyscreenshot/locale/' + aBundleName + '.properties');
+}
+
+Strings.prototype.get = function(name, args) {
+  if (args) {
+    args = [].slice.call(arguments, 1);
+    return this._bundle.formatStringFromName(name, args, args.length);
+  } else {
+    return this._bundle.GetStringFromName(name);
+  }
+};
+
+utils.strings = function(aBundleName) {
+  return new Strings(aBundleName);
+};
+
 Cu.import('resource://easyscreenshot/3rd/log4moz.js');
-var loggers = {};
+let loggers = {};
 
 function CommonLogger(nameSpace) {
   this.nameSpace = nameSpace;

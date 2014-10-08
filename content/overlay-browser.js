@@ -5,22 +5,26 @@
 
 (function() {
 
-  let jsm = {};
-  XPCOMUtils.defineLazyModuleGetter(jsm, 'utils', 'resource://easyscreenshot/utils.jsm');
-  const prefs = jsm.utils.prefs;
+  if (typeof XPCOMUtils == 'undefined') {
+    Cu.import('resource://gre/modules/XPCOMUtils.jsm');
+  }
 
-  var ns = MOA.ns('ESS');
+  let jsm = {};
+
+  XPCOMUtils.defineLazyModuleGetter(jsm, 'utils',
+    'resource://easyscreenshot/utils.jsm');
+  const prefs = jsm.utils.prefs;
+  const strings = jsm.utils.strings('easyscreenshot');
+
+  XPCOMUtils.defineLazyModuleGetter(jsm, 'hotkeys',
+    'resource://easyscreenshot/hotkeys.jsm');
+  const hotkeys = jsm.hotkeys;
+
+  let ns = MOA.ns('ESS');
+
   ns.ceEasyScreenshot = {
     buttonID: 'ce_easyscreenshot',
     viewID: 'PanelUI-easyscreenshot-view',
-
-    strings: {
-      _bundle: null,
-      get: function(name) {
-        this._bundle = this._bundle || document.getElementById('easyscreenshot-strings');
-        return this._bundle.getString(name);
-      }
-    },
 
     handleEvent: function ce_easyscreenshot__handleEvent(aEvt) {
       switch (aEvt.type) {
@@ -123,8 +127,8 @@
         id: this.buttonID,
         type: 'button',
         defaultArea: CustomizableUI.AREA_NAVBAR,
-        label: this.strings.get('title'),
-        tooltiptext: this.strings.get('tooltip'),
+        label: strings.get('title'),
+        tooltiptext: strings.get('tooltip'),
         onCreated: (aNode) => {
           aNode.setAttribute('type', 'menu-button');
           let doc = aNode.ownerDocument || document;
@@ -186,31 +190,22 @@
     },
 
     setupHotkeys: function() {
-      try {
-        let hotkeys = [{
-          keyID: 'key-snapshot-select',
-          modifiersPref: 'extensions.easyscreenshot.hotkeys.select.modifiers',
-          keyPref: 'extensions.easyscreenshot.hotkeys.select.key'
-        }, {
-          keyID: 'key-snapshot-entire',
-          modifiersPref: 'extensions.easyscreenshot.hotkeys.entire.modifiers',
-          keyPref: 'extensions.easyscreenshot.hotkeys.entire.key'
-        }, {
-          keyID: 'key-snapshot-visible',
-          modifiersPref: 'extensions.easyscreenshot.hotkeys.visible.modifiers',
-          keyPref: 'extensions.easyscreenshot.hotkeys.visible.key'
-        }];
-        hotkeys.forEach((hotkey) => {
-          if (Services.prefs.getBoolPref('extensions.easyscreenshot.hotkeys.enabled')) {
-            let keyItem = document.getElementById(hotkey.keyID);
-            if (keyItem) {
-              keyItem.removeAttribute('disabled') ;
-              keyItem.setAttribute('modifiers', Services.prefs.getCharPref(hotkey.modifiersPref));
-              keyItem.setAttribute('key', Services.prefs.getCharPref(hotkey.keyPref));
+      let ops = {
+        select: 'startSelection',
+        entire: 'captureEntirePage',
+        visible: 'captureVisiblePart'
+      };
+      for (let name in ops) {
+        if (!hotkeys.get(name)) {
+          hotkeys.set(name, ((aName) => () => {
+            if (this.shouldEnable()) {
+              let win = Services.wm.getMostRecentWindow('navigator:browser');
+              win.MOA.ESS.Snapshot[ops[aName]]();
             }
-          }
-        });
-      } catch (e) {}
+          })(name));
+          hotkeys.watch(name);
+        }
+      }
     },
 
     openSettings: function() {

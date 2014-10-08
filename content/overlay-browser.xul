@@ -14,29 +14,18 @@
   <script type="application/javascript" src="chrome://easyscreenshot/content/easyscreenshot.js"/>
   <script type="application/javascript" src="chrome://easyscreenshot/content/overlay-browser.js" />
 
-  <stringbundleset id="stringbundleset">
-    <stringbundle id="easyscreenshot-strings" src="chrome://easyscreenshot/locale/easyscreenshot.properties"/>
-    <stringbundle id="ssSelector-strings" src="chrome://easyscreenshot/locale/ssSelector.properties"/>
-  </stringbundleset>
-
   <commandset>
     <command id="cmd-snapshot-select" oncommand="if (MOA.ESS.ceEasyScreenshot.shouldEnable(event)) MOA.ESS.Snapshot.startSelection();event.stopPropagation();"/>
     <command id="cmd-snapshot-entire" oncommand="if (MOA.ESS.ceEasyScreenshot.shouldEnable(event)) MOA.ESS.Snapshot.captureEntirePage();event.stopPropagation();"/>
-    <command id="cmd-snapshot-visible" oncommand="if (MOA.ESS.ceEasyScreenshot.shouldEnable(event)) MOA.ESS.Snapshot.captureVisiblePart('visible');event.stopPropagation();"/>
+    <command id="cmd-snapshot-visible" oncommand="if (MOA.ESS.ceEasyScreenshot.shouldEnable(event)) MOA.ESS.Snapshot.captureVisiblePart();event.stopPropagation();"/>
   </commandset>
-
-  <keyset>
-    <key id="key-snapshot-select" modifiers="control shift" key="C" command="cmd-snapshot-select" disabled="true"/>
-    <key id="key-snapshot-entire" modifiers="control shift" key="L" command="cmd-snapshot-entire" disabled="true"/>
-    <key id="key-snapshot-visible" modifiers="control shift" key="V" command="cmd-snapshot-visible" disabled="true"/>
-  </keyset>
 
   <panelmultiview id="PanelUI-multiView" mainViewId="PanelUI-mainView">
     <panelview id="PanelUI-easyscreenshot-view" flex="1" class="PanelUI-subView">
       <label value="&easyscreenshot.button.label;" class="panel-subview-header"/>
-      <toolbarbutton id="easyscreenshot-snapshot-select" class="subviewbutton" label="&easyscreenshot_snapshot_select;" key="key-snapshot-select" command="cmd-snapshot-select"/>
-      <toolbarbutton id="easyscreenshot-snapshot-entire" class="subviewbutton" label="&easyscreenshot_snapshot_entire;" key="key-snapshot-entire" command="cmd-snapshot-entire"/>
-      <toolbarbutton id="easyscreenshot-snapshot-visible" class="subviewbutton" label="&easyscreenshot_snapshot_visible;" key="key-snapshot-visible" command="cmd-snapshot-visible"/>
+      <toolbarbutton id="easyscreenshot-snapshot-select" class="subviewbutton" label="&easyscreenshot_snapshot_select;" command="cmd-snapshot-select"/>
+      <toolbarbutton id="easyscreenshot-snapshot-entire" class="subviewbutton" label="&easyscreenshot_snapshot_entire;" command="cmd-snapshot-entire"/>
+      <toolbarbutton id="easyscreenshot-snapshot-visible" class="subviewbutton" label="&easyscreenshot_snapshot_visible;" command="cmd-snapshot-visible"/>
       <toolbarseparator/>
       <toolbarbutton id="easyscreenshot-snapshot-settings" class="subviewbutton" label="&easyscreenshot_snapshot_settings;" oncommand="MOA.ESS.ceEasyScreenshot.openSettings();event.stopPropagation();"/>
       <toolbarbutton id="easyscreenshot-snapshot-feedback" class="subviewbutton" label="&easyscreenshot_snapshot_feedback;" oncommand="MOA.ESS.ceEasyScreenshot.openSnapshotFeedback();event.stopPropagation();"/>

@@ -5,14 +5,20 @@ window.ssInstalled = true;
 
   const {classes: Cc, interfaces: Ci, utils: Cu, results: Cr} = Components;
 
-  Cu.import('resource://gre/modules/XPCOMUtils.jsm');
+  if (typeof XPCOMUtils == 'undefined') {
+    Cu.import('resource://gre/modules/XPCOMUtils.jsm');
+  }
   XPCOMUtils.defineLazyModuleGetter(this, 'Services',
     'resource://gre/modules/Services.jsm');
   XPCOMUtils.defineLazyModuleGetter(this, 'Downloads',
     'resource://gre/modules/Downloads.jsm');
+
   var jsm = {};
-  XPCOMUtils.defineLazyModuleGetter(jsm, 'utils', 'resource://easyscreenshot/utils.jsm');
+
+  XPCOMUtils.defineLazyModuleGetter(jsm, 'utils',
+    'resource://easyscreenshot/utils.jsm');
   const prefs = jsm.utils.prefs;
+  const strings = jsm.utils.strings('easyscreenshot');
 
   var Utils = {
     parse: function(element) {
@@ -72,18 +78,6 @@ window.ssInstalled = true;
           }
         }).then(null, onerror);
       }).then(null, onerror);
-    },
-    /* Simple string bundle tool object */
-    strings: {
-      _bundle: Services.strings.createBundle('chrome://easyscreenshot/locale/easyscreenshot.properties'),
-      get: function(name, args) {
-        if (args) {
-          args = Array.prototype.slice.call(arguments, 1);
-          return this._bundle.formatStringFromName(name, args, args.length);
-        } else {
-          return this._bundle.GetStringFromName(name);
-        }
-      }
     },
     notify: function(title, text) {
       Cc['@mozilla.org/alerts-service;1']
@@ -1194,7 +1188,7 @@ window.ssInstalled = true;
           .getService(Ci.nsIProperties)
           .get('Desk', Ci.nsILocalFile)
       );
-      var defaultFilename = Utils.strings.get('SnapFilePrefix') + '_' + (new Date()).toISOString().replace(/:/g, '-') + '.png';
+      var defaultFilename = strings.get('SnapFilePrefix') + '_' + (new Date()).toISOString().replace(/:/g, '-') + '.png';
       file.append(defaultFilename);
 
       Utils.download(this.canvas.toDataURL('image/png', ''), file.path, function() {
@@ -1207,10 +1201,10 @@ window.ssInstalled = true;
         }
 
         self.playSound('export');
-        Utils.notify(Utils.strings.get('saveNotification'), file.parent.path);
+        Utils.notify(strings.get('saveNotification'), file.parent.path);
         Utils.interrupt('window.close();');
       }, function() {
-        Utils.notify(Utils.strings.get('failToSaveNotification'));
+        Utils.notify(strings.get('failToSaveNotification'));
         Utils.interrupt('window.close();');
       });
     },
@@ -1234,7 +1228,7 @@ window.ssInstalled = true;
       Services.clipboard.setData(trans, null, Ci.nsIClipboard.kGlobalClipboard);
 
       this.playSound('export');
-      Utils.notify(Utils.strings.get('copyNotification'));
+      Utils.notify(strings.get('copyNotification'));
       Utils.interrupt('window.close();');
     },
     _cancelAndClose: function() {

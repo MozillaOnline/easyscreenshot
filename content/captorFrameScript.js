@@ -33,28 +33,22 @@
 
 const {classes: Cc, interfaces: Ci, results: Cr, utils: Cu} = Components;
 
-var jsm = {};
 if (typeof XPCOMUtils == 'undefined') {
   Cu.import('resource://gre/modules/XPCOMUtils.jsm');
 }
-XPCOMUtils.defineLazyGetter(jsm, 'utils', function() {
-  let obj = {};
-  Cu.import('resource://easyscreenshot/utils.jsm', obj);
-  return obj.utils;
-});
 
-var _logger = jsm.utils.logger('ESS.snapshot');
-var _strings = null;
+let jsm = {};
+
+XPCOMUtils.defineLazyModuleGetter(jsm, 'utils',
+  'resource://easyscreenshot/utils.jsm');
+const _logger = jsm.utils.logger('ESS.snapshot');
+const strings = jsm.utils.strings('easyscreenshot');
 
 function ssSelector() {
   if (content.ssInstalled) {
     return;
   }
 
-  function getString(key){
-    var _stringBundle = document.getElementById('ssSelector-strings');
-    return _stringBundle.getString(key)
-  }
   var setting = {
     min_height:      4,
     min_width:      4,
@@ -758,8 +752,6 @@ function ssSelector() {
   event_connect(widget.selection_left, 'mousedown', action_left);
   event_connect(widget.selection_right, 'mousedown', action_right);
 
-  /*-------------------------------------------------------------------------------------------*/
-
   var capture = function() {
     var canvas = content.document.createElementNS('http://www.w3.org/1999/xhtml', 'html:canvas');
     var context = canvas.getContext('2d');
@@ -889,8 +881,7 @@ function getSnapshot(part, data) {
     Cc['@mozilla.org/alerts-service;1']
       .getService(Ci.nsIAlertsService)
       .showAlertNotification('chrome://easyscreenshot/skin/image/logo32.png',
-        document.getElementById("easyscreenshot-strings")
-                .getString('failToCaptureNotification'),
+        strings.get('failToCaptureNotification'),
         null);
   }
 }

@@ -1,14 +1,18 @@
 /* vim: set ts=2 et sw=2 tw=80: */
 (function() {
 
-  let jsm = {};
-  if (XPCOMUtils === undefined) {
+  if (typeof XPCOMUtils == 'undefined') {
     Cu.import('resource://gre/modules/XPCOMUtils.jsm');
   }
-  XPCOMUtils.defineLazyModuleGetter(jsm, 'utils', 'resource://easyscreenshot/utils.jsm');
+
+  let jsm = {};
+
+  XPCOMUtils.defineLazyModuleGetter(jsm, 'utils',
+    'resource://easyscreenshot/utils.jsm');
+  const _logger = jsm.utils.logger('ESS.snapshot');
+  const strings = jsm.utils.strings('ssSelector');
 
   let ns = MOA.ns('ESS.Snapshot');
-  let _logger = jsm.utils.logger('ESS.snapshot');
 
   ns.startSelection = function() {
     let browser = gBrowser.selectedBrowser;
@@ -33,10 +37,6 @@
       aBrowser.messageManager.loadFrameScript('chrome://easyscreenshot/content/captorFrameScript.js', false);
       aBrowser.__captor_framescript_loaded = true;
     }
-  }
-
-  function getString(aName) {
-    return document.getElementById('ssSelector-strings').getString(aName);
   }
 
   function openEditor(aCanvasData) {
@@ -64,11 +64,11 @@
     }
 
     let notice = notificationBox.appendNotification(
-      getString('notice'),
+      strings.get('notice'),
       'ssSelector-controls',
       null,
       notificationBox.PRIORITY_INFO_HIGH, [{
-        label: getString('acknowledge'),
+        label: strings.get('acknowledge'),
         accessKey: 'K',
         callback: function() {
           notificationBox.removeNotification(notice);
