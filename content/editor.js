@@ -1030,20 +1030,12 @@ window.ssInstalled = true;
         newBtn[!newBtn.simple && newID == oldID ? 'finish' : 'start']();
       }
     },
-    init: function() {
+    init: function(aCanvasData) {
       var self = this;
 
       this.canvas = Utils.qs('#display');
-      if (this._canvasData) {
-        this.canvasData = this._canvasData;
-      } else {
-        ['fontselect', 'floatbar', 'textinput'].forEach(function(id) {
-          Utils.qs('#' + id).style.display = 'none';
-        });
-        var src = prefs.getLocale('homepage', 'http://mozilla.com.cn/addon/325-easyscreenshot/');
-        window.location.href = src;
-        return;
-      }
+      this.canvasData = aCanvasData;
+
       this.updateHistory();
       this._disableUndo();
       this._setupToolbar();
@@ -1245,14 +1237,8 @@ window.ssInstalled = true;
     }
   };
 
-  window.addEventListener('message', function(aEvt) {
-    if (aEvt.origin == 'chrome://easyscreenshot') {
-      Editor._canvasData = aEvt.data;
-    }
-  });
-
-  window.addEventListener('load', function() {
-    Editor.init();
+  window.addEventListener('ceEasyScreenshot:canvasData', function(aEvt) {
+    Editor.init(aEvt.detail);
     window.addEventListener('resize', function() {
       Floatbar.reposition();
       CropOverlay.reposition();

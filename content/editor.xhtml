@@ -23,13 +23,13 @@
             </li><li id="button-copy" title="&editor.copy.tooltip; (C)">
             </li><li id="button-cancel" title="&editor.cancel.tooltip; (Q)"></li>
         </ul>
-        <ul id="floatbar">
+        <ul id="floatbar" style="display: none">
             <li id="button-lineWidth" class="container" title="&editor.linewidth.tooltip;">
                 <ul><li value="3"></li><li value="6"></li><li value="9"></li></ul>
             </li><li id="button-fontSize" title="&editor.fontsize.tooltip;">
             </li><li id="button-color" title="&editor.color.tooltip;"><div id="color"></div></li>
         </ul>
-        <ul id="fontselect">
+        <ul id="fontselect" style="display: none">
             <li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>18</li><li>24</li><li>36</li><li>48</li><li>64</li><li>72</li><li>96</li>
         </ul>
         <canvas id="display"/>
@@ -45,7 +45,7 @@
                 <div id="ctrlsw"></div>
             </div>
         </div>
-        <textarea id="textinput"></textarea>
+        <textarea id="textinput" style="display: none"></textarea>
         <audio id="sound-capture" src="chrome://easyscreenshot/content/capture.ogg" preload="auto"></audio>
         <audio id="sound-export" src="chrome://easyscreenshot/content/export.ogg" preload="auto"></audio>
     </body>
