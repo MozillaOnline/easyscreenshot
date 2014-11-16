@@ -5,6 +5,7 @@ locale   easyscreenshot  zh-TW        locale/zh-TW/
 skin     easyscreenshot  classic/1.0  skin/
 skin     easyscreenshot-os  classic/1.0  skin/
 skin     easyscreenshot-os  classic/1.0  skin/mac/  os=Darwin
+skin     easyscreenshot-os  classic/1.0  skin/mac/yosemite/ os=Darwin osversion>=10.10
 resource easyscreenshot                 modules/
 
 style   chrome://global/content/customizeToolbar.xul chrome://easyscreenshot/skin/easyscreenshot.css
