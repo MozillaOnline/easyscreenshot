@@ -12,28 +12,22 @@ utils.prefs = Object.create(new Preferences('extensions.easyscreenshot.'));
 
 utils.prefs.getFile = function(k, v) {
   try {
-    return this._prefSvc.getComplexValue(k, Ci.nsILocalFile) || v;
+    // see <https://bugzil.la/982856> for upstream changes
+    return (this._branchStr ? this._prefBranch : this._prefSvc).
+      getComplexValue(k, Ci.nsILocalFile) || v;
   } catch (e) {
     return this.get(k, v);
   }
-};
-
-utils.prefs.setFile = function(k, v) {
-  this._prefSvc.setComplexValue(k, Ci.nsILocalFile, v);
 };
 
 utils.prefs.getLocale = function(k, v) {
-  try{
-    return this._prefSvc.getComplexValue(k, Ci.nsIPrefLocalizedString).data || v;
+  try {
+    // see above
+    return (this._branchStr ? this._prefBranch : this._prefSvc).
+      getComplexValue(k, Ci.nsIPrefLocalizedString).data || v;
   } catch (e) {
     return this.get(k, v);
   }
-};
-
-utils.prefs.setLocale = function(k, v) {
-  let pls = Cc['@mozilla.org/pref-localizedstring;1'].createInstance(Ci.nsIPrefLocalizedString);
-  pls.data = v;
-  this._prefSvc.setComplexValue(k, Ci.nsIPrefLocalizedString, pls);
 };
 
 Cu.import('resource://easyscreenshot/3rd/log4moz.js');
