@@ -1,4 +1,4 @@
-﻿<?xml version="1.0"?>
+<?xml version="1.0"?>
 <!-- This Source Code Form is subject to the terms of the Mozilla Public
    - License, v. 2.0. If a copy of the MPL was not distributed with this
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
@@ -8,7 +8,7 @@
 
   <Description about="urn:mozilla:install-manifest">
     <em:id>easyscreenshot@mozillaonline.com</em:id>
-    <em:version>1.2.7</em:version>
+    <em:version>1.2.7.1</em:version>
     <em:name>Easy Screenshot</em:name>
     <em:type>2</em:type>
     <em:unpack>true</em:unpack>
@@ -22,9 +22,6 @@
         <em:maxVersion>40.*</em:maxVersion>
       </Description>
     </em:targetApplication>
-
-    <em:updateURL>http://g-fox.cn/chinaedition/addons/easyscreenshot/update.rdf?version=%ITEM_VERSION%</em:updateURL>
-    <em:updateKey>MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCoAfkL/DXqNQGGaiYgfRYISTRGmtKCm9CXT+/r6JArs6S9lBK8muB73pxLvb03sQk3kNuvF0OooE4iWNfzExZROj7zsEjQeTDwCxzRVbmhKlDEg9pLfvQwJzeSWkz80cgeTmVNLIPguH93vZZhUFFr9JAanwXk/nJJlwvcauL16wIDAQAB</em:updateKey>
 
     <em:localized>
       <Description>
