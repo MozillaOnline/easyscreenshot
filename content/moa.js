@@ -33,6 +33,8 @@ if (!window['MOA']) {
             .getBranch('mozillaonlineaddons.');
 
     this.debug = function(message) {
+      this.log(message);
+      return;
       var isDebug = false;
       try {
         isDebug = _prefs.getBoolPref('debug');
