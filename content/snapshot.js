@@ -1,5 +1,6 @@
 /* vim: set ts=2 et sw=2 tw=80: */
 (function() {
+const {classes: Cc, interfaces: Ci, utils: Cu, results: Cr} = Components;
   var jsm = {};
   if (typeof XPCOMUtils == 'undefined') {
     Cu.import('resource://gre/modules/XPCOMUtils.jsm');
@@ -20,7 +21,9 @@
   var ns = MOA.ns('ESS.Snapshot');
   var _logger = jsm.utils.logger('ESS.snapshot');
   var _strings = null;
-
+  var mainWin = Components.classes["@mozilla.org/appshell/window-mediator;1"]
+           .getService(Components.interfaces.nsIWindowMediator)
+           .getMostRecentWindow("navigator:browser");
   ns.init = function (evt) {
     _strings = document.getElementById('easyscreenshot-strings');
   };
@@ -96,7 +99,7 @@
         break;
       case 'editor':
         jsm.SnapshotStorage.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
-        openUILinkIn('chrome://easyscreenshot/content/editor.xhtml', 'tab');
+        mainWin.openUILinkIn('chrome://easyscreenshot/content/editor.xhtml', 'tab');
         break;
     }
   }

@@ -1,11 +1,28 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <!--<script type="application/x-javascript;"  src="test.js"/>-->
+</head>
 <body>
-<img id="img" src="screenshot.png">
+<img id="img" src="file:///C:/Users/dodo/AppData/Local/Temp/1180381.BMP"/>
+
 <script>
+  const {classes: Cc, interfaces: Ci, utils: Cu, results: Cr} = Components;
+  var jsm = {};
+  if (typeof XPCOMUtils == 'undefined') {
+    Cu.import('resource://gre/modules/XPCOMUtils.jsm');
+  }
+  XPCOMUtils.defineLazyGetter(jsm, 'utils', function() {
+    var obj = {};
+    Cu['import']('resource://easyscreenshot/utils.jsm', obj);
+    return obj.utils;
+  });
+
   window.addEventListener("load", function() {
     var img = document.getElementById("img");
+	img.src = jsm.utils.bitMapFilePath;
     img.mozRequestFullScreen();
+	window.top.MOA.ESS.Snapshot.ssSelector("screenshot");
   });
 </script>
 </body>

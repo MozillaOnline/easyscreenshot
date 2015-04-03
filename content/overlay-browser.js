@@ -60,7 +60,9 @@ ns.ceEasyScreenshot = {
   onCommand: function ce_easyscreenshot__onCommand(aEvent) {
     let {win} = this.infoFromEvent(aEvent);
     if(this.shouldEnable(aEvent)){
-      win.MOA.ESS.Snapshot.ssSelector();
+      OS.Constants.Sys.Name === 'WINNT' ?
+        win.MOA.ESS.Screenshot.ssSelector() :
+        win.MOA.ESS.Snapshot.ssSelector();
     } else {
       win.MOA.ESS.Snapshot.getSnapshot('visible');
     }
@@ -89,6 +91,12 @@ ns.ceEasyScreenshot = {
     this.createButton();
     this.logUsage();
     this.setupHotkeys();
+    Cc['@mozilla.org/net/osfileconstantsservice;1'].
+      getService(Ci.nsIOSFileConstantsService).
+      init();
+    if (OS.Constants.Sys.Name == 'WINNT') {
+      document.getElementById('easyscreenshot-snapshot-screen-select').classList.remove('hidden');
+    }
     document.getElementById('PanelUI-popup')
             .addEventListener('popupshown',
                               (aEvent) => this.updateUI(aEvent));
@@ -175,6 +183,10 @@ ns.ceEasyScreenshot = {
   setupHotkeys: function() {
     try {
       let hotkeys = [{
+        keyID: 'key-snapshot-screen-select',
+        modifiersPref: 'extensions.easyscreenshot.hotkeys.screen.select.modifiers',
+        keyPref: 'extensions.easyscreenshot.hotkeys.screen.select.key'
+      }, {
         keyID: 'key-snapshot-select',
         modifiersPref: 'extensions.easyscreenshot.hotkeys.select.modifiers',
         keyPref: 'extensions.easyscreenshot.hotkeys.select.key'

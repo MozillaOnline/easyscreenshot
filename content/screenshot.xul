@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<window xmlns:html="http://www.w3.org/1999/xhtml"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <stringbundleset id="stringbundleset">
+    <stringbundle id="easyscreenshot-strings" src="chrome://easyscreenshot/locale/easyscreenshot.properties"/>
+    <stringbundle id="ssSelector-strings" src="chrome://easyscreenshot/locale/ssSelector.properties"/>
+  </stringbundleset>
+  
+  <script type="application/x-javascript" src="moa.js"/>
+  <!--<script type="application/x-javascript" src="screenshot.js"/>-->
+  <script type="application/x-javascript" src="snapshot.js"/>
+  <script type="application/x-javascript;"  src="ssSelector.js"/>
+
+  <browser id="screenshot-browser-element"
+               flex="1"
+               src="chrome://easyscreenshot/content/screenshot.html"/>
+</window>

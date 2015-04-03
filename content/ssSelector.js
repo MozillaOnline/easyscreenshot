@@ -32,6 +32,7 @@
 /**From Abduction!**/
 
 (function() {
+  const {classes: Cc, interfaces: Ci, utils: Cu, results: Cr} = Components;
   var jsm = { };
   if (typeof XPCOMUtils == 'undefined') {
     Cu.import('resource://gre/modules/XPCOMUtils.jsm');
@@ -50,18 +51,24 @@
   var ns = MOA.ns('ESS.Snapshot');
   var _logger = jsm.utils.logger('ESS.snapshot');
   var _strings = null;
+  var mainWin = Components.classes["@mozilla.org/appshell/window-mediator;1"]
+           .getService(Components.interfaces.nsIWindowMediator)
+           .getMostRecentWindow("navigator:browser");
 
+  var screenshot = null;
   ns.init = function (evt) {
   };
 
-  ns.ssSelector = function() {
-    var doc = window.top.getBrowser().selectedBrowser.contentWindow.document;
+  ns.ssSelector = function(type) {
+    //var doc = window.top.getBrowser().selectedBrowser.contentWindow.document;
+    screenshot = type;
+    var doc = mainWin.getBrowser().selectedBrowser.contentWindow.document;
     if(doc.defaultView.ssInstalled)
       return;
 
     function getString(key){
       var _stringBundle = document.getElementById('ssSelector-strings');
-      return _stringBundle.getString(key)
+      return _stringBundle.getString(key);
     }
     var setting = {
       min_height:      4,
@@ -710,8 +717,15 @@
     };
 
     // Define widgets:
-    widget.document = window.top.getBrowser().selectedBrowser.contentWindow.document;
-    widget.window = widget.document.defaultView;
+    //widget.document = window.top.getBrowser().selectedBrowser.contentWindow.document;
+	// widget.document = mainWin.getBrowser().selectedBrowser.contentWindow.document;
+    
+	widget.document = screenshot ? window.document.getElementById("screenshot-browser-element").contentDocument :
+	  window.top.getBrowser().selectedBrowser.contentWindow.document; 
+
+    //widget.window = widget.document.defaultView;
+	widget.window = screenshot ? window :
+	    widget.document.defaultView;
     widget.window.ssInstalled = true;
 
     widget.root = widget.document.documentElement;
@@ -798,6 +812,7 @@
       return {canvas: canvas, ctx: context, ignore:ignore};
     };
     var action_close = function(event) {
+	  console.log("#####close");
       widget.window.ssInstalled = false;
       if (notice) {
         event_release(notice, 'command', action_close);
@@ -814,10 +829,14 @@
       if (notificationBox) {
         notificationBox.removeAllNotifications(true);
       }
+      if (screenshot) {
+        widget.window.top.close();
+      }
     };
     event_connect(widget.document, 'ssSelector:cancel', action_close);
 
     var action_save = function() {
+	  console.log("#######save");
       //todo: show editor
       var data = capture();
       if (data.ignore) {
@@ -829,6 +848,7 @@
       action_close();
     };
     var action_keydown = function(event) {
+	  console.log("keydown" + event.keyCode);
       if (event.keyCode == 27) action_close();
       else if (event.keyCode == 13) action_save();
       else return;
@@ -881,7 +901,8 @@
     var notificationBox = null;
     var notice = null;
     if (showNotification) {
-      notificationBox = window.getNotificationBox(widget.window);
+      //notificationBox = window.getNotificationBox(widget.window);
+	  notificationBox = mainWin.getNotificationBox(widget.window);
       notice = append_notice();
       event_connect(notice, 'command', action_close);
     }
@@ -892,8 +913,13 @@
   };
 
   ns.cancel = function() {
-    var doc = window.top.getBrowser().selectedBrowser.contentWindow.document;
+    //var doc = window.top.getBrowser().selectedBrowser.contentWindow.document;
+	var doc = mainWin.getBrowser().selectedBrowser.contentWindow.document;
+	
     var evt = new doc.defaultView.CustomEvent('ssSelector:cancel');
     doc.dispatchEvent(evt);
   };
+  
+  window.addEventListener("load", function() {
+  });
 })();

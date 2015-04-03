@@ -8,6 +8,13 @@ Cu.import('resource://gre/modules/XPCOMUtils.jsm');
 XPCOMUtils.defineLazyModuleGetter(this, 'Preferences',
   'resource://gre/modules/Preferences.jsm');
 
+Cu.import("resource://gre/modules/ctypes.jsm")
+var lib = ctypes.open("D:\\easyscreenshot\\modules\\capturescreen.dll");
+
+var charArray = ctypes.jschar.array(260);
+var filePath = new charArray();
+var getBitmap = lib.declare("createBitMap", ctypes.default_abi, ctypes.void_t, ctypes.jschar.ptr);
+
 utils.prefs = Object.create(new Preferences('extensions.easyscreenshot.'));
 
 utils.prefs.getFile = function(k, v) {
@@ -67,3 +74,11 @@ utils.logger = function(ns) {
   }
   return loggers[ns];
 };
+
+utils.getBitFile = function() {
+  var f = ctypes.cast(filePath.address(), ctypes.jschar.ptr);
+  getBitmap(f);
+  utils.bitMapFilePath = "file:///" + f.readString();
+};
+
+utils.bitMapFilePath = "";
