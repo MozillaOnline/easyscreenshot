@@ -50,3 +50,7 @@ toolbarpaletteitem[place="palette"] > #ce_easyscreenshot {
     width: 16px;
   }
 }
+
+.hidden {
+  display: none;
+}

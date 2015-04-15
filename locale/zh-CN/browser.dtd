@@ -1,8 +1,9 @@
 <!ENTITY easyscreenshot.button.label "网页截图">
 <!ENTITY easyscreenshot.button.tooltip "网页截图">
 
-<!ENTITY easyscreenshot_snapshot_select "截取选定区域">
-<!ENTITY easyscreenshot_snapshot_visible "截取可视区域">
+<!ENTITY easyscreenshot_snapshot_screen_select "截取屏幕选定区域">
+<!ENTITY easyscreenshot_snapshot_select "截取网页选定区域">
+<!ENTITY easyscreenshot_snapshot_visible "截取网页可视区域">
 <!ENTITY easyscreenshot_snapshot_entire "截取整个网页">
 
 <!ENTITY easyscreenshot_snapshot_settings "设置">

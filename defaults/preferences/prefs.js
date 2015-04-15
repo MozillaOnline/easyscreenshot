@@ -2,6 +2,9 @@ pref('extensions.easyscreenshot.openDirectory', true);
 
 pref('extensions.easyscreenshot.hotkeys.enabled', false);
 
+pref('extensions.easyscreenshot.hotkeys.screen.select.modifiers', 'control shift');
+pref('extensions.easyscreenshot.hotkeys.screen.select.key', 'S');
+
 pref('extensions.easyscreenshot.hotkeys.select.modifiers', 'control shift');
 pref('extensions.easyscreenshot.hotkeys.select.key', 'C');
 
