@@ -42,7 +42,7 @@
 
     <checkbox label="&easyscreenshot.settings.enablehotkeys;" preference="pref-enablehotkeys" oncommand="settings.refreshHotkeysBox(!this.checked);"/>
     <groupbox id="settings-hotkeys">
-      <hbox align="center">
+      <hbox id="fullscreenshot" align="center">
         <label value="&easyscreenshot_snapshot_screen_select;:"/>
         <spacer flex="1"/>
         <menulist preference="pref-screenselectmodifiers">

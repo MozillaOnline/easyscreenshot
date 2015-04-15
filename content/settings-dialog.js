@@ -73,6 +73,11 @@ var settings = {
     this._setSaveDirElem(saveDirPref.value);
 
     this.refreshHotkeysBox();
+    Cc['@mozilla.org/net/osfileconstantsservice;1'].
+      getService(Ci.nsIOSFileConstantsService).init();
+    if (OS.Constants.Sys.Name != 'WINNT') {
+      document.getElementById('fullscreenshot').style.display = 'none';
+    }
   },
 
   refreshHotkeysBox: function(toDisable) {
