@@ -831,9 +831,12 @@ window.ssInstalled = true;
     _init: function() {
       // refresh() is to update display of item according to prefs
       this.refresh();
-      prefs.observe(this.id, this.refresh.bind(this));
+      prefs.observe(this.id, this.refresh, this);
       this._ele.addEventListener('click', this.click.bind(this));
       this._initPopup();
+    },
+    uninit: function() {
+      prefs.ignore(this.id, this.refresh, this);
     },
     _initPopup: function() {
       if (this._popup) {
@@ -1258,5 +1261,10 @@ window.ssInstalled = true;
       Floatbar.reposition();
       CropOverlay.reposition();
     });
+  });
+  window.addEventListener('unload', function(evt) {
+    for (var item in Floatbar.items) {
+      Floatbar.items[item].uninit();
+    }
   });
 })();
