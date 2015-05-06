@@ -8,7 +8,7 @@
 
   <Description about="urn:mozilla:install-manifest">
     <em:id>easyscreenshot@mozillaonline.com</em:id>
-    <em:version>1.2.5</em:version>
+    <em:version>1.2.6</em:version>
     <em:name>Easy Screenshot</em:name>
     <em:type>2</em:type>
     <em:description>You can capture a screen shot by selecting an area of a webpage, the whole webpage or the visible area of a webpage, and save it as an image file. Also provide some essential edit functions.</em:description>
