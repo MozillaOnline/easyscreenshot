@@ -89,6 +89,9 @@ ns.ceEasyScreenshot = {
     this.createButton();
     this.logUsage();
     this.setupHotkeys();
+    if (Services.appinfo.OS == 'WINNT') {
+      document.getElementById('easyscreenshot-snapshot-screen-select').removeAttribute('hidden');
+    }
     document.getElementById('PanelUI-popup')
             .addEventListener('popupshown',
                               (aEvent) => this.updateUI(aEvent));
@@ -175,6 +178,10 @@ ns.ceEasyScreenshot = {
   setupHotkeys: function() {
     try {
       let hotkeys = [{
+        keyID: 'key-snapshot-screen-select',
+        modifiersPref: 'extensions.easyscreenshot.hotkeys.screen.select.modifiers',
+        keyPref: 'extensions.easyscreenshot.hotkeys.screen.select.key'
+      }, {
         keyID: 'key-snapshot-select',
         modifiersPref: 'extensions.easyscreenshot.hotkeys.select.modifiers',
         keyPref: 'extensions.easyscreenshot.hotkeys.select.key'

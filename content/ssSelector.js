@@ -61,7 +61,7 @@
 
     function getString(key){
       var _stringBundle = document.getElementById('ssSelector-strings');
-      return _stringBundle.getString(key)
+      return _stringBundle.getString(key);
     }
     var setting = {
       min_height:      4,
@@ -813,6 +813,10 @@
 
       if (notificationBox) {
         notificationBox.removeAllNotifications(true);
+      }
+      if (gBrowser.selectedBrowser.currentURI.spec ==
+          'chrome://easyscreenshot/content/screenshot.html') {
+        gBrowser.removeCurrentTab();
       }
     };
     event_connect(widget.document, 'ssSelector:cancel', action_close);

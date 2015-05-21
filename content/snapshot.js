@@ -4,16 +4,15 @@
   if (typeof XPCOMUtils == 'undefined') {
     Cu.import('resource://gre/modules/XPCOMUtils.jsm');
   }
-  XPCOMUtils.defineLazyGetter(jsm, 'utils', function() {
-    let obj = {};
-    Cu['import']('resource://easyscreenshot/utils.jsm', obj);
-    return obj.utils;
-  });
-  XPCOMUtils.defineLazyGetter(jsm, 'SnapshotStorage', function() {
-    let obj = {};
-    Cu['import']('resource://easyscreenshot/snapshot.js', obj);
-    return obj.SnapshotStorage;
-  });
+
+  XPCOMUtils.defineLazyModuleGetter(jsm, 'winScreenshot',
+    'resource://easyscreenshot/winScreenshot.jsm');
+
+  XPCOMUtils.defineLazyModuleGetter(jsm, 'utils',
+    'resource://easyscreenshot/utils.jsm');
+
+  XPCOMUtils.defineLazyModuleGetter(jsm, 'SnapshotStorage',
+    'resource://easyscreenshot/snapshot.js');
 
   const prefs = jsm.utils.prefs;
 
@@ -25,6 +24,10 @@
     _strings = document.getElementById('easyscreenshot-strings');
   };
 
+  ns.screenshot = function() {
+    jsm.winScreenshot.getBitMap();
+    window.top.openUILinkIn('chrome://easyscreenshot/content/screenshot.html', 'tab', 'fullscreen=yes');
+  };
   ns.getSnapshot = function(part,data) {
     if(part == 'data'){
       return sendSnapshot(data.canvas, data.ctx);

@@ -73,6 +73,9 @@ var settings = {
     this._setSaveDirElem(saveDirPref.value);
 
     this.refreshHotkeysBox();
+    if (Services.appinfo.OS == 'WINNT') {
+      document.getElementById('fullscreenshot').removeAttribute('hidden');
+    }
   },
 
   refreshHotkeysBox: function(toDisable) {

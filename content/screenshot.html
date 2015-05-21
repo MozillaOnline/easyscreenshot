@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+  <img id='img' src=''/>
+
+<script>
+  const {utils: Cu} = Components;
+  Cu.import('resource://easyscreenshot/winScreenshot.jsm');
+  Cu.import('resource://gre/modules/Services.jsm');
+  Cu.import('resource://gre/modules/PrivateBrowsingUtils.jsm');
+
+  var mainWin = Services.wm.getMostRecentWindow("navigator:browser");
+  var privacyContext = PrivateBrowsingUtils.privacyContextFromWindow(window);
+  privacyContext.usePrivateBrowsing = true;
+
+  window.addEventListener('load', function() {
+    var img = document.getElementById('img');
+    img.src = winScreenshot.bitMapFilePath;
+    img.mozRequestFullScreen();
+    mainWin.MOA.ESS.Snapshot.ssSelector();
+    document.addEventListener('mozvisibilitychange', function() {
+      window.close();
+    }, false);
+  });
+</script>
+</body>
+</html>
