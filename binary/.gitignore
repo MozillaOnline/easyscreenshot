@@ -1,0 +1,9 @@
+Release
+Debug
+dll/Release
+dll/Debug
+ScreenCapture.suo
+ScreenCapture.sdf
+ScreenCapture.opensdf
+dll/dll.vcxproj.user
+ipch
