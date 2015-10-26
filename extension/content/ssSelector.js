@@ -667,7 +667,7 @@
       widget.root.removeChild(widget.selection);
 
       sendAsyncMessage('ESS-REMOVE-NOTIFICATION', {});
-      sendAsyncMessage('ESS-REMOVE-SCREEN-CAPTURE-PAGE', {});
+      //sendAsyncMessage('ESS-REMOVE-SCREEN-CAPTURE-PAGE', {});
     };
     event_connect(widget.document, 'ssSelector:cancel', action_close);
 

@@ -41,13 +41,13 @@
       if (notificationBox) {
         notificationBox.removeAllNotifications(true);
       }
-    });
+    });/*
     window.messageManager.addMessageListener('ESS-REMOVE-SCREEN-CAPTURE-PAGE', function() {
       if (gBrowser.selectedBrowser.currentURI.spec ==
           'chrome://easyscreenshot/content/screenshot.html') {
         gBrowser.removeCurrentTab();
       }
-    });
+    });*/
 
     _strings = document.getElementById('easyscreenshot-strings');
   };
