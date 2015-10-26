@@ -28,7 +28,9 @@ ns.ceEasyScreenshot = {
         // thus icon will stay disabled no matter what shouldEnable() returns.
         // The reason of this is still uncertain. Here's the dirty fix by
         // manually checking shouldEnable() after 1 sec.
-        setTimeout(() => this.updateUI(aEvent), 1000);
+        setTimeout(() => {
+          this.updateUI(aEvent);
+        }, 1000);
         break;
       }
       case 'TabSelect':

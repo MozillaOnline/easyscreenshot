@@ -19,90 +19,109 @@
   var ns = MOA.ns('ESS.Snapshot');
   var _logger = jsm.utils.logger('ESS.snapshot');
   var _strings = null;
+  let notificationBox = null;
 
   ns.init = function (evt) {
+    window.messageManager.addMessageListener('SAVE_DATA', function(msg) {
+      jsm.SnapshotStorage.push(msg.data.dataStr);
+      openUILinkIn('chrome://easyscreenshot/content/editor.xhtml', 'tab');
+    });
+
+    window.messageManager.addMessageListener('CAPTURE_DATA_ERROR', function(msg) {
+      Cu.reportError('Unable to capture screenshot with\n' +
+                     'url: ' + msg.data.url + '\n');
+      Cc['@mozilla.org/alerts-service;1']
+        .getService(Ci.nsIAlertsService)
+        .showAlertNotification('chrome://easyscreenshot/skin/image/logo32.png',
+          document.getElementById("easyscreenshot-strings")
+                  .getString('failToCaptureNotification'),
+                  null);
+    });
+    window.messageManager.addMessageListener('ESS-REMOVE-NOTIFICATION', function() {
+      if (notificationBox) {
+        notificationBox.removeAllNotifications(true);
+      }
+    });
+    window.messageManager.addMessageListener('ESS-REMOVE-SCREEN-CAPTURE-PAGE', function() {
+      if (gBrowser.selectedBrowser.currentURI.spec ==
+          'chrome://easyscreenshot/content/screenshot.html') {
+        gBrowser.removeCurrentTab();
+      }
+    });
+
     _strings = document.getElementById('easyscreenshot-strings');
+  };
+
+  let action_know = function() {
+    if (notificationBox) {
+      notificationBox.removeCurrentNotification();
+    }
+    prefs.set('showNotification', false);
+  };
+
+  let append_notice = function() {
+    return notificationBox.appendNotification(
+      _strings.getString('notice'),
+      'ssSelector-controls',
+      null,
+      notificationBox.PRIORITY_INFO_HIGH, [{
+        label:    _strings.getString('acknowledge'),
+        accessKey:  'K',
+        callback:  function() {
+          try {
+            action_know();
+          }
+          catch (error) {
+            Services.console.logStringMessage('Error occurs when showing help information: ' + error);
+          }
+          return true;
+        }
+      }]
+    );
+  };
+
+  ns.ssSelector = function() {
+    let browserMM = gBrowser.selectedBrowser.messageManager;
+    browserMM.loadFrameScript('chrome://easyscreenshot/content/ssSelector.js', true);
+    browserMM.sendAsyncMessage('ESS-SELECT-WEBPAGE-REGION');
+
+    let showNotification = true;
+
+    try {
+      showNotification = prefs.get('showNotification');
+    } catch (ex) {
+      prefs.set('showNotification', true);
+    }
+    let notice = null;
+
+    if (!showNotification) return;
+
+    notificationBox = gBrowser.getNotificationBox();
+    if (!notificationBox) return;
+
+    notice = append_notice();
+    // event_connect(notice, 'command', action_close);
+    // notice.removeEventListener('command', listener, false);
   };
 
   ns.screenshot = function() {
     jsm.winScreenshot.getBitMap();
     window.top.openUILinkIn('chrome://easyscreenshot/content/screenshot.html', 'tab', 'fullscreen=yes');
   };
+
   ns.getSnapshot = function(part,data) {
-    if(part == 'data'){
-      return sendSnapshot(data.canvas, data.ctx);
-    }
+    // Cancel selection mode first.
+    ns.cancel();
 
-    var contentWindow = window.content;
-    var contentDocument = contentWindow.document;
-    var width, height, x, y;
-    switch (part) {
-      case 'visible':
-        // Cancel selection mode first.
-        ns.cancel();
-        x = contentDocument.documentElement.scrollLeft;
-        y = contentDocument.documentElement.scrollTop;
-        width = contentDocument.documentElement.clientWidth;
-        height = contentDocument.documentElement.clientHeight;
-        break;
-      case 'entire':
-        // Cancel selection mode first.
-        ns.cancel();
-        x = y = 0;
-        width = Math.max(contentDocument.documentElement.scrollWidth, contentDocument.body.scrollWidth);
-        height = Math.max(contentDocument.documentElement.scrollHeight, contentDocument.body.scrollHeight);
-        break;
-      default:
-        _logger.trace('unknown part argument')
-    }
-
-    try {
-      var canvas = contentDocument.createElementNS('http://www.w3.org/1999/xhtml', 'html:canvas');
-      canvas.height = height;
-      canvas.width = width;
-
-      // maybe https://bugzil.la/729026#c10 ?
-      var ctx = canvas.getContext('2d');
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.save();
-      ctx.drawWindow(contentWindow, x, y, width, height, 'rgb(255,255,255)');
-
-      if (width != canvas.width || height != canvas.height) {
-        throw new Error("Size error");
-      }
-
-      sendSnapshot(canvas, ctx);
-    } catch(ex) {
-      Cu.reportError('Unable to capture screenshot with\n' +
-                     'url: ' + contentWindow.location + '\n' +
-                     'x: ' + x + '\n' +
-                     'y: ' + y + '\n' +
-                     'width: ' + width + '\n' +
-                     'height: ' + height + '\n' +
-                     'error: ' + ex);
-      Cc['@mozilla.org/alerts-service;1']
-        .getService(Ci.nsIAlertsService)
-        .showAlertNotification('chrome://easyscreenshot/skin/image/logo32.png',
-          document.getElementById("easyscreenshot-strings")
-                  .getString('failToCaptureNotification'),
-          null);
-    }
+    let browserMM = gBrowser.selectedBrowser.messageManager;
+    browserMM.loadFrameScript('chrome://easyscreenshot/content/capture.js', true);
+    browserMM.sendAsyncMessage('ESS-CAPTURE-WEBPAGE', {type: part});
+    return;
   };
 
-  var sendSnapshot = function(canvas, ctx) {
-    var defaultAction = 'editor';
-
-    switch(defaultAction) {
-      case 'local':
-        saveDataToDisk(canvas.toDataURL('image/png', ''));
-        break;
-      case 'editor':
-        jsm.SnapshotStorage.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
-        openUILinkIn('chrome://easyscreenshot/content/editor.xhtml', 'tab');
-        break;
-    }
-  }
+  ns.cancel = function() {
+    window.messageManager.broadcastAsyncMessage('ESS-CANCEL-WIDGET');
+  };
 
   var saveDataToDisk = function(data) {
     var fp = Cc['@mozilla.org/filepicker;1'].createInstance(Ci.nsIFilePicker);

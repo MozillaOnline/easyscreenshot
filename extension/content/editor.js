@@ -1045,7 +1045,13 @@ window.ssInstalled = true;
 
       this.canvas = Utils.qs('#display');
       try {
-        this.canvasData = SnapshotStorage.pop();
+        var img = new Image();
+        img.onload = function() {
+          this.canvas.width = img.width;
+          this.canvas.height = img.height;
+          this.canvas.getContext('2d').drawImage(img, 0, 0);
+        }.bind(this);
+        img.src = SnapshotStorage.pop();
       } catch(ex) {
         ['fontselect', 'floatbar', 'textinput'].forEach(function(id) {
           Utils.qs('#' + id).style.display = 'none';

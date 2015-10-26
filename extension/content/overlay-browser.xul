@@ -13,7 +13,6 @@
   <script type="application/x-javascript" src="moa.js"/>
   <script type="application/x-javascript" src="snapshot.js"/>
   <script type="application/x-javascript" src="overlay-browser.js" />
-  <script type="application/x-javascript" src="ssSelector.js" />
 
   <stringbundleset id="stringbundleset">
     <stringbundle id="easyscreenshot-strings" src="chrome://easyscreenshot/locale/easyscreenshot.properties"/>
