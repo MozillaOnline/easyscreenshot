@@ -73,7 +73,7 @@ var settings = {
     this._setSaveDirElem(saveDirPref.value);
 
     this.refreshHotkeysBox();
-    if (Services.appinfo.OS == 'WINNT') {
+    if (Services.appinfo.OS == 'WINNT' && !Services.appinfo.is64Bit) {
       document.getElementById('fullscreenshot').removeAttribute('hidden');
     }
   },
