@@ -89,7 +89,9 @@ ns.ceEasyScreenshot = {
     this.createButton();
     this.logUsage();
     this.setupHotkeys();
-    if (Services.appinfo.OS == 'WINNT' && !Services.appinfo.is64Bit) {
+    if (Services.appinfo.OS == 'WINNT' &&
+        !Services.appinfo.is64Bit &&
+        Services.vc.compare(Services.appinfo.version, "44.0a1") < 0) {
       document.getElementById('easyscreenshot-snapshot-screen-select').removeAttribute('hidden');
     }
     document.getElementById('PanelUI-popup')
