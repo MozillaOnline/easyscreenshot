@@ -1,5 +1,0 @@
-<!ENTITY easyscreenshot.settings.dialogtitle "Settings">
-<!ENTITY easyscreenshot.settings.savelabel "Save screenshots to">
-<!ENTITY easyscreenshot.settings.savebutton "Choose">
-<!ENTITY easyscreenshot.settings.opendirectory "Open containing folder after saving to disk">
-<!ENTITY easyscreenshot.settings.enablehotkeys "Enable hotkeys (Restart required)">

@@ -1,0 +1,100 @@
+{
+  "browserActionTitle": {
+    "message": "网页截图"
+  },
+  "extensionDescription": {
+    "message": "方便的截图工具，支持任意选定区域截图、全网页截图等多种截图方式，并提供必要的图片编辑功能。"
+  },
+  "extensionName": {
+    "message": "网页截图"
+  },
+  "feedbackUrl": {
+    "message": "http://mozilla.com.cn/addon/325-easyscreenshot/"
+  },
+  "minPanelWidth": {
+    "message": "12em"
+  },
+  "editor_title": {
+    "message": "火狐截图编辑"
+  },
+  "editor_color_tooltip": {
+    "message": "选择填充颜色"
+  },
+  "editor_crop_tooltip": {
+    "message": "裁剪"
+  },
+  "editor_rectangle_tooltip": {
+    "message": "添加矩形"
+  },
+  "editor_circle_tooltip": {
+    "message": "添加椭圆"
+  },
+  "editor_text_tooltip": {
+    "message": "添加文字"
+  },
+  "editor_blur_tooltip": {
+    "message": "模糊"
+  },
+  "editor_line_tooltip": {
+    "message": "添加直线"
+  },
+  "editor_pencil_tooltip": {
+    "message": "铅笔"
+  },
+  "editor_undo_tooltip": {
+    "message": "撤销"
+  },
+  "editor_local_tooltip": {
+    "message": "保存到本地"
+  },
+  "editor_copy_tooltip": {
+    "message": "复制到剪贴板"
+  },
+  "editor_cancel_tooltip": {
+    "message": "关闭"
+  },
+  "editor_lineWidth_tooltip": {
+    "message": "线条粗细"
+  },
+  "editor_fontSize_tooltip": {
+    "message": "文字大小"
+  },
+  "editor_crop_instruction": {
+    "message": "拖动开始，双击完成"
+  },
+  "save_file_name": {
+    "message": "火狐截图_$TIMESTAMP$.png",
+    "placeholders": {
+      "timestamp" : {
+        "content" : "$1"
+      }
+    }
+  },
+  "save_success": {
+    "message": "截图已保存"
+  },
+  "save_failure": {
+    "message": "保存截图失败"
+  },
+  "copy_success": {
+    "message": "截图已复制到剪贴板"
+  },
+  "copy_failure": {
+    "message": "复制截图到剪贴板失败"
+  },
+  "popup_select": {
+    "message": "截取网页选定区域"
+  },
+  "popup_entire": {
+    "message": "截取整个网页"
+  },
+  "popup_visible": {
+    "message": "截取网页可视区域"
+  },
+  "popup_settings": {
+    "message": "设置"
+  },
+  "popup_feedback": {
+    "message": "意见反馈"
+  }
+}
