@@ -1,4 +1,0 @@
-LIBRARY dll
-
-EXPORTS
-	createBitMap	@1
