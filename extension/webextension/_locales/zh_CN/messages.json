@@ -14,6 +14,9 @@
   "minPanelWidth": {
     "message": "12em"
   },
+  "generic_crop_instruction": {
+    "message": "拖动开始，双击或回车完成"
+  },
   "editor_title": {
     "message": "火狐截图编辑"
   },

@@ -1,7 +1,11 @@
   var EditorCropOverlay = {
     __proto__: CropOverlay,
+    _i18nInstructionId: 'editor_crop_instruction',
     _dblclick: function(evt) {
       Editor.current = {id: 'crop'};
+    },
+    _keydown: function(evt) {
+      // do nothing
     },
     _refreshImageData: function() {
       var { x, y, w, h } = Utils.parse(this._overlay.target);
@@ -357,7 +361,7 @@
       }).bind(this));
     },
     _keypress: function(evt) {
-      if (evt.ctrlKey && evt.keyCode == 13) { // Ctrl + Enter
+      if (evt.ctrlKey && evt.keyCode == evt.DOM_VK_RETURN) { // Ctrl + Enter
         this._input.blur();
       }
     },
@@ -874,7 +878,7 @@
       Floatbar.init();
 
       document.body.addEventListener('keypress', function(evt) {
-        if (evt.keyCode == 27) { // Esc
+        if (evt.keyCode == evt.DOM_VK_ESCAPE) { // Esc
           self.current = null;
         }
         if (self._getID(evt.target) == 'textinput') {

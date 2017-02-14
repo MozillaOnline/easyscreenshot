@@ -50,6 +50,7 @@ var Utils = {
 
 var CropOverlay = {
   _extId: undefined,
+  _i18nInstructionId: 'generic_crop_instruction',
   _overlay: {},
   _status: {
     isMoving: false,
@@ -59,6 +60,7 @@ var CropOverlay = {
   handleEvent: function(evt) {
     switch (evt.type) {
       case 'dblclick':
+      case 'keydown':
       case 'mousedown':
       case 'mousemove':
       case 'mouseup':
@@ -95,6 +97,18 @@ var CropOverlay = {
   },
   _hide: function() {
     this._overlay.overlay.style.display = 'none';
+  },
+  _keydown: function(evt) {
+    switch (evt.keyCode) {
+      case evt.DOM_VK_ESCAPE:
+        this.cancel();
+        break;
+      case evt.DOM_VK_RETURN:
+        this.stop();
+        break;
+      default:
+        break;
+    }
   },
   _mousedown: function(evt) {
     var { x, y } = Utils.parse(this._overlay.overlay);
@@ -217,7 +231,7 @@ var CropOverlay = {
     this._extId = /* 'easy-screenshot'; */ chrome.i18n.getMessage("@@extension_id");
     if (!this._overlay.overlay) {
       this._initOverlays();
-      this._overlay.overlay.setAttribute('title', chrome.i18n.getMessage('editor_crop_instruction'));
+      this._overlay.overlay.setAttribute('title', chrome.i18n.getMessage(this._i18nInstructionId));
     }
     this._hide();
   },
@@ -225,12 +239,14 @@ var CropOverlay = {
     this._display(x, y, w, h);
     this._overlay.overlay.addEventListener('dblclick', this, false);
     this._overlay.overlay.addEventListener('mousedown', this, false);
+    window.addEventListener('keydown', this, false);
     window.addEventListener('resize', this, false);
   },
   cancel: function() {
     this._hide();
     this._overlay.overlay.removeEventListener('dblclick', this);
     this._overlay.overlay.removeEventListener('mousedown', this);
+    window.removeEventListener('keydown', this);
     window.removeEventListener('resize', this);
   },
   stop: function() {

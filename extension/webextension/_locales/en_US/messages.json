@@ -14,6 +14,9 @@
   "minPanelWidth": {
     "message": "18em"
   },
+  "generic_crop_instruction": {
+    "message": "Drag to start, double click or press Enter to finish"
+  },
   "editor_title": {
     "message": "Firefox Screen Shot Editor"
   },
