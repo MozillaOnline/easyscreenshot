@@ -1,0 +1,103 @@
+{
+  "browserActionTitle": {
+    "message": "Легкий Скриншот"
+  },
+  "extensionDescription": {
+    "message": "Вы можете сделать снимок экрана, выбрав область или захватить всю / видимую веб-страницу. Затем отредактировать и сохранить его в виде файла изображения."
+  },
+  "extensionName": {
+    "message": "Легкий Скриншот"
+  },
+  "feedbackUrl": {
+    "message": "http://mozilla.com.cn/addon/325-easyscreenshot/"
+  },
+  "minPanelWidth": {
+    "message": "18em"
+  },
+  "generic_crop_instruction": {
+    "message": "Перетащите, чтобы начать, дважды щелкните или нажмите Enter для завершения"
+  },
+  "editor_title": {
+    "message": "Firefox скриншот редактор"
+  },
+  "editor_color_tooltip": {
+    "message": "Выберите цвет"
+  },
+  "editor_crop_tooltip": {
+    "message": "Обрежьте снимок"
+  },
+  "editor_rectangle_tooltip": {
+    "message": "Добавьте прямоугольник"
+  },
+  "editor_circle_tooltip": {
+    "message": "Добавьте эллипс"
+  },
+  "editor_text_tooltip": {
+    "message": "Добавьте текст"
+  },
+  "editor_blur_tooltip": {
+    "message": "Перетащите указатель, чтобы размыть"
+  },
+  "editor_line_tooltip": {
+    "message": "Добавьте линию"
+  },
+  "editor_pencil_tooltip": {
+    "message": "Свободная Линия"
+  },
+  "editor_undo_tooltip": {
+    "message": "Отменить"
+  },
+  "editor_local_tooltip": {
+    "message": "Сохранить на диске"
+  },
+  "editor_copy_tooltip": {
+    "message": "Rопировать"
+  },
+  "editor_cancel_tooltip": {
+    "message": "Закрыть"
+  },
+  "editor_lineWidth_tooltip": {
+    "message": "Ширина линии"
+  },
+  "editor_fontSize_tooltip": {
+    "message": "Размер шрифта"
+  },
+  "editor_crop_instruction": {
+    "message": "Перетащите, чтобы начать, двойной щелчок, чтобы закончить"
+  },
+  "save_file_name": {
+    "message": "Firefox_Screenshot_$TIMESTAMP$.png",
+    "placeholders": {
+      "timestamp" : {
+        "content" : "$1"
+      }
+    }
+  },
+  "save_success": {
+    "message": "Сохранить скриншот"
+  },
+  "save_failure": {
+    "message": "Не удается сохранить скриншот"
+  },
+  "copy_success": {
+    "message": "Скриншот скопирован в буфер обмена"
+  },
+  "copy_failure": {
+    "message": "Не удается скопировать скриншот в буфер обмена"
+  },
+  "popup_select": {
+    "message": "Захват области Веб-страницы"
+  },
+  "popup_entire": {
+    "message": "Захват всей веб-страницы"
+  },
+  "popup_visible": {
+    "message": "Захват видимой веб-страницы"
+  },
+  "popup_settings": {
+    "message": "Настройки"
+  },
+  "popup_feedback": {
+    "message": "Обратная связь"
+  }
+}
