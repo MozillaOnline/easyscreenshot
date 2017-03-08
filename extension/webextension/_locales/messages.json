@@ -1,12 +1,12 @@
 {
   "browserActionTitle": {
-    "message": "Легкий Скриншот"
+    "message": "Easy Screenshot"
   },
   "extensionDescription": {
     "message": "Вы можете сделать снимок экрана, выбрав область или захватить всю / видимую веб-страницу. Затем отредактировать и сохранить его в виде файла изображения."
   },
   "extensionName": {
-    "message": "Легкий Скриншот"
+    "message": "Easy Screenshot"
   },
   "feedbackUrl": {
     "message": "http://mozilla.com.cn/addon/325-easyscreenshot/"
