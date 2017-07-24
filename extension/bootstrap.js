@@ -41,6 +41,12 @@ function handleMessage(message, sender, sendResponse) {
 
 function install() {}
 function startup({webExtension}) {
+  let prefs = new Preferences({
+    branch: "extensions.screenshots.",
+    defaultBranch: true
+  });
+  prefs.set("disabled", true);
+
   webExtension.startup().then(api => {
     const { browser } = api;
     browser.runtime.onMessage.addListener(handleMessage);
