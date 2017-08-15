@@ -1,23 +1,25 @@
+/* global CropOverlay, Utils */
+
   var EditorCropOverlay = {
     __proto__: CropOverlay,
-    _i18nInstructionId: 'editor_crop_instruction',
-    _dblclick: function(evt) {
-      Editor.current = {id: 'crop'};
+    _i18nInstructionId: "editor_crop_instruction",
+    _dblclick(evt) {
+      Editor.current = {id: "crop"};
     },
-    _keydown: function(evt) {
+    _keydown(evt) {
       // do nothing
     },
-    _refreshImageData: function() {
+    _refreshImageData() {
       var { x, y, w, h } = Utils.parse(this._overlay.target);
       if (!h || !w) {
         return;
       }
       Editor.canvasData = Editor.ctx.getImageData(x, y, w, h);
     },
-    _resize: function() {
-      this._overlay.overlay.style.left = Editor.canvas.getBoundingClientRect().left + 'px';
+    _resize() {
+      this._overlay.overlay.style.left = Editor.canvas.getBoundingClientRect().left + "px";
     },
-    stop: function() {
+    stop() {
       this._refreshImageData();
       Editor.updateHistory();
     }
@@ -40,26 +42,26 @@
   //
 
     _dir: 1,
-    _isStartPoint: function(evt) {
+    _isStartPoint(evt) {
       return evt.pageX - this._origRect[0] == this._startxy[0] &&
              evt.pageY - this._origRect[1] == this._startxy[1];
     },
-    _mousedown: function(evt) {
+    _mousedown(evt) {
       var rx = evt.pageX - this._origRect[0];
       var ry = evt.pageY - this._origRect[1];
       this._startxy = [rx, ry];
-      document.addEventListener('mousemove', this._listeners.mousemove);
-      document.addEventListener('mouseup', this._listeners.mouseup);
+      document.addEventListener("mousemove", this._listeners.mousemove);
+      document.addEventListener("mouseup", this._listeners.mouseup);
       evt.stopPropagation();
       evt.preventDefault();
     },
-    _mousemove: function(evt) {
+    _mousemove(evt) {
       var x = this._origRect[0];
       var y = this._origRect[1];
       var rx = Math.min(Math.max(evt.pageX - x, 0), this._origRect[2]);
       var ry = Math.min(Math.max(evt.pageY - y, 0), this._origRect[3]);
-      var x = Math.min(rx, this._startxy[0]);
-      var y = Math.min(ry, this._startxy[1]);
+      x = Math.min(rx, this._startxy[0]);
+      y = Math.min(ry, this._startxy[1]);
       var w = Math.abs(rx - this._startxy[0]);
       var h = Math.abs(ry - this._startxy[1]);
       if (evt.shiftKey) {
@@ -72,13 +74,13 @@
           y = this._startxy[1] - h;
         }
       }
-      if(rx > this._startxy[0] && ry < this._startxy[1])
+      if (rx > this._startxy[0] && ry < this._startxy[1])
         this._dir = 1;
-      else if(rx < this._startxy[0] && ry < this._startxy[1])
+      else if (rx < this._startxy[0] && ry < this._startxy[1])
         this._dir = 2;
-      else if(rx < this._startxy[0] && ry > this._startxy[1])
+      else if (rx < this._startxy[0] && ry > this._startxy[1])
         this._dir = 3;
-      else if(rx > this._startxy[0] && ry > this._startxy[1])
+      else if (rx > this._startxy[0] && ry > this._startxy[1])
         this._dir = 4;
       this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
       this._rect = [x, y, w, h];
@@ -88,8 +90,8 @@
       var dh = Math.min(y + h + this.lineWidth, this._origRect[3]) - y + dy;
       x += this._origRect[0];
       y += this._origRect[1];
-      this._canvas.style.left = x - dx + 'px';
-      this._canvas.style.top = y - dy + 'px';
+      this._canvas.style.left = x - dx + "px";
+      this._canvas.style.top = y - dy + "px";
       this._canvas.left = x - dx;
       this._canvas.top = y - dy;
       this._canvas.width = dw;
@@ -101,9 +103,9 @@
       evt.stopPropagation();
       evt.preventDefault();
     },
-    _mouseup: function(evt) {
-      document.removeEventListener('mousemove', this._listeners.mousemove);
-      document.removeEventListener('mouseup', this._listeners.mouseup);
+    _mouseup(evt) {
+      document.removeEventListener("mousemove", this._listeners.mousemove);
+      document.removeEventListener("mouseup", this._listeners.mouseup);
       evt.stopPropagation();
       evt.preventDefault();
       if (!this._isStartPoint(evt)) {
@@ -111,69 +113,69 @@
         Editor.updateHistory();
       }
     },
-    _refreshImageData: function() {
+    _refreshImageData() {
       var [x, y, w, h] = this._rect;
       Editor.ctx.lineWidth = this.lineWidth;
       Editor.ctx.strokeStyle = this.color;
       Editor.ctx.save();
       this._stroke(Editor.ctx, x, y, w, h);
     },
-    _stroke: function(ctx, x, y, w, h) {
+    _stroke(ctx, x, y, w, h) {
     },
     get lineWidth() {
-      return Editor.prefs['editor.lineWidth'];
+      return Editor.prefs["editor.lineWidth"];
     },
     set lineWidth(value) {
       if (!isNaN(value)) {
         chrome.storage.local.set({
-          'editor.lineWidth': Number(value)
+          "editor.lineWidth": Number(value)
         });
       }
     },
     get fontSize() {
-      return Editor.prefs['editor.fontSize'];
+      return Editor.prefs["editor.fontSize"];
     },
     set fontSize(value) {
       if (!isNaN(value)) {
         chrome.storage.local.set({
-          'editor.fontSize': Number(value)
+          "editor.fontSize": Number(value)
         });
       }
     },
     get color() {
-      return Editor.prefs['editor.color'];
+      return Editor.prefs["editor.color"];
     },
     set color(value) {
       chrome.storage.local.set({
-        'editor.color': value
+        "editor.color": value
       });
     },
-    init: function() {
+    init() {
       this._listeners.mousedown = this._mousedown.bind(this);
       this._listeners.mousemove = this._mousemove.bind(this);
       this._listeners.mouseup = this._mouseup.bind(this);
     },
-    start: function(x, y, w, h, canvasId, evtName) {
+    start(x, y, w, h, canvasId, evtName) {
       if (!evtName) {
-        evtName = 'mousedown';
+        evtName = "mousedown";
       }
-      this._canvas = document.createElement('canvas');
-      this._ctx = this._canvas.getContext('2d');
+      this._canvas = document.createElement("canvas");
+      this._ctx = this._canvas.getContext("2d");
       this._canvas.id = canvasId;
       Editor.canvas.className = canvasId;
       document.body.appendChild(this._canvas);
       this._origRect = [x, y, w, h];
 
-      this._canvas.style.left = x + 'px';
-      this._canvas.style.top = y + 'px';
+      this._canvas.style.left = x + "px";
+      this._canvas.style.top = y + "px";
       this._canvas.width = 0;
       this._canvas.height = 0;
       this._canvas.addEventListener(evtName, this._listeners[evtName]);
       Editor.canvas.addEventListener(evtName, this._listeners[evtName]);
     },
-    cancel: function() {
-      this._canvas.removeEventListener('mousedown', this._listeners.mousedown);
-      Editor.canvas.removeEventListener('mousedown', this._listeners.mousedown);
+    cancel() {
+      this._canvas.removeEventListener("mousedown", this._listeners.mousedown);
+      Editor.canvas.removeEventListener("mousedown", this._listeners.mousedown);
       document.body.removeChild(this._canvas);
     }
   };
@@ -186,11 +188,11 @@
     _origRect: null,
     _rect: null,
     _startxy: null,
-    _stroke: function(ctx, x, y, w, h) {
+    _stroke(ctx, x, y, w, h) {
       ctx.strokeRect(x, y, w, h);
     },
-    start: function(x, y, w, h) {
-      this.__proto__.start.bind(this)(x, y, w, h, 'rectcanvas');
+    start(x, y, w, h) {
+      this.__proto__.start.bind(this)(x, y, w, h, "rectcanvas");
     }
   };
 
@@ -202,21 +204,21 @@
     _origRect: null,
     _rect: null,
     _startxy: null,
-    _stroke: function(ctx, x, y, w, h) {
+    _stroke(ctx, x, y, w, h) {
       ctx.beginPath();
       var dir = this._dir;
-      if(dir == 1 || dir == 3){
-        ctx.moveTo(x, y+h);
-        ctx.lineTo(x+w, y);
+      if (dir == 1 || dir == 3) {
+        ctx.moveTo(x, y + h);
+        ctx.lineTo(x + w, y);
       } else {
         ctx.moveTo(x, y);
-        ctx.lineTo(x+w, y+h);
+        ctx.lineTo(x + w, y + h);
       }
       ctx.stroke();
       ctx.closePath();
     },
-    start: function(x, y, w, h) {
-      this.__proto__.start.bind(this)(x, y, w, h, 'linecanvas');
+    start(x, y, w, h) {
+      this.__proto__.start.bind(this)(x, y, w, h, "linecanvas");
     }
   };
 
@@ -228,10 +230,10 @@
     _origRect: null,
     _rect: null,
     _startxy: null,
-    _stroke: function(ctx, x, y, w, h) {
+    _stroke(ctx, x, y, w, h) {
       this._strokeCirc(ctx, x, y, w, h);
     },
-    _strokeCirc: function(ctx, x, y, w, h) {
+    _strokeCirc(ctx, x, y, w, h) {
       // see http://www.whizkidtech.redprince.net/bezier/circle/kappa/
       var br = (Math.sqrt(2) - 1) * 4 / 3;
       var bx = w * br / 2;
@@ -245,8 +247,8 @@
       ctx.closePath();
       ctx.stroke();
     },
-    start: function(x, y, w, h) {
-      this.__proto__.start.bind(this)(x, y, w, h, 'circcanvas');
+    start(x, y, w, h) {
+      this.__proto__.start.bind(this)(x, y, w, h, "circcanvas");
     }
   };
 
@@ -258,14 +260,14 @@
     _listeners: {},
     _origRect: null,
     _size: {},
-    _refreshSize: function() {
+    _refreshSize() {
       // Factor 1.2 per character looks good
       var factor = 1.2;
       // Initial size set to 2x1 characters
       this._size.width = Math.ceil(BaseControl.fontSize * factor * 2);
       this._size.height = Math.ceil(BaseControl.fontSize * factor);
     },
-    _refreshImageData: function() {
+    _refreshImageData() {
       var textRect = this._input.getBoundingClientRect();
 
       var x = textRect.left;
@@ -281,7 +283,7 @@
                      h + 'px" width="' + w + 'px">' +
                    '<foreignObject height="100%" width="100%">' +
                      '<div xmlns="http://www.w3.org/1999/xhtml" style="border: 1px dashed transparent; color: ' +
-                         this.color + '; font-family: Arial, Helvetica, sans-serif; font-size: ' +
+                         this.color + "; font-family: Arial, Helvetica, sans-serif; font-size: " +
                          BaseControl.fontSize + 'px; padding: 1px; white-space: pre;">' +
                        this._input.value +
                      "</div>" +
@@ -289,29 +291,28 @@
                  "</svg>";
       var blob = new Blob([data], {type: "image/svg+xml;charset=utf-8"});
       var url = URL.createObjectURL(blob);
-      var self = this;
       img.onload = function(evt) {
         var canvasRect = Editor.canvas.getBoundingClientRect();
         Editor.ctx.drawImage(evt.target, x - canvasRect.left, y - canvasRect.top);
         URL.revokeObjectURL(evt.target.src);
-        
+
         // Show floatbar again after capturing text area
         Floatbar.show();
       };
       img.src = url;
     },
-    _blur: function() {
+    _blur() {
       if (!/^\s*$/.test(this._input.value)) {
         this._refreshImageData();
         Editor.updateHistory();
       }
       this._hide();
     },
-    _click: function(evt) {
+    _click(evt) {
       this._input.blur();
-      this._input.style.fontSize = BaseControl.fontSize + 'px';
-      this._input.style.left = evt.pageX + 'px';
-      this._input.style.top = Math.min(Math.max(evt.pageY - 7, this._origRect[1]), this._origRect[1] + this._origRect[3] - 20) + 'px';
+      this._input.style.fontSize = BaseControl.fontSize + "px";
+      this._input.style.left = evt.pageX + "px";
+      this._input.style.top = Math.min(Math.max(evt.pageY - 7, this._origRect[1]), this._origRect[1] + this._origRect[3] - 20) + "px";
 
       this._refreshSize();
       // marginX and marginY are to leave some minimal space between text input and page edge
@@ -334,19 +335,19 @@
       this._size.minHeight = initialHeight;
 
       // Set minimal size
-      this._input.style.minWidth = initialWidth + 'px';
-      this._input.style.minHeight = initialHeight + 'px';
+      this._input.style.minWidth = initialWidth + "px";
+      this._input.style.minHeight = initialHeight + "px";
 
       // Set maximal size
-      this._input.style.maxWidth = maxWidth + 'px';
-      this._input.style.maxHeight = maxHeight + 'px';
+      this._input.style.maxWidth = maxWidth + "px";
+      this._input.style.maxHeight = maxHeight + "px";
 
       // Set text color and transparent border
       this._input.style.color = this.color;
       this._input.style.borderColor = Utils.hex2rgba(this.color, 0.5);
 
       // Show and focus on the text input
-      this._input.style.display = 'block';
+      this._input.style.display = "block";
       this._input.focus();
 
       // This is to fix a bug that if you're using Chinese input method that
@@ -355,49 +356,49 @@
       // all unfinished letters would comes into new text input.
       // interrupt funcion here is to let Chinese input method put all characters first.
       Utils.interrupt((function() {
-        this._input.value = '';
-        this._input.style.width = initialWidth + 'px';
-        this._input.style.height = initialHeight + 'px';
+        this._input.value = "";
+        this._input.style.width = initialWidth + "px";
+        this._input.style.height = initialHeight + "px";
       }).bind(this));
     },
-    _keypress: function(evt) {
+    _keypress(evt) {
       if (evt.ctrlKey && evt.keyCode == evt.DOM_VK_RETURN) { // Ctrl + Enter
         this._input.blur();
       }
     },
-    _hide: function() {
-      this._input.style.display = 'none';
+    _hide() {
+      this._input.style.display = "none";
     },
-    init: function() {
+    init() {
       var self = this;
-      this._input = Utils.qs('#textinput');
+      this._input = Utils.qs("#textinput");
       this._hide();
       this._listeners.click = this._click.bind(this);
-      this._input.addEventListener('blur', this._blur.bind(this));
-      this._input.addEventListener('keypress', this._keypress.bind(this));
-      this._input.wrap = 'off';
+      this._input.addEventListener("blur", this._blur.bind(this));
+      this._input.addEventListener("keypress", this._keypress.bind(this));
+      this._input.wrap = "off";
       // Auto resize according to content
-      this._input.addEventListener('input', function(evt) {
+      this._input.addEventListener("input", function(evt) {
         // Always shrink to minimal size first
-        this.style.width = self._size.minWidth + 'px';
-        this.style.width = this.scrollWidth + 'px';
+        this.style.width = self._size.minWidth + "px";
+        this.style.width = this.scrollWidth + "px";
         // And then extend to scroll size
-        this.style.height = self._size.minHeight + 'px';
-        this.style.height = this.scrollHeight + 'px';
+        this.style.height = self._size.minHeight + "px";
+        this.style.height = this.scrollHeight + "px";
       });
       // Disallow scroll. Make sure content on screen doesn't scroll away.
-      this._input.addEventListener('scroll', function(evt) {
+      this._input.addEventListener("scroll", function(evt) {
         this.scrollTop = 0;
         this.scrollLeft = 0;
       });
     },
-    start: function(x, y, w, h) {
-      this.__proto__.start.bind(this)(x, y, w, h, 'textcanvas', 'click');
+    start(x, y, w, h) {
+      this.__proto__.start.bind(this)(x, y, w, h, "textcanvas", "click");
     },
-    cancel: function() {
-      this._input.value = '';
-      this._canvas.removeEventListener('click', this._listeners.click);
-      Editor.canvas.removeEventListener('click', this._listeners.click);
+    cancel() {
+      this._input.value = "";
+      this._canvas.removeEventListener("click", this._listeners.click);
+      Editor.canvas.removeEventListener("click", this._listeners.click);
       document.body.removeChild(this._canvas);
       this._hide();
     }
@@ -412,7 +413,7 @@
     _bluredData: null,
     _origRect: null,
     _radius: 7,
-    _blurAround: function(x, y) {
+    _blurAround(x, y) {
       var sx = Math.max(0, x - this._radius);
       var sy = Math.max(0, y - this._radius);
       var ex = Math.min(this._origRect[2], x + this._radius);
@@ -432,7 +433,7 @@
       }
       Editor.ctx.putImageData(this._bluredData, sx - dx, sy - dy);
     },
-    _calcBluredData: function(x, y) {
+    _calcBluredData(x, y) {
       var maxradius = Math.min(x, y, this._origData.width - 1 - x, this._origData.height - 1 - y);
       var radius = Math.min(3, maxradius);
       var tmp = [0, 0, 0, 0, 0];
@@ -444,16 +445,16 @@
           tmp[4] += 1;
         }
       }
-      for (var i = 0; i < 4; i++) {
+      for (i = 0; i < 4; i++) {
         this._bluredData.data[this._xyToIndex(x, y, i)] = Math.floor(tmp[i] / tmp[4]);
       }
     },
-    _refreshImageData: function() {
+    _refreshImageData() {
     },
-    _xyToIndex: function(x, y, i) {
+    _xyToIndex(x, y, i) {
       return 4 * (y * this._origData.width + x) + i;
     },
-    _mousemove: function(evt) {
+    _mousemove(evt) {
       var x = this._origRect[0];
       var y = this._origRect[1];
       var rx = Math.min(Math.max(evt.pageX - x, 0), this._origRect[2]);
@@ -462,10 +463,10 @@
       evt.stopPropagation();
       evt.preventDefault();
     },
-    start: function(x, y, w, h) {
-      this.__proto__.start.bind(this)(x, y, w, h, 'blurcanvas');
+    start(x, y, w, h) {
+      this.__proto__.start.bind(this)(x, y, w, h, "blurcanvas");
     },
-    cancel: function() {
+    cancel() {
       this.__proto__.cancel.bind(this)();
       this._origData = null;
       this._bluredData = null;
@@ -479,11 +480,11 @@
     _listeners: {},
     _origRect: null,
     _radius: 1,
-    _draw: function(x, y) {
+    _draw(x, y) {
       Editor.ctx.lineTo(x, y);
       Editor.ctx.stroke();
     },
-    _mousedown: function(evt) {
+    _mousedown(evt) {
       var rx = evt.pageX - this._origRect[0];
       var ry = evt.pageY - this._origRect[1];
       this._startxy = [rx, ry];
@@ -492,12 +493,12 @@
       Editor.ctx.fillStyle = this.color;
       Editor.ctx.moveTo(rx, ry);
       Editor.ctx.beginPath();
-      document.addEventListener('mousemove', this._listeners.mousemove);
-      document.addEventListener('mouseup', this._listeners.mouseup);
+      document.addEventListener("mousemove", this._listeners.mousemove);
+      document.addEventListener("mouseup", this._listeners.mouseup);
       evt.stopPropagation();
       evt.preventDefault();
     },
-    _mouseup: function(evt) {
+    _mouseup(evt) {
       if (this._isStartPoint(evt)) {
         var rx = evt.pageX - this._origRect[0];
         var ry = evt.pageY - this._origRect[1];
@@ -507,14 +508,14 @@
         Editor.ctx.fill();
       }
       Editor.ctx.closePath();
-      document.removeEventListener('mousemove', this._listeners.mousemove);
-      document.removeEventListener('mouseup', this._listeners.mouseup);
+      document.removeEventListener("mousemove", this._listeners.mousemove);
+      document.removeEventListener("mouseup", this._listeners.mouseup);
       evt.stopPropagation();
       evt.preventDefault();
       this._refreshImageData();
       Editor.updateHistory();
     },
-    _mousemove: function(evt) {
+    _mousemove(evt) {
       var x = this._origRect[0];
       var y = this._origRect[1];
       var rx = Math.min(Math.max(evt.pageX - x, 0), this._origRect[2]);
@@ -523,12 +524,12 @@
       evt.stopPropagation();
       evt.preventDefault();
     },
-    _refreshImageData: function() {
+    _refreshImageData() {
     },
-    start: function(x, y, w, h) {
-      this.__proto__.start.bind(this)(x, y, w, h, 'pencilcanvas');
+    start(x, y, w, h) {
+      this.__proto__.start.bind(this)(x, y, w, h, "pencilcanvas");
     },
-    cancel: function() {
+    cancel() {
       this.__proto__.cancel.bind(this)();
     }
   };
@@ -536,24 +537,24 @@
   // Base class of ColorPicker & FontSelect
   var BarPopup = {
     get visible() {
-      return this._ele.style.display != 'none';
+      return this._ele.style.display != "none";
     },
     set visible(value) {
       this.toggle(value);
       this._anchor.toggle(value);
     },
-    show: function() {
+    show() {
       this.toggle(true);
     },
-    hide: function() {
+    hide() {
       this.toggle(false);
     },
-    toggle: function(toShow) {
+    toggle(toShow) {
       if (toShow === undefined) {
         toShow = !this.visible;
       }
-      this._ele.style.display = toShow ? 'block' : 'none';
-      document[toShow ? 'addEventListener' : 'removeEventListener']('click', this._listeners.hide);
+      this._ele.style.display = toShow ? "block" : "none";
+      document[toShow ? "addEventListener" : "removeEventListener"]("click", this._listeners.hide);
     }
   };
 
@@ -563,18 +564,18 @@
     _ele: null,
     _anchor: null,
     _listeners: {},
-    init: function() {
+    init() {
       this._listeners.hide = () => this.visible = false;
 
-      this._ele = Utils.qs('#colorpicker');
-      this._ele.addEventListener('click', this.click.bind(this));
+      this._ele = Utils.qs("#colorpicker");
+      this._ele.addEventListener("click", this.click.bind(this));
 
-      [].forEach.call(this._ele.querySelectorAll('li'), function(li) {
+      [].forEach.call(this._ele.querySelectorAll("li"), function(li) {
         li.style.backgroundColor = li.dataset.color;
       });
     },
-    click: function(evt) {
-      if (evt.target.nodeName.toLowerCase() == 'li') {
+    click(evt) {
+      if (evt.target.nodeName.toLowerCase() == "li") {
         BaseControl.color = evt.target.dataset.color;
       }
     }
@@ -586,14 +587,14 @@
     _ele: null,
     _anchor: null,
     _listeners: {},
-    init: function() {
+    init() {
       this._listeners.hide = () => this.visible = false;
 
-      this._ele = Utils.qs('#fontselect');
-      this._ele.addEventListener('click', this.click.bind(this));
+      this._ele = Utils.qs("#fontselect");
+      this._ele.addEventListener("click", this.click.bind(this));
     },
-    click: function(evt) {
-      if (evt.target.nodeName.toLowerCase() == 'li') {
+    click(evt) {
+      if (evt.target.nodeName.toLowerCase() == "li") {
         BaseControl.fontSize = Number(evt.target.textContent);
       }
     }
@@ -605,21 +606,21 @@
     // _refresh (update display of item according to prefs),
     // and click
     Utils.extend(this, options);
-    Utils.assert(this.id, 'id is mandatory');
-    Utils.assert(this._refresh, '_refresh method is mandatory');
-    Utils.assert(this.click, 'click method is mandatory');
-    this._ele = Utils.qs('#button-' + this.id);
-    var title = chrome.i18n.getMessage('editor_' + this.id + '_tooltip');
-    this._ele.setAttribute('title', title);
+    Utils.assert(this.id, "id is mandatory");
+    Utils.assert(this._refresh, "_refresh method is mandatory");
+    Utils.assert(this.click, "click method is mandatory");
+    this._ele = Utils.qs("#button-" + this.id);
+    var title = chrome.i18n.getMessage("editor_" + this.id + "_tooltip");
+    this._ele.setAttribute("title", title);
     this._init();
   };
   BarItem.prototype = {
-    _init: function() {
+    _init() {
       this.refresh = (function(changes, area) {
-        if (area != 'local') {
+        if (area != "local") {
           return;
         }
-        var prefId = 'editor.' + this.id;
+        var prefId = "editor." + this.id;
         if (!changes[prefId]) {
           return;
         }
@@ -629,13 +630,13 @@
       // _refresh() is to update display of item according to prefs
       this._refresh();
       chrome.storage.onChanged.addListener(this.refresh);
-      this._ele.addEventListener('click', this.click.bind(this));
+      this._ele.addEventListener("click", this.click.bind(this));
       this._initPopup();
     },
-    uninit: function() {
+    uninit() {
       chrome.storage.onChanged.removeListener(this.refresh);
     },
-    _initPopup: function() {
+    _initPopup() {
       if (this._popup) {
         this._popup.init();
         this._popup._anchor = this;
@@ -643,7 +644,7 @@
       }
     },
     get pressed() {
-      return this._ele.classList.contains('current');
+      return this._ele.classList.contains("current");
     },
     set pressed(value) {
       this.toggle(value);
@@ -651,17 +652,17 @@
         this._popup.toggle(value);
       }
     },
-    press: function() {
+    press() {
       this.toggle(true);
     },
-    release: function() {
+    release() {
       this.toggle(false);
     },
-    toggle: function(toPress) {
+    toggle(toPress) {
       if (toPress === undefined) {
         toPress = !this.pressed;
       }
-      this._ele.classList[toPress ? 'add' : 'remove']('current');
+      this._ele.classList[toPress ? "add" : "remove"]("current");
     }
   };
 
@@ -671,83 +672,82 @@
     _ele: null,
     items: {},
     anchorEle: null, // Which button Floatbar is for/under
-    init: function() {
-      var self = this;
-      this._ele = Utils.qs('#floatbar');
+    init() {
+      this._ele = Utils.qs("#floatbar");
 
       // Generate items
       this.items = {
         lineWidth: new BarItem({
-          id: 'lineWidth',
-          _refresh: function() {
-            Array.prototype.forEach.call(this._ele.getElementsByTagName('li'), function(li) {
-              li.classList[li.value == BaseControl.lineWidth ? 'add' : 'remove']('current');
+          id: "lineWidth",
+          _refresh() {
+            Array.prototype.forEach.call(this._ele.getElementsByTagName("li"), function(li) {
+              li.classList[li.value == BaseControl.lineWidth ? "add" : "remove"]("current");
             });
           },
-          click: function(evt) {
-            if (evt.target.nodeName.toLowerCase() == 'li') {
+          click(evt) {
+            if (evt.target.nodeName.toLowerCase() == "li") {
               BaseControl.lineWidth = evt.target.value;
             }
           }
         }),
         fontSize: new BarItem({
-          id: 'fontSize',
+          id: "fontSize",
           _popup: FontSelect,
-          _refresh: function() {
-            this._ele.firstChild.textContent = BaseControl.fontSize + ' px';
+          _refresh() {
+            this._ele.firstChild.textContent = BaseControl.fontSize + " px";
           },
-          click: function(evt) {
+          click(evt) {
             Floatbar.pressItem(this);
             evt.stopPropagation();
           }
         }),
-        color: new BarItem ({
-          id: 'color',
+        color: new BarItem({
+          id: "color",
           _popup: ColorPicker,
-          _refresh: function() {
+          _refresh() {
             this._ele.firstChild.style.backgroundColor = BaseControl.color;
           },
-          click: function(evt) {
+          click(evt) {
             Floatbar.pressItem(this);
             evt.stopPropagation();
           }
         })
       };
 
-      window.addEventListener('resize', this, false);
-    },    
-    handleEvent: function(evt) {
+      window.addEventListener("resize", this);
+    },
+    handleEvent(evt) {
       switch (evt.type) {
-        case 'resize':
+        case "resize":
           this.reposition();
           break;
         default:
-          break;  
+          break;
       }
     },
-    reposition: function() {
+    reposition() {
       if (this.anchorEle) {
-        this._ele.style.left = this.anchorEle.getBoundingClientRect().left + 'px';
+        this._ele.style.left = this.anchorEle.getBoundingClientRect().left + "px";
       }
     },
-    show: function(buttonEle, itemsToShow) {
+    show(buttonEle, itemsToShow) {
       if (buttonEle) {
         this.anchorEle = buttonEle;
         this.reposition();
       }
 
-      this._ele.style.display = 'block';
+      this._ele.style.display = "block";
 
       if (itemsToShow) {
         Object.keys(this.items).forEach(function(id) {
-          this.items[id]._ele.style.display = itemsToShow.indexOf(id) >= 0 ? 'inline-block' : 'none';
+          this.items[id]._ele.style.display = itemsToShow.indexOf(id) >= 0 ? "inline-block" : "none";
         }, this);
       }
     },
-    hide: function() {
-      this._ele.style.display = 'none';
+    hide() {
+      this._ele.style.display = "none";
     },
-    pressItem: function(item) {
+    pressItem(item) {
       for (var i in this.items) {
         if (this.items[i].id != item.id) {
           this.items[i].pressed = false;
@@ -762,15 +762,15 @@
     // options contains id, key
     // and may contain start, finish and clear
     Utils.extend(this, options);
-    Utils.assert(this.id, 'id is mandatory');
-    Utils.assert(this.key, 'key is mandatory');
-    this._ele = Utils.qs('#button-' + this.id);
-    var title = chrome.i18n.getMessage('editor_' + this.id + '_tooltip');
-    this._ele.setAttribute('title', title + ' (' + this.key + ')');
+    Utils.assert(this.id, "id is mandatory");
+    Utils.assert(this.key, "key is mandatory");
+    this._ele = Utils.qs("#button-" + this.id);
+    var title = chrome.i18n.getMessage("editor_" + this.id + "_tooltip");
+    this._ele.setAttribute("title", title + " (" + this.key + ")");
   };
   Button.prototype = {
-    start: function() {
-      this._ele.classList.add('current');
+    start() {
+      this._ele.classList.add("current");
       Editor._current = this._ele;
       if (this.floatbar) {
         Floatbar.show(this._ele, this.floatbar);
@@ -784,13 +784,13 @@
       );
     },
     finish: Utils.emptyFunction,
-    clear: function() {
-      Editor._current.classList.remove('current');
+    clear() {
+      Editor._current.classList.remove("current");
       Editor._current = null;
       if (this.floatbar) {
         Floatbar.hide();
       }
-      Editor.canvas.className = '';
+      Editor.canvas.className = "";
       Editor._controls[this.id].cancel();
     }
   };
@@ -798,13 +798,13 @@
   const HISTORY_LENGHT_MAX = 50;
   var Editor = {
     _controls: {
-      'crop': EditorCropOverlay,
-      'rectangle': Rect,
-      'line': Line,
-      'pencil': Pencil,
-      'circle': Circ,
-      'text': TextInput,
-      'blur': Blur
+      "crop": EditorCropOverlay,
+      "rectangle": Rect,
+      "line": Line,
+      "pencil": Pencil,
+      "circle": Circ,
+      "text": TextInput,
+      "blur": Blur
     },
     _canvas: null,
     _ctx: null,
@@ -817,7 +817,7 @@
     },
     set canvas(canvas) {
       this._canvas = canvas;
-      this._ctx = this._canvas.getContext('2d');
+      this._ctx = this._canvas.getContext("2d");
     },
     get ctx() {
       return this._ctx;
@@ -834,8 +834,8 @@
       return this._current;
     },
     set current(newCurrent) {
-      var oldID = this._current ? this._getID(this._current) : '';
-      var newID = newCurrent ? this._getID(newCurrent) : '';
+      var oldID = this._current ? this._getID(this._current) : "";
+      var newID = newCurrent ? this._getID(newCurrent) : "";
 
       var oldBtn = oldID ? this.buttons[oldID] : null;
       var newBtn = newID ? this.buttons[newID] : null;
@@ -847,27 +847,27 @@
       // finish() will only be called when a pressed button is clicked
       // start() is the main task this button is binding to
       if (newBtn) {
-        newBtn[!newBtn.simple && newID == oldID ? 'finish' : 'start']();
+        newBtn[!newBtn.simple && newID == oldID ? "finish" : "start"]();
       }
     },
     prefs: {
-      'editor.lineWidth': 6,
-      'editor.fontSize': 18,
-      'editor.color': '#FF0000'
+      "editor.lineWidth": 6,
+      "editor.fontSize": 18,
+      "editor.color": "#FF0000"
     },
-    init: function(img) {
+    init(img) {
       var self = this;
 
-      this.canvas = Utils.qs('#display');
+      this.canvas = Utils.qs("#display");
       try {
         this.canvas.width = img.width;
         this.canvas.height = img.height;
         this.ctx.drawImage(img, 0, 0);
-      } catch(ex) {
-        ['fontselect', 'floatbar', 'textinput'].forEach(function(id) {
-          Utils.qs('#' + id).style.display = 'none';
+      } catch (ex) {
+        ["fontselect", "floatbar", "textinput"].forEach(function(id) {
+          Utils.qs("#" + id).style.display = "none";
         });
-        var src = chrome.i18n.getMessage('feedbackUrl');
+        var src = chrome.i18n.getMessage("feedbackUrl");
         console.error(ex);
         window.location.href = src;
         return;
@@ -877,11 +877,11 @@
       this._setupToolbar();
       Floatbar.init();
 
-      document.body.addEventListener('keypress', function(evt) {
+      document.body.addEventListener("keypress", function(evt) {
         if (evt.keyCode == evt.DOM_VK_ESCAPE) { // Esc
           self.current = null;
         }
-        if (self._getID(evt.target) == 'textinput') {
+        if (self._getID(evt.target) == "textinput") {
           return;
         }
         Object.keys(self.buttons).some(function(id) {
@@ -890,7 +890,7 @@
           return key ? [key.toLowerCase(), key.toUpperCase()].some(function(letter) {
             var found = evt.charCode == letter.charCodeAt(0);
             if (found) {
-              self.current = {id: id};
+              self.current = {id};
               evt.preventDefault();
             }
             return found;
@@ -903,100 +903,100 @@
 
       this._inited = true;
     },
-    updateHistory: function() {
+    updateHistory() {
       this._history.push(this.canvasData);
       if (this._history.length > HISTORY_LENGHT_MAX) {
         this._history.shift();
-        //this._history.splice(1, 1);
+        // this._history.splice(1, 1);
       }
       if (this._history.length > 1) {
         this._enableUndo();
       }
     },
-    _getID: function(ele) {
-      return ele.id.replace(/^button-/, '');
+    _getID(ele) {
+      return ele.id.replace(/^button-/, "");
     },
-    _setupToolbar: function() {
+    _setupToolbar() {
       var self = this;
-      [].forEach.call(document.querySelectorAll('#toolbar > li'), function(li) {
-        li.addEventListener('click', function(evt) {
+      [].forEach.call(document.querySelectorAll("#toolbar > li"), function(li) {
+        li.addEventListener("click", function(evt) {
           self.current = evt.target;
         });
       });
       this._setupButtons();
     },
-    _setupButtons: function() {
+    _setupButtons() {
       // Define floatbar types to avoid repetition
       var floatbars = {
-        line: ['lineWidth', 'color'],
-        text: ['fontSize', 'color']
+        line: ["lineWidth", "color"],
+        text: ["fontSize", "color"]
       };
       // Generate buttons
       this.buttons = {
         crop: new Button({
-          id: 'crop',
-          key: 'X',
-          finish: function() {
+          id: "crop",
+          key: "X",
+          finish() {
             Editor._controls.crop.stop();
           }
         }),
         rectangle: new Button({
-          id: 'rectangle',
-          key: 'R',
+          id: "rectangle",
+          key: "R",
           floatbar: floatbars.line
         }),
         line: new Button({
-          id: 'line',
-          key: 'D',
+          id: "line",
+          key: "D",
           floatbar: floatbars.line
         }),
         pencil: new Button({
-          id: 'pencil',
-          key: 'F',
+          id: "pencil",
+          key: "F",
           floatbar: floatbars.line
         }),
         circle: new Button({
-          id: 'circle',
-          key: 'E',
+          id: "circle",
+          key: "E",
           floatbar: floatbars.line
         }),
         text: new Button({
-          id: 'text',
-          key: 'T',
+          id: "text",
+          key: "T",
           floatbar: floatbars.text
         }),
         blur: new Button({
-          id: 'blur',
-          key: 'B'
+          id: "blur",
+          key: "B"
         }),
         undo: new Button({
-          id: 'undo',
-          key: 'Z',
+          id: "undo",
+          key: "Z",
           simple: true,
           start: Editor._undo.bind(Editor)
         }),
         local: new Button({
-          id: 'local',
-          key: 'S',
+          id: "local",
+          key: "S",
           simple: true,
           start: Editor._saveLocal.bind(Editor)
         }),
         copy: new Button({
-          id: 'copy',
-          key: 'C',
+          id: "copy",
+          key: "C",
           simple: true,
           start: Editor._copyToClipboard.bind(Editor)
         }),
         cancel: new Button({
-          id: 'cancel',
-          key: 'Q',
+          id: "cancel",
+          key: "Q",
           simple: true,
           start: Editor._cancelAndClose.bind(Editor)
         })
       };
     },
-    _undo: function() {
-      if(this._history.length > 1) {
+    _undo() {
+      if (this._history.length > 1) {
         this._history.pop();
         this.canvasData = this._history[this._history.length - 1];
         if (this._history.length <= 1) {
@@ -1004,43 +1004,43 @@
         }
       }
     },
-    _enableUndo: function() {
-      Utils.qs('#button-undo').removeAttribute('disabled');
+    _enableUndo() {
+      Utils.qs("#button-undo").removeAttribute("disabled");
     },
-    _disableUndo: function() {
-      Utils.qs('#button-undo').setAttribute('disabled', 'true');
+    _disableUndo() {
+      Utils.qs("#button-undo").setAttribute("disabled", "true");
     },
-    _saveLocal: function() {
+    _saveLocal() {
       // data uri doesn't work with chrome.downloads.download in Fx
       this.canvas.toBlob(function(blob) {
         chrome.runtime.sendMessage({
-          'dir': 'editor2bg',
-          'type': 'download',
-          'url': URL.createObjectURL(blob)
+          "dir": "editor2bg",
+          "type": "download",
+          "url": URL.createObjectURL(blob)
         });
       });
     },
-    _copyToClipboard: function() {
+    _copyToClipboard() {
       chrome.runtime.sendMessage({
-        'dir': 'editor2bg',
-        'type': 'copy_image',
-        'image': this.canvas.toDataURL()
+        "dir": "editor2bg",
+        "type": "copy_image",
+        "image": this.canvas.toDataURL()
       });
     },
-    _cancelAndClose: function() {
+    _cancelAndClose() {
       chrome.runtime.sendMessage({
-        'dir': 'editor2bg',
-        'type': 'removetab'
+        "dir": "editor2bg",
+        "type": "removetab"
       });
     }
   };
 
-  window.addEventListener('load', function(evt) {
+  window.addEventListener("load", function(evt) {
     chrome.storage.local.get(Object.keys(Editor.prefs), function(results) {
       Editor.prefs = Utils.extend(Editor.prefs, results);
       chrome.runtime.sendMessage(undefined, {
-        'dir': 'editor2bg',
-        'type': 'editor_ready'
+        "dir": "editor2bg",
+        "type": "editor_ready"
       }, undefined, function(response) {
         var dataUri = response && response.dataUri;
         if (!dataUri) {
@@ -1055,10 +1055,10 @@
         img.src = dataUri;
       });
     });
-    document.title = chrome.i18n.getMessage('editor_title');
-  }, false);
+    document.title = chrome.i18n.getMessage("editor_title");
+  });
 
-  window.addEventListener('unload', function(evt) {
+  window.addEventListener("unload", function(evt) {
     for (var item in Floatbar.items) {
       Floatbar.items[item].uninit();
     }

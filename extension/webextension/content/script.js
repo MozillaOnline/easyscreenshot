@@ -1,3 +1,5 @@
+/* global CropOverlay, Utils */
+
 (function() {
   let extId = chrome.i18n.getMessage("@@extension_id");
   let fixedPositionHack = "mococn-" + extId + "-fixed-position-hack";
@@ -60,7 +62,6 @@
           return;
         default:
           console.error("Unexpected mutation.attributeName: " + attribute);
-          return;
       }
     });
   });
@@ -75,7 +76,7 @@
           }
           selectors.push(cssRule.selectorText);
         }
-      } catch(ex) {
+      } catch (ex) {
         switch (ex.name) {
           case "SecurityError":
             console.log(styleSheet);
@@ -94,7 +95,7 @@
         CropOverlay.init();
         CropOverlay.start();
         sendResponse({});
-        break;
+        return false;
       case "detect":
         sendResponse({
           "clientHeight": rootScrollable.clientHeight,
@@ -106,7 +107,7 @@
           "scrollTopMax": rootScrollable.scrollTopMax,
           "scrollWidth": Math.min(rootScrollable.scrollWidth, sizeLimit),
         });
-        break;
+        return false;
       case "init":
         CropOverlay.init();
         CropOverlay.cancel();
@@ -133,7 +134,7 @@
             ].join("");
             try {
               style.sheet.insertRule(ruleText, 0);
-            } catch(ex) {
+            } catch (ex) {
               switch (ex.name) {
                 case "SyntaxError":
                   console.log(ruleText);
@@ -159,7 +160,7 @@
         });
 
         fixedObserver.observe(document.documentElement, {
-          attributeFilter: attributeFilter,
+          attributeFilter,
           attributeOldValue: true,
           subtree: true
         });
@@ -167,7 +168,7 @@
         sendResponse({
           step: 0
         });
-        break;
+        return false;
       case "scroll":
         window.scrollTo(message.to.left, message.to.top);
         // maybe make this delay adjustable ?
@@ -182,9 +183,9 @@
         sendResponse({
           left: rootScrollable.scrollLeft,
           top: rootScrollable.scrollTop,
-          windowScrolled: windowScrolled
+          windowScrolled
         });
-        break;
+        return false;
       case "uninit":
         fixedObserver.disconnect();
         // ?
@@ -201,14 +202,14 @@
 
         window.scrollTo(savedTopleft.left, savedTopleft.top);
         sendResponse({});
-        break;
+        return false;
       case "ping":
         sendResponse({
           type: "pong"
         });
-        break;
+        return false;
       default:
-        break;
+        return false;
     }
   }
 
@@ -217,5 +218,5 @@
   }
 
   chrome.runtime.onMessage.addListener(handleRuntimeMessage);
-  window.addEventListener("scroll", handleWindowScroll, false);
+  window.addEventListener("scroll", handleWindowScroll);
 })();

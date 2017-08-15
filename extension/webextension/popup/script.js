@@ -1,5 +1,5 @@
 let popup = {
-  handleEvent: function(evt) {
+  handleEvent(evt) {
     switch (evt.type) {
       case "click":
         if (!evt.currentTarget ||
@@ -17,13 +17,13 @@ let popup = {
         break;
     }
   },
-  init: function(evt) {
+  init(evt) {
     let items = document.querySelectorAll("div.panel-list-item");
     let self = this;
     [].forEach.call(items, function(item) {
       let text = item.querySelector("div.text");
       text.textContent = chrome.i18n.getMessage("popup_" + item.dataset.action);
-      item.addEventListener("click", self, false);
+      item.addEventListener("click", self);
     });
 
     chrome.tabs.query({
@@ -31,9 +31,7 @@ let popup = {
       currentWindow: true
     }, function(tabs) {
       if (tabs.length < 1) {
-        sendResponse({
-          error: "No active tab in currentWindow?"
-        });
+        console.error("No active tab in currentWindow?");
         return;
       }
       if (tabs.length > 1) {
@@ -47,7 +45,7 @@ let popup = {
       });
     });
   },
-  redirectToBG: function(evt) {
+  redirectToBG(evt) {
     chrome.runtime.sendMessage(undefined, {
       dir: "popup2bg",
       type: "popup_action",
@@ -60,7 +58,7 @@ let popup = {
       window.close();
     });
   },
-  toggleActions: function(enabled, actions) {    
+  toggleActions(enabled, actions) {
     let items = document.querySelectorAll("div.panel-list-item");
     [].forEach.call(items, function(item) {
       if ((actions || ["select",
@@ -77,4 +75,4 @@ let popup = {
   }
 }
 
-window.addEventListener("load", popup, false);
+window.addEventListener("load", popup);

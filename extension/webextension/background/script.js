@@ -6,7 +6,7 @@ let tabIdByEditorId = new Map();
 function scrollAndCaptureOnce(tab, to, sendResponse, nextStep) {
   chrome.tabs.sendMessage(tab.id, {
     type: "scroll",
-    to: to
+    to
   }, undefined, function(sResp) {
     if (sResp.left > to.left || sResp.top > to.top) {
       sendResponse({
@@ -175,12 +175,13 @@ function handlePopupAction(message, sender, sendResponse) {
         }, sendResponse);
         return true;
       default:
-        break;
+        return false;
     }
-  } catch(ex) {
+  } catch (ex) {
     sendResponse({
       error: ex.message
     });
+    return false;
   }
 }
 
@@ -217,7 +218,7 @@ function handleRuntimeMessage(message, sender, sendResponse) {
       let filename = chrome.i18n.getMessage("save_file_name", timestamp);
       chrome.downloads.download({
         url: message.url,
-        filename: filename,
+        filename,
         conflictAction: "uniquify"
       }, function(downloadId) {
         blobUrisByDownloadId.set(downloadId, message.url);
@@ -239,7 +240,8 @@ function handleRuntimeMessage(message, sender, sendResponse) {
       document.getElementById("sound-capture").play();
       break;
     case "popup_action":
-      return handlePopupAction(message, sender, sendResponse);
+      handlePopupAction(message, sender, sendResponse);
+      break;
     case "removetab":
       chrome.tabs.remove(sender.tab.id);
       break;
@@ -251,14 +253,14 @@ function handleRuntimeMessage(message, sender, sendResponse) {
 function notify(title, text) {
   chrome.notifications.create({
     "type": "basic",
-    "iconUrl": "icons/icon-48.png", //?
+    "iconUrl": "icons/icon-48.png", // ?
     "title": (title || ""),
     "message": (text || "")
   });
 }
 
 function onCaptureStarted(tabId, size) {
-  chrome.tabs.getZoom(tabId, function(zoomFactor) {  
+  chrome.tabs.getZoom(tabId, function(zoomFactor) {
     let canvas = document.createElement("canvas");
     canvas.id = "canvas-" + tabId;
     try {
@@ -267,7 +269,7 @@ function onCaptureStarted(tabId, size) {
       canvas.setAttribute("leftoffset", (size.x || 0));
       canvas.setAttribute("topoffset", (size.y || 0));
       canvas.setAttribute("zoomfactor", zoomFactor);
-    } catch(ex) {
+    } catch (ex) {
       console.error(ex);
     }
     document.body.appendChild(canvas);
@@ -275,7 +277,7 @@ function onCaptureStarted(tabId, size) {
 }
 
 function onCaptured(dataUri, tabId, topleft, sendResponse, callback) {
-  chrome.tabs.getZoom(tabId, function(zoomFactor) {    
+  chrome.tabs.getZoom(tabId, function(zoomFactor) {
     let canvas = document.getElementById("canvas-" + tabId);
     if (parseFloat(canvas.getAttribute("zoomfactor")) !== zoomFactor) {
       sendResponse({
@@ -285,12 +287,12 @@ function onCaptured(dataUri, tabId, topleft, sendResponse, callback) {
     }
     let img = new Image();
     img.onload = function() {
-      let ctx = canvas.getContext('2d');
+      let ctx = canvas.getContext("2d");
       let leftOffset = parseInt(canvas.getAttribute("leftoffset"), 10);
       let topOffset = parseInt(canvas.getAttribute("topoffset"), 10);
       let left = (topleft.left || 0) - leftOffset;
       let top = (topleft.top || 0) - topOffset;
-  
+
       ctx.drawImage(img, left * zoomFactor, top * zoomFactor);
       callback();
     }
@@ -310,7 +312,7 @@ function onCaptureEnded(tabId, tabIndex) {
     }, function(tab) {
       tabIdByEditorId.set(tab.id, tabId);
     });
-  } catch(ex) {
+  } catch (ex) {
     console.error(ex);
   } finally {
     canvas.remove(); // ?

@@ -27,13 +27,12 @@ function handleMessage(message, sender, sendResponse) {
       try {
         clipboard.set(message.image, "image");
         sendResponse({});
-      } catch(ex) {
+      } catch (ex) {
         sendResponse({
           error: ex.toString()
         });
-      } finally {
-        return false;
       }
+      return false;
     default:
       return false;
   }
