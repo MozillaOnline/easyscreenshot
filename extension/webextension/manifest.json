@@ -2,30 +2,39 @@
   "applications": {
     "gecko": {
       "id": "easyscreenshot@mozillaonline.com",
-      "strict_min_version": "51.0"
+      "strict_min_version": "55.0"
     }
   },
   "background": {
-    "page": "background/page.html"
+    "scripts": [
+      "lib/Chaz.js",
+      "editor/editor.background.js",
+      "background/PrintScreenLauncher.background.js",
+      "background/easyscreenshot.background.js"
+    ]
   },
   "browser_action": {
     "browser_style": true,
     "default_icon": {
-      "16": "icons/browser_action-16.png",
-      "32": "icons/browser_action-32.png"
+      "16": "images/browser_action-16.png",
+      "32": "images/browser_action-32.png"
     },
-    "default_popup": "popup/page.html",
+    "default_popup": "popup/easyscreenshot.popup.html",
     "default_title": "__MSG_browserActionTitle__"
   },
   "content_scripts": [
     {
-      "matches": ["*://*/*"],
+      "matches": [
+        "<all_urls>"
+      ],
       "css": [
-        "common/style.css"
+        "lib/mococn.css"
       ],
       "js": [
-        "common/script.js",
-        "content/script.js"
+        "lib/Chaz.js",
+        "lib/script.js",
+        "content/PrintScreen.content.js",
+        "content/easyscreenshot.content.js"
       ],
       "run_at": "document_end"
     }
@@ -34,8 +43,8 @@
   "description": "__MSG_extensionDescription__",
   "homepage_url": "http://www.firefox.com.cn/",
   "icons": {
-    "48": "icons/icon-48.png",
-    "64": "icons/icon-64.png"
+    "48": "images/icon-48.png",
+    "64": "images/icon-64.png"
   },
   "manifest_version": 2,
   "name": "__MSG_extensionName__",
@@ -45,5 +54,10 @@
     "notifications",
     "storage"
   ],
-  "version": "2.55.3"
+  "version": "2.55.3",
+  "web_accessible_resources": [
+    "editor/page.html",
+    "editor/audio/capture.ogg",
+    "editor/audio/export.ogg"
+  ]
 }
