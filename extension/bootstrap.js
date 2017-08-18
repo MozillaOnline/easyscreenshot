@@ -1,10 +1,42 @@
 const { utils: Cu } = Components;
 Cu.import("resource://gre/modules/XPCOMUtils.jsm");
+XPCOMUtils.defineLazyModuleGetter(this, "Services",
+  "resource://gre/modules/Services.jsm");
 XPCOMUtils.defineLazyModuleGetter(this, "Preferences",
   "resource://gre/modules/Preferences.jsm");
 XPCOMUtils.defineLazyModuleGetter(this, "require",
   "resource://devtools/shared/Loader.jsm");
 XPCOMUtils.defineLazyGetter(this, "clipboard", () => require("sdk/clipboard"));
+
+var fxScreenshotHack = {
+  get prefs() {
+    delete this.prefs;
+    return this.prefs = new Preferences({
+      branch: "extensions.screenshots.",
+      defaultBranch: true
+    });
+  },
+
+  defaultPrefTweak() {
+    this.prefs.set("disabled", true);
+  },
+
+  init() {
+    this.defaultPrefTweak();
+
+    Services.obs.addObserver(this, "prefservice:after-app-defaults");
+  },
+
+  observe(subject, topic, data) {
+    switch (topic) {
+      case "prefservice:after-app-defaults":
+        this.defaultPrefTweak();
+        break;
+      default:
+        break;
+    }
+  }
+};
 
 function handleMessage(message, sender, sendResponse) {
   if (message.dir != "bg2legacy") {
@@ -40,14 +72,9 @@ function handleMessage(message, sender, sendResponse) {
 
 function install() {}
 function startup({webExtension}) {
-  let prefs = new Preferences({
-    branch: "extensions.screenshots.",
-    defaultBranch: true
-  });
-  prefs.set("disabled", true);
+  fxScreenshotHack.init();
 
-  webExtension.startup().then(api => {
-    const { browser } = api;
+  webExtension.startup().then(({ browser }) => {
     browser.runtime.onMessage.addListener(handleMessage);
   });
 }
