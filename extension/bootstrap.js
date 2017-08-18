@@ -9,6 +9,7 @@ XPCOMUtils.defineLazyModuleGetter(this, "require",
 XPCOMUtils.defineLazyGetter(this, "clipboard", () => require("sdk/clipboard"));
 
 var fxScreenshotHack = {
+  topic: "prefservice:after-app-defaults",
   get prefs() {
     delete this.prefs;
     return this.prefs = new Preferences({
@@ -24,17 +25,21 @@ var fxScreenshotHack = {
   init() {
     this.defaultPrefTweak();
 
-    Services.obs.addObserver(this, "prefservice:after-app-defaults");
+    Services.obs.addObserver(this, this.topic);
   },
 
   observe(subject, topic, data) {
     switch (topic) {
-      case "prefservice:after-app-defaults":
+      case this.topic:
         this.defaultPrefTweak();
         break;
       default:
         break;
     }
+  },
+
+  unint() {
+    Services.obs.removeObserver(this, this.topic);
   }
 };
 
@@ -78,5 +83,7 @@ function startup({webExtension}) {
     browser.runtime.onMessage.addListener(handleMessage);
   });
 }
-function shutdown() {}
+function shutdown() {
+  fxScreenshotHack.uninit();
+}
 function uninstall() {}
