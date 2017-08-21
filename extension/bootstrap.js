@@ -25,7 +25,9 @@ var fxScreenshotHack = {
   init() {
     this.defaultPrefTweak();
 
-    Services.obs.addObserver(this, this.topic);
+    // still necessary for Fx 54 and earlier versions: https://bugzil.la/1356569
+    // eslint-disable-next-line mozilla/no-useless-parameters
+    Services.obs.addObserver(this, this.topic, false);
   },
 
   observe(subject, topic, data) {
@@ -38,7 +40,7 @@ var fxScreenshotHack = {
     }
   },
 
-  unint() {
+  uninit() {
     Services.obs.removeObserver(this, this.topic);
   }
 };
