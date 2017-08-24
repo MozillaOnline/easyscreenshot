@@ -3,7 +3,6 @@
 Chaz.init("page.content");
 
 const Background = new Chaz("background");
-const iFrame = new Chaz("iframe.content");
 const Popup = new Chaz("popup.privileged");
 
 // response image for background script's needs

@@ -102,7 +102,7 @@ class ChazEvent {
      * */
     has(eventType) {
         if (eventType in this._events) {
-            return this._events[eventType];
+            return this._events[eventType].length;
         }
             return 0;
 
@@ -215,7 +215,7 @@ Message.is = function(message) {
         && typeof message["event_type"] === "string"
     ;
 };
-class InsideMessage extends Message {
+class InsideMessage extends Message {// todo: internal
     constructor(info) {
         if (!InsideMessage.allowType.includes(info.eventType)) {
             throw new Error(`event_type "${info.eventType}" is not support in InsideMessage."`)
@@ -288,9 +288,40 @@ Sender.sendMessageUseTabs = async function(message) {
         return browser.tabs.sendMessage(+message["tab_id"], message);
     } // 广播发送
         var tabs = await browser.tabs.query({});
-        return Promise.race(
-            tabs.map(tab => browser.tabs.sendMessage(tab.id, message))
-        );
+        // 广播发送情况略复杂
+        // 由于有可能有的tab没有listener，导致reject
+        // 所以这里当所有tabs均reject则reject，但有任何一个tab resolve则resolve
+        return new Promise(function(resolve, reject) {
+            var rejectContent = 0;
+            var rejectMap = {};
+            var rejectCallback = function(error, tabId) {
+                rejectContent++;
+                if (error instanceof Error) {
+                    rejectMap[tabId] = error.toString();
+                }
+                if (rejectContent === tabs.length) {
+                    if (Object.keys(rejectMap) === 0) {
+                        resolve();// 没有任何一个标签响应
+                    } else {
+                        reject(`some tabs throw error:${JSON.stringify(rejectMap, null, 4)}`);
+                    }
+                }
+            };
+            var resolveCallback = function(data) {
+                if (typeof data !== undefined) {
+                    resolve(data);
+                } else {
+                    rejectCallback();
+                }
+            };
+            tabs.forEach(
+                tab => (
+                    browser.tabs.sendMessage(tab.id, message)
+                    .then(resolveCallback)
+                    .catch(e => rejectCallback(e, tab.id))
+                )
+            );
+        });
 
 };
 Sender.sendMessageUseRuntime = async function(message) {
@@ -330,7 +361,7 @@ Receiver.prototype.listen = function() {
         if (InsideMessage.is(message)) return false;
         if (
             !Message.is(message)
-            || !Utility.matchAddress(message.to, this.self)
+            || !Utility.matchAddress(this.self, message.to)
             || !Utility.matchAddress(message.from, this.target)
         ) {
             Utility.log(
@@ -391,7 +422,7 @@ Receiver.backgroundInit = async function(type) {
         if (
                 !InsideMessage.is(message)
                 || !Utility.matchAddress(message.to, Utility.parseScriptType("background"))
-        ) return null;
+        ) return undefined;
         switch (message["event_type"]) {
             case "hello":
                 return async function() {
@@ -409,7 +440,7 @@ Receiver.backgroundInit = async function(type) {
                 return Sender.sendMessageUseTabs(message.data);
             default:
                 Utility.log(Receiver.self, "ignore isInsideMessage", message);
-                return null;
+                return undefined;
         }
     });
     return true;

@@ -54,10 +54,5 @@
     "notifications",
     "storage"
   ],
-  "version": "2.55.3",
-  "web_accessible_resources": [
-    "editor/page.html",
-    "editor/audio/capture.ogg",
-    "editor/audio/export.ogg"
-  ]
+  "version": "2.55.3"
 }

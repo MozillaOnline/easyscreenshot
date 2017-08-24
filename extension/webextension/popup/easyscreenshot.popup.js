@@ -1,5 +1,3 @@
-/* global CropOverlay */
-
 Chaz.init("popup.privileged");
 const Background = new Chaz("background");
 const Content = new Chaz("page.content");
