@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        .panel {
+            min-width: __MSG_minPanelWidth__;
+        }
+    </style>
+</head>
+<body>
+<div class="panel" id="run-screenshot">
+    <div class="panel-section panel-section-list">
+        <div class="panel-list-item" data-screenshot="select">
+            <div class="text" chaz-i18n="popup_select"></div>
+        </div>
+        <div class="panel-list-item" data-screenshot="entire">
+            <div class="text" chaz-i18n="popup_entire"></div>
+        </div>
+        <div class="panel-list-item" data-screenshot="visible">
+            <div class="text" chaz-i18n="popup_visible"></div>
+        </div>
+    </div>
+    <div class="panel-section-separator"></div>
+    <div class="panel-section panel-section-list">
+        <!--div class="panel-list-item">
+            <div class="text" chaz-i18n="popup_settings"></div>
+        </div-->
+        <div class="panel-list-item" data-screenshot="feedback">
+            <div class="text" chaz-i18n="popup_feedback"></div>
+        </div>
+    </div>
+</div>
+<script src="/lib/Chaz.js"></script>
+<script src="easyscreenshot.popup.js"></script>
+</body>
+</html>

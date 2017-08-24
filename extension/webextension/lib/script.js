@@ -1,3 +1,4 @@
+/* global PrintScreen */
 var Utils = {
   parse(element) {
     return {
@@ -255,15 +256,10 @@ var CropOverlay = {
       return;
     }
     this.cancel();
-    chrome.runtime.sendMessage(undefined, {
-      dir: "content2bg",
-      type: "popup_action", // not really
-      action: "entire",
-      selected: parsed
-    }, undefined, function(response) {
-      if (response.error) {
-        console.error(response.error);
-      }
-    });
-  }
+    this.cut(parsed);
+  },
+  cut({x, y, w, h}) {
+      var imgInfo = PrintScreen.printScreen(w, h, {x, y});
+      (new Chaz("background")).send("open_editor", imgInfo);
+  },
 };
