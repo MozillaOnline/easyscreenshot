@@ -51,7 +51,7 @@ let popup = {
       type: "popup_action",
       action: evt.currentTarget.dataset.action
     }, undefined, function(response) {
-      if (response.error) {
+      if (response && response.error) {
         console.error(response.error);
         return;
       }
