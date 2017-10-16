@@ -194,22 +194,9 @@ function handleRuntimeMessage(message, sender, sendResponse) {
   console.log(message);
   switch (message.type) {
     case "copy_image":
-      browser.runtime.sendMessage({
-        dir: "bg2legacy",
-        type: message.type,
-        image: message.image
-      }).then(function(response) {
-        if (response && response.error) {
-          console.error(response.error);
-          notify(chrome.i18n.getMessage("copy_failure"));
-        } else {
-          notify(chrome.i18n.getMessage("copy_success"));
-        }
-        chrome.tabs.remove(sender.tab.id);
-        document.getElementById("sound-export").play();
-      }, function(ex) {
-        console.error(ex);
-      });
+      notify(chrome.i18n.getMessage("copy_success"));
+      chrome.tabs.remove(sender.tab.id);
+      document.getElementById("sound-export").play();
       break;
     case "download":
       // why we still need the replacement?
