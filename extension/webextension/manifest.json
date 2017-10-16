@@ -2,7 +2,7 @@
   "applications": {
     "gecko": {
       "id": "easyscreenshot@mozillaonline.com",
-      "strict_min_version": "51.0"
+      "strict_min_version": "57.0"
     }
   },
   "background": {
@@ -41,6 +41,7 @@
   "name": "__MSG_extensionName__",
   "permissions": [
     "<all_urls>",
+    "clipboardWrite",
     "downloads",
     "notifications",
     "storage"

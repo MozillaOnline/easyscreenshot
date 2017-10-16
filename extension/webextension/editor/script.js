@@ -1020,11 +1020,19 @@
         });
       });
     },
-    _copyToClipboard() {
-      chrome.runtime.sendMessage({
+    async _copyToClipboard() {
+      var blob = await new Promise(r => this.canvas.toBlob(r));
+      var arrayBuffer = await new Promise(resolve => {
+          var fr = new FileReader();
+          fr.onload = function() {
+              resolve(this.result);
+          };
+          fr.readAsArrayBuffer(blob);
+      });
+      await browser.clipboard.setImageData(arrayBuffer, "png");
+      await browser.runtime.sendMessage({
         "dir": "editor2bg",
         "type": "copy_image",
-        "image": this.canvas.toDataURL()
       });
     },
     _cancelAndClose() {
