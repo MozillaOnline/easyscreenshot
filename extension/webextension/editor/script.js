@@ -1020,11 +1020,19 @@
         });
       });
     },
-    _copyToClipboard() {
-      chrome.runtime.sendMessage({
+    async _copyToClipboard() {
+      var failed = false;
+      try {
+        var response = await fetch(this.canvas.toDataURL());
+        var arrayBuffer = await response.arrayBuffer();
+        await browser.clipboard.setImageData(arrayBuffer, "png");
+      } catch (ex) {
+        failed = true;
+      }
+      await browser.runtime.sendMessage({
         "dir": "editor2bg",
         "type": "copy_image",
-        "image": this.canvas.toDataURL()
+        "failed": failed
       });
     },
     _cancelAndClose() {
