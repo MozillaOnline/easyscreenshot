@@ -2,7 +2,8 @@
   "applications": {
     "gecko": {
       "id": "easyscreenshot@mozillaonline.com",
-      "strict_min_version": "57.0"
+      "strict_min_version": "57.0",
+      "update_url": "https://addons.firefox.com.cn/chinaedition/addons/updates.json"
     }
   },
   "background": {
@@ -46,5 +47,5 @@
     "notifications",
     "storage"
   ],
-  "version": "2.55.3"
+  "version": "3.57"
 }

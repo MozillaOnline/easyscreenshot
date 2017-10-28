@@ -311,17 +311,4 @@ function onCaptureEnded(tabId, tabIndex) {
 
 chrome.downloads.onChanged.addListener(handleDownloadChange);
 chrome.runtime.onMessage.addListener(handleRuntimeMessage);
-browser.runtime.sendMessage({
-  dir: "bg2legacy",
-  type: "migrate_prefs"
-}).then(function(response) {
-  for (let key in response) {
-    if (response[key] === undefined) {
-      delete response[key];
-    }
-  }
-  chrome.storage.local.set(response);
-}, function(ex) {
-  console.error(ex);
-});
 console.log("background.js loaded");

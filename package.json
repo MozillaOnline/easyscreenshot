@@ -1,6 +1,6 @@
 {
   "name": "easyscreenshot",
-  "version": "2.55.3",
+  "version": "3.57.0",
   "description": "Easy Screenshot",
   "scripts": {
     "lint": "eslint extension"
