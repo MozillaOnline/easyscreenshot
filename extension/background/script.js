@@ -111,6 +111,40 @@ function getSnapshot(message, tab, sendResponse) {
   }
 }
 
+function handleAction(message, sendResponse) {
+  chrome.tabs.query({
+    active: true,
+    currentWindow: true
+  }, function(tabs) {
+    if (tabs.length < 1) {
+      sendResponse({
+        error: "No active tab in currentWindow?"
+      });
+      return;
+    }
+    if (tabs.length > 1) {
+      console.error(tabs);
+    }
+
+    getSnapshot(message, tabs[0], sendResponse);
+  });
+}
+
+function handleCommand(cmd) {
+  if (!cmd.startsWith("ess-")) {
+    return;
+  }
+
+  let action = cmd.slice("ess-".length);
+  handleAction({action}, response => {
+    if (response && response.error) {
+      console.error(response.error);
+    } else {
+      console.log(response);
+    }
+  });
+}
+
 function handleDownloadChange(downloadDelta) {
   if (!blobUrisByDownloadId.has(downloadDelta.id)) {
     return;
@@ -154,22 +188,7 @@ function handlePopupAction(message, sender, sendResponse) {
       case "select":
       case "entire":
       case "visible":
-        chrome.tabs.query({
-          active: true,
-          currentWindow: true
-        }, function(tabs) {
-          if (tabs.length < 1) {
-            sendResponse({
-              error: "No active tab in currentWindow?"
-            });
-            return;
-          }
-          if (tabs.length > 1) {
-            console.error(tabs);
-          }
-
-          getSnapshot(message, tabs[0], sendResponse);
-        });
+        handleAction(message, sendResponse);
         return true;
       case "settings":
         chrome.tabs.create({
@@ -318,7 +337,7 @@ function onCaptureEnded(tabId, tabIndex) {
 }
 
 
-
+chrome.commands.onCommand.addListener(handleCommand);
 chrome.downloads.onChanged.addListener(handleDownloadChange);
 chrome.runtime.onMessage.addListener(handleRuntimeMessage);
 console.log("background.js loaded");

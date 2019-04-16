@@ -85,19 +85,19 @@
   "copy_failure": {
     "message": "Unable to copy screenshot to clipboard"
   },
-  "popup_select": {
+  "action_select": {
     "message": "Capture Web Page Region"
   },
-  "popup_entire": {
+  "action_entire": {
     "message": "Capture Whole Web Page"
   },
-  "popup_visible": {
+  "action_visible": {
     "message": "Capture Visible Web Content"
   },
-  "popup_settings": {
+  "action_settings": {
     "message": "Settings"
   },
-  "popup_feedback": {
+  "action_feedback": {
     "message": "Feedback"
   }
 }

@@ -17,6 +17,20 @@
     "default_popup": "popup/page.html",
     "default_title": "__MSG_browserActionTitle__"
   },
+  "commands": {
+    "ess-select": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+S"
+      },
+      "description": "__MSG_action_select__"
+    },
+    "ess-entire": {
+      "description": "__MSG_action_entire__"
+    },
+    "ess-visible": {
+      "description": "__MSG_action_visible__"
+    }
+  },
   "content_scripts": [
     {
       "matches": ["*://*/*"],

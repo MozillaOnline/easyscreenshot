@@ -85,19 +85,19 @@
   "copy_failure": {
     "message": "复制截图到剪贴板失败"
   },
-  "popup_select": {
+  "action_select": {
     "message": "截取网页选定区域"
   },
-  "popup_entire": {
+  "action_entire": {
     "message": "截取整个网页"
   },
-  "popup_visible": {
+  "action_visible": {
     "message": "截取网页可视区域"
   },
-  "popup_settings": {
+  "action_settings": {
     "message": "设置"
   },
-  "popup_feedback": {
+  "action_feedback": {
     "message": "意见反馈"
   }
 }

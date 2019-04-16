@@ -22,7 +22,7 @@ let popup = {
     let self = this;
     [].forEach.call(items, function(item) {
       let text = item.querySelector("div.text");
-      text.textContent = chrome.i18n.getMessage("popup_" + item.dataset.action);
+      text.textContent = chrome.i18n.getMessage("action_" + item.dataset.action);
       item.addEventListener("click", self);
     });
 

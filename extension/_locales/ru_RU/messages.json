@@ -85,19 +85,19 @@
   "copy_failure": {
     "message": "Не удается скопировать скриншот в буфер обмена"
   },
-  "popup_select": {
+  "action_select": {
     "message": "Захват области Веб-страницы"
   },
-  "popup_entire": {
+  "action_entire": {
     "message": "Захват всей веб-страницы"
   },
-  "popup_visible": {
+  "action_visible": {
     "message": "Захват видимой веб-страницы"
   },
-  "popup_settings": {
+  "action_settings": {
     "message": "Настройки"
   },
-  "popup_feedback": {
+  "action_feedback": {
     "message": "Обратная связь"
   }
 }
