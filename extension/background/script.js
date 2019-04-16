@@ -31,6 +31,13 @@ function scrollAndCaptureOnce(tab, to, sendResponse, nextStep) {
   });
 }
 
+function dataUriToBlob(dataUri) {
+  const binary = atob(dataUri.split(",", 2)[1]);
+  const data = Uint8Array.from(binary, char => char.charCodeAt(0));
+  const blob = new Blob([data], {type: "image/png"});
+  return blob;
+}
+
 function getSnapshot(message, tab, sendResponse) {
   switch (message.action) {
     case "select":
@@ -204,12 +211,15 @@ function handleRuntimeMessage(message, sender, sendResponse) {
       let timestamp = (new Date()).toISOString().replace(/:/g, "-");
       // save in an alternative folder ?
       let filename = chrome.i18n.getMessage("save_file_name", timestamp);
+      let blob = dataUriToBlob(message.url);
+      let url = URL.createObjectURL(blob);
       chrome.downloads.download({
-        url: message.url,
+        url,
+        incognito: sender.tab.incognito,
         filename,
         conflictAction: "uniquify"
       }, function(downloadId) {
-        blobUrisByDownloadId.set(downloadId, message.url);
+        blobUrisByDownloadId.set(downloadId, url);
         tabIdByDownloadId.set(downloadId, sender.tab.id);
       });
       break;

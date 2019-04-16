@@ -1011,13 +1011,10 @@
       Utils.qs("#button-undo").setAttribute("disabled", "true");
     },
     _saveLocal() {
-      // data uri doesn't work with chrome.downloads.download in Fx
-      this.canvas.toBlob(function(blob) {
-        chrome.runtime.sendMessage({
-          "dir": "editor2bg",
-          "type": "download",
-          "url": URL.createObjectURL(blob)
-        });
+      chrome.runtime.sendMessage({
+        "dir": "editor2bg",
+        "type": "download",
+        "url": this.canvas.toDataURL()
       });
     },
     async _copyToClipboard() {
