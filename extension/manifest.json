@@ -33,7 +33,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://*/*"],
+      "matches": ["*://*/*", "file:///*"],
       "css": [
         "common/style.css"
       ],
