@@ -324,7 +324,7 @@ function onCaptureEnded(tabId, tabIndex) {
 
     chrome.tabs.create({
       index: (tabIndex + 1),
-      // openerTabId: tabId,
+      openerTabId: tabId,
       url: chrome.extension.getURL("editor/page.html")
     }, function(tab) {
       tabIdByEditorId.set(tab.id, tabId);
