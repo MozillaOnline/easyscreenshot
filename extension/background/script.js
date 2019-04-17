@@ -3,34 +3,6 @@ let dataUrisByTabId = new Map();
 let tabIdByDownloadId = new Map();
 let tabIdByEditorId = new Map();
 
-function scrollAndCaptureOnce(tab, to, sendResponse, nextStep) {
-  chrome.tabs.sendMessage(tab.id, {
-    type: "scroll",
-    to
-  }, undefined, function(sResp) {
-    if (sResp.left > to.left || sResp.top > to.top) {
-      sendResponse({
-        error: "Scrolled too much?"
-      });
-      return;
-    }
-    chrome.tabs.captureVisibleTab(tab.windowId, {
-      format: "png"
-    }, function(dataUri) {
-      chrome.tabs.sendMessage(tab.id, {
-        type: "confirm"
-      }, undefined, function(cResp) {
-        if (cResp.windowScrolled ||
-            sResp.left !== cResp.left || sResp.top !== cResp.top ) {
-          scrollAndCaptureOnce(tab, to, sendResponse, nextStep);
-          return;
-        }
-        onCaptured(dataUri, tab.id, cResp, sendResponse, nextStep);
-      });
-    });
-  });
-}
-
 function dataUriToBlob(dataUri) {
   const binary = atob(dataUri.split(",", 2)[1]);
   const data = Uint8Array.from(binary, char => char.charCodeAt(0));
@@ -46,64 +18,12 @@ function getSnapshot(message, tab, sendResponse) {
       }, undefined, sendResponse);
       break;
     case "entire":
-      chrome.tabs.sendMessage(tab.id, {
-        type: "detect"
-      }, undefined, function(dResp) {
-        let selected = message.selected || {};
-        let stepX = Math.ceil((selected.w || dResp.scrollWidth) / dResp.clientWidth);
-        let steps = stepX * Math.ceil((selected.h || dResp.scrollHeight) / dResp.clientHeight);
-        function nextStep(stepObj) {
-          let step = stepObj.step;
-          let y = Math.floor(step / stepX);
-          let x = (y % 2) * (stepX - 1) + Math.pow(-1, y) * (step % stepX);
-          scrollAndCaptureOnce(tab, {
-            left: Math.min(dResp.scrollLeftMax, ((selected.x || 0) + x * dResp.clientWidth)),
-            top: Math.min(dResp.scrollTopMax, ((selected.y || 0) + y * dResp.clientHeight))
-          }, sendResponse, function() {
-            step += 1;
-            if (step < steps) {
-              nextStep({ step });
-            } else {
-              onCaptureEnded(tab.id, tab.index);
-              chrome.tabs.sendMessage(tab.id, {
-                type: "uninit"
-              }, undefined, sendResponse);
-            }
-          });
-        }
-        onCaptureStarted(tab.id, {
-          x: selected.x,
-          y: selected.y,
-          w: (selected.w || dResp.scrollWidth),
-          h: (selected.h || dResp.scrollHeight)
-        });
-        chrome.tabs.sendMessage(tab.id, {
-          type: "init"
-        }, undefined, nextStep);
-      });
-      break;
     case "visible":
       chrome.tabs.sendMessage(tab.id, {
-        type: "detect"
-      }, undefined, function(dResp) {
-        onCaptureStarted(tab.id, {
-          w: dResp.clientWidth,
-          h: dResp.clientHeight
-        });
-        chrome.tabs.sendMessage(tab.id, {
-          type: "init"
-        }, undefined, function() {
-          chrome.tabs.captureVisibleTab(tab.windowId, {
-            format: "png"
-          }, function(dataUri) {
-            onCaptured(dataUri, tab.id, {}, sendResponse, function() {
-              onCaptureEnded(tab.id, tab.index);
-              chrome.tabs.sendMessage(tab.id, {
-                type: "uninit"
-              }, undefined, sendResponse);
-            });
-          });
-        });
+        type: message.action,
+        selected: (message.selected || {})
+      }, function(dataUri) {
+        onCaptureEnded(tab.id, dataUri);
       });
       break;
     default:
@@ -276,54 +196,11 @@ function notify(title, text) {
   });
 }
 
-function onCaptureStarted(tabId, size) {
-  chrome.tabs.getZoom(tabId, function(zoomFactor) {
-    let canvas = document.createElement("canvas");
-    canvas.id = "canvas-" + tabId;
-    try {
-      canvas.width = size.w * zoomFactor;
-      canvas.height = size.h * zoomFactor;
-      canvas.setAttribute("leftoffset", (size.x || 0));
-      canvas.setAttribute("topoffset", (size.y || 0));
-      canvas.setAttribute("zoomfactor", zoomFactor);
-    } catch (ex) {
-      console.error(ex);
-    }
-    document.body.appendChild(canvas);
-  });
-}
-
-function onCaptured(dataUri, tabId, topleft, sendResponse, callback) {
-  chrome.tabs.getZoom(tabId, function(zoomFactor) {
-    let canvas = document.getElementById("canvas-" + tabId);
-    if (parseFloat(canvas.getAttribute("zoomfactor")) !== zoomFactor) {
-      sendResponse({
-        error: "zoomFactor changed!"
-      });
-      return;
-    }
-    let img = new Image();
-    img.onload = function() {
-      let ctx = canvas.getContext("2d");
-      let leftOffset = parseInt(canvas.getAttribute("leftoffset"), 10);
-      let topOffset = parseInt(canvas.getAttribute("topoffset"), 10);
-      let left = (topleft.left || 0) - leftOffset;
-      let top = (topleft.top || 0) - topOffset;
-
-      ctx.drawImage(img, left * zoomFactor, top * zoomFactor);
-      callback();
-    }
-    img.src = dataUri;
-  });
-}
-
-function onCaptureEnded(tabId, tabIndex) {
-  let canvas = document.getElementById("canvas-" + tabId);
+function onCaptureEnded(tabId, dataUri) {
   try {
-    dataUrisByTabId.set(tabId, canvas.toDataURL());
+    dataUrisByTabId.set(tabId, dataUri);
 
     chrome.tabs.create({
-      index: (tabIndex + 1),
       openerTabId: tabId,
       url: chrome.extension.getURL("editor/page.html")
     }, function(tab) {
@@ -331,8 +208,6 @@ function onCaptureEnded(tabId, tabIndex) {
     });
   } catch (ex) {
     console.error(ex);
-  } finally {
-    canvas.remove(); // ?
   }
 }
 

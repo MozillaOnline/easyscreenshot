@@ -261,7 +261,7 @@ var CropOverlay = {
       action: "entire",
       selected: parsed
     }, undefined, function(response) {
-      if (response.error) {
+      if (response && response.error) {
         console.error(response.error);
       }
     });
