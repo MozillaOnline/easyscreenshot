@@ -230,7 +230,7 @@ li.container > ul {
 
 #display {
   display: block;
-  margin: 42px auto 21px;
+  margin: 78px auto 21px;
 }
 
 #blurcanvas, #pencilcanvas, #rectcanvas, #linecanvas, #circcanvas, #textcanvas, #textinput {
