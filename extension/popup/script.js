@@ -4,7 +4,8 @@ let popup = {
       case "click":
         if (!evt.currentTarget ||
             !evt.currentTarget.dataset ||
-            !evt.currentTarget.dataset.action) {
+            !evt.currentTarget.dataset.action ||
+            evt.currentTarget.classList.contains("disabled")) {
           return;
         }
         this.toggleActions(false);
@@ -18,18 +19,22 @@ let popup = {
     }
   },
   init(evt) {
-    let items = document.querySelectorAll("div.panel-list-item");
     let self = this;
-    [].forEach.call(items, function(item) {
-      let text = item.querySelector("div.text");
-      text.textContent = chrome.i18n.getMessage("action_" + item.dataset.action);
-      item.addEventListener("click", self);
-    });
 
     chrome.tabs.query({
       active: true,
       currentWindow: true
     }, function(tabs) {
+      let items = document.querySelectorAll("div[data-action]");
+      [].forEach.call(items, function(item) {
+        // Add .panel-list-item here as a work around for https://bugzil.la/1416505
+        item.classList.add("panel-list-item");
+
+        let text = item.querySelector("div.text");
+        text.textContent = chrome.i18n.getMessage("action_" + item.dataset.action);
+        item.addEventListener("click", self);
+      });
+
       if (tabs.length < 1) {
         console.error("No active tab in currentWindow?");
         return;
@@ -41,7 +46,7 @@ let popup = {
       chrome.tabs.sendMessage(tabs[0].id, {
         type: "ping"
       }, undefined, function(resp) {
-        self.toggleActions(resp && resp.type === "pong");
+        self.toggleActions(!chrome.runtime.lastError);
       });
     });
   },
