@@ -1,6 +1,6 @@
 {
   "name": "easyscreenshot",
-  "version": "3.57.0",
+  "version": "3.67.0",
   "description": "Easy Screenshot",
   "scripts": {
     "lint": "eslint extension"
@@ -10,7 +10,7 @@
   "repository": "MozillaOnline/easyscreenshot",
   "devDependencies": {
     "eslint": "3.19.0",
-    "eslint-plugin-mozilla": "0.4.2",
+    "eslint-plugin-mozilla": "0.4.4",
     "eslint-plugin-no-unsanitized": "2.0.1"
   }
 }
