@@ -11,11 +11,21 @@
   "browser_action": {
     "browser_style": true,
     "default_icon": {
-      "16": "icons/browser_action-16.png",
-      "32": "icons/browser_action-32.png"
+      "16": "icons/browser_action-dark.svg",
+      "32": "icons/browser_action-dark.svg",
+      "64": "icons/browser_action-dark.svg"
     },
     "default_popup": "popup/page.html",
-    "default_title": "__MSG_browserActionTitle__"
+    "default_title": "__MSG_browserActionTitle__",
+    "theme_icons": [{
+      "light": "icons/browser_action-light.svg",
+      "dark": "icons/browser_action-dark.svg",
+      "size": 16
+    }, {
+      "light": "icons/browser_action-light.svg",
+      "dark": "icons/browser_action-dark.svg",
+      "size": 32
+    }]
   },
   "commands": {
     "ess-select": {
