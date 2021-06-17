@@ -2,7 +2,7 @@
   "applications": {
     "gecko": {
       "id": "easyscreenshot@mozillaonline.com",
-      "strict_min_version": "57.0"
+      "strict_min_version": "82.0"
     }
   },
   "background": {

@@ -11,18 +11,16 @@
       return {
         x: (message.selected.x || 0),
         y: (message.selected.y || 0),
-        w: Math.min(message.selected.w || rootScrollable.scrollWidth, zoomedSizeLimit),
-        h: Math.min(message.selected.h || rootScrollable.scrollHeight, zoomedSizeLimit),
-        z: window.devicePixelRatio
+        width: Math.min(message.selected.w || rootScrollable.scrollWidth, zoomedSizeLimit),
+        height: Math.min(message.selected.h || rootScrollable.scrollHeight, zoomedSizeLimit)
       }
     }
 
     return {
       x: rootScrollable.scrollLeft,
       y: rootScrollable.scrollTop,
-      w: rootScrollable.clientWidth,
-      h: rootScrollable.clientHeight,
-      z: window.devicePixelRatio
+      width: rootScrollable.clientWidth,
+      height: rootScrollable.clientHeight
     }
   }
 
@@ -38,18 +36,8 @@
         CropOverlay.init();
         CropOverlay.cancel();
 
-        let size = getSize(message);
-
-        let canvas = document.createElementNS("http://www.w3.org/1999/xhtml", "canvas");
-        canvas.width = size.w * size.z;
-        canvas.height = size.h * size.z;
-        canvas.mozOpaque = true;
-
-        let ctx = canvas.getContext("2d");
-        ctx.scale(size.z, size.z);
-        ctx.drawWindow(window, size.x, size.y, size.w, size.h, "#fff");
-
-        sendResponse(canvas.toDataURL());
+        let options = { rect: getSize(message) };
+        sendResponse(options);
         return false;
       case "ping":
         sendResponse({

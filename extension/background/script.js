@@ -22,8 +22,10 @@ function getSnapshot(message, tab, sendResponse) {
       chrome.tabs.sendMessage(tab.id, {
         type: message.action,
         selected: (message.selected || {})
-      }, function(dataUri) {
-        onCaptureEnded(tab.id, dataUri);
+      }, function(options) {
+        browser.tabs.captureTab(tab.id, options).then(dataUri => {
+          onCaptureEnded(tab.id, dataUri);
+        });
       });
       break;
     default:
@@ -202,7 +204,7 @@ function onCaptureEnded(tabId, dataUri) {
 
     chrome.tabs.create({
       openerTabId: tabId,
-      url: chrome.extension.getURL("editor/page.html")
+      url: chrome.runtime.getURL("editor/page.html")
     }, function(tab) {
       tabIdByEditorId.set(tab.id, tabId);
     });
