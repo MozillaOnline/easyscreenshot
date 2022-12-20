@@ -10,6 +10,7 @@
   },
   "browser_action": {
     "browser_style": true,
+    "default_area": "navbar",
     "default_icon": {
       "16": "icons/browser_action-dark.svg",
       "32": "icons/browser_action-dark.svg",
